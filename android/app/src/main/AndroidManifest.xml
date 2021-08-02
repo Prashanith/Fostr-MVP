@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.fostr">
+    package="com.clubfostr.fostr">
    <application
         android:label="fostr"
         android:icon="@mipmap/ic_launcher">
