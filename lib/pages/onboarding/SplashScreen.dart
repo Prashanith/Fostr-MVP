@@ -39,7 +39,7 @@ class _SplashScreenState extends State<SplashScreen> {
               child: PrimaryButton(
                 text: "Get Started",
                 onTap: () {
-                  FostrRouter.goto(context, Routes.singup);
+                  FostrRouter.replaceGoto(context, Routes.singup);
                 },
               ),
             ),

@@ -7,6 +7,9 @@ import 'package:fostr/router/routes.dart';
 class FostrRouter {
   static goto(BuildContext context, String name) =>
       Navigator.pushNamed(context, name);
+  
+  static replaceGoto(BuildContext context, String name) =>
+      Navigator.pushReplacementNamed(context, name);
 
   static Route<dynamic> generateRoute(
     BuildContext context,

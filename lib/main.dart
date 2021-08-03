@@ -9,12 +9,15 @@ class MyApp extends StatelessWidget with FostrTheme {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       initialRoute: "/",
       onGenerateRoute: (settings) =>
           FostrRouter.generateRoute(context, settings),
       title: "FOSTR",
-      home: Scaffold(
-        body: const SplashScreen(),
+      home: SafeArea(
+        child: Scaffold(
+          body: const SplashScreen(),
+        ),
       ),
     );
   }
