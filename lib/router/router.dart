@@ -11,6 +11,9 @@ import 'package:fostr/router/routes.dart';
 class FostrRouter {
   static goto(BuildContext context, String name) =>
       Navigator.pushNamed(context, name);
+  
+  static replaceGoto(BuildContext context, String name) =>
+      Navigator.pushReplacementNamed(context, name);
 
   static pop(BuildContext context) => Navigator.pop(context);
 
