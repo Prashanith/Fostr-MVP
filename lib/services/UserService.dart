@@ -23,6 +23,15 @@ class UserService {
     }
   }
 
+  Future<void> updateUserField(Map<String, dynamic> json) async {
+    try {
+      await _userCollection.doc(json['id']).update(json);
+    } catch (e) {
+      print(e);
+      throw e;
+    }
+  }
+
   Future<void> deleteUser(String id) async {
     try {
       await _userCollection.doc(id).delete();

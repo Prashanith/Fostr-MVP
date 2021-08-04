@@ -58,57 +58,24 @@ class _AddDetailsState extends State<AddDetails> with FostrTheme {
             ),
             Form(
               key: nameForm,
-              child: Column(
-                children: [
-                  InputField(
-                    onChange: checkUsername,
-                    controller: usernameController,
-                    validator: (value) {
-                      if (value!.isNotEmpty) {
-                        if (!Validator.isUsername(value)) {
-                          return "Username is not valid";
-                        }
-                        if (isExists) {
-                          return "Username already exists";
-                        }
-                      } else {
-                        return "Enter a user name";
-                      }
-                    },
-                    // controller: _controller,
-                    hintText: "Username",
-                    keyboardType: TextInputType.text,
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Form(
-                    key: passwordForm,
-                    child: Column(
-                      children: [
-                        InputField(
-                          controller: passwordController,
-                          hintText: "Password",
-                          isPassword: true,
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        InputField(
-                          controller: confirmPasswordController,
-                          validator: (value) {
-                            if (passwordController.text.trim() !=
-                                confirmPasswordController.text.trim()) {
-                              return "Password dose not match";
-                            }
-                          },
-                          isPassword: true,
-                          hintText: "Confirm password",
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+              child: InputField(
+                onChange: checkUsername,
+                controller: usernameController,
+                validator: (value) {
+                  if (value!.isNotEmpty) {
+                    if (!Validator.isUsername(value)) {
+                      return "Username is not valid";
+                    }
+                    if (isExists) {
+                      return "Username already exists";
+                    }
+                  } else {
+                    return "Enter a user name";
+                  }
+                },
+                // controller: _controller,
+                hintText: "Username",
+                keyboardType: TextInputType.text,
               ),
             ),
             Spacer(),
@@ -118,12 +85,7 @@ class _AddDetailsState extends State<AddDetails> with FostrTheme {
                 text: "Save",
                 onTap: () async {
                   await checkUsername();
-                  if (nameForm.currentState!.validate() &&
-                      passwordForm.currentState!.validate()) {
-                    if (auth.email != null) {
-                      await auth.signupWithEmailPassword(auth.email!,
-                          passwordController.text.trim(), auth.userType!);
-                    }
+                  if (nameForm.currentState!.validate()) {
                     var user = auth.user!;
                     var newUser = User(
                         id: user.id,
@@ -134,9 +96,7 @@ class _AddDetailsState extends State<AddDetails> with FostrTheme {
                         lastLogin: user.lastLogin,
                         invites: user.invites);
 
-                    auth
-                        .addUserDetails(newUser, passwordController.text.trim())
-                        .then((value) {
+                    auth.addUserDetails(newUser).then((value) {
                       print("done");
                     }).catchError((e) {
                       print(e);

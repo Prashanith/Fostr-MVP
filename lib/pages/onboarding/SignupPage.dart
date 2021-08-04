@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:fostr/pages/onboarding/Layout.dart';
 import 'package:fostr/providers/AuthProvider.dart';
@@ -21,8 +23,12 @@ class _SignupPageState extends State<SignupPage> with FostrTheme {
   final signupForm = GlobalKey<FormState>();
 
   bool isEmail = false;
+  bool isError = false;
+  String error = "";
 
   TextEditingController _controller = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
+
   void handlePasswordField() {
     if (Validator.isEmail(_controller.text)) {
       setState(() {
@@ -77,15 +83,34 @@ class _SignupPageState extends State<SignupPage> with FostrTheme {
           ),
           Form(
             key: signupForm,
-            child: InputField(
-              controller: _controller,
-              validator: (value) {
-                if (!Validator.isEmail(value!) && !Validator.isPhone(value)) {
-                  return "Please provide correct values";
-                }
-                return null;
-              },
-              hintText: "Email or Mobile Number",
+            child: Column(
+              children: [
+                InputField(
+                  controller: _controller,
+                  validator: (value) {
+                    if (isError) {
+                      isError = false;
+                      return error;
+                    }
+                    if (!Validator.isEmail(value!) &&
+                        !Validator.isPhone(value)) {
+                      return "Please provide correct values";
+                    }
+                    return null;
+                  },
+                  hintText: "Email or Mobile Number",
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                (isEmail)
+                    ? InputField(
+                        controller: _passwordController,
+                        hintText: "Password",
+                        isPassword: true,
+                      )
+                    : Container(),
+              ],
             ),
           ),
           Spacer(),
@@ -99,18 +124,23 @@ class _SignupPageState extends State<SignupPage> with FostrTheme {
                 ),
                 PrimaryButton(
                   text: (!isEmail) ? "Send OTP" : "Next",
-                  onTap: () {
+                  onTap: () async {
                     if (signupForm.currentState!.validate()) {
                       if (Validator.isEmail(_controller.text)) {
-                        auth.setEmail(_controller.text);
-                        FostrRouter.goto(context, Routes.addDetails);
+                        auth
+                            .signupWithEmailPassword(_controller.text.trim(),
+                                _passwordController.text.trim(), auth.userType!)
+                            .catchError(handleError)
+                            .then((value) {
+                          FostrRouter.goto(context, Routes.addDetails);
+                        });
                       } else if (Validator.isPhone(_controller.text)) {
                         if (!auth.isLoading) {
                           auth
                               .signInWithPhone(context, _controller.text)
                               .then((value) {
                             FostrRouter.goto(context, Routes.otpVerification);
-                          });
+                          }).catchError(handleError);
                         }
                       }
                     }
@@ -151,5 +181,13 @@ class _SignupPageState extends State<SignupPage> with FostrTheme {
         ],
       ),
     ));
+  }
+
+  FutureOr<Null> handleError(Object error) async {
+    setState(() {
+      isError = true;
+      this.error = showAuthError(error.toString());
+    });
+    signupForm.currentState!.validate();
   }
 }

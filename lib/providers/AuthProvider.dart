@@ -84,15 +84,17 @@ class AuthProvider with ChangeNotifier {
       _setFree();
       print("from auth provider");
       print(e);
+      throw e;
     }
   }
 
-  Future<void> signInWithGoogle(UserType userType) async {
+  Future<User?> signInWithGoogle(UserType userType) async {
     try {
       _setBusy();
       _user = await _authService.signInWithGoogle(userType);
       _localStorage.setLoggedIn();
       _setFree();
+      return _user;
     } catch (e) {
       _setFree();
       print("from auth provider");
@@ -116,10 +118,10 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  Future<void> addUserDetails(User user, String password) async {
+  Future<void> addUserDetails(User user) async {
     try {
       _setBusy();
-      await _authService.updateUser(user, password);
+      await _authService.updateUser(user);
       await _userService.addUsername(user);
       _setFree();
     } catch (e) {

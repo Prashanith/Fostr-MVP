@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:fostr/pages/onboarding/Layout.dart';
 import 'package:fostr/providers/AuthProvider.dart';
@@ -23,6 +26,8 @@ class _LoginPageState extends State<LoginPage> with FostrTheme {
   TextEditingController idController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   bool isVisible = false;
+  bool isError = false;
+  String error = "";
 
   void handlePasswordField() {
     if (Validator.isEmail(idController.text)) {
@@ -84,6 +89,10 @@ class _LoginPageState extends State<LoginPage> with FostrTheme {
               children: [
                 InputField(
                   validator: (value) {
+                    if (isError) {
+                      isError = false;
+                      return error;
+                    }
                     if (!Validator.isEmail(value!) &&
                         !Validator.isPhone(value)) {
                       return "Please provide correct values";
@@ -98,6 +107,7 @@ class _LoginPageState extends State<LoginPage> with FostrTheme {
                 ),
                 (isVisible)
                     ? InputField(
+                        isPassword: true,
                         validator: (value) {
                           if (passwordController.text.length < 6) {
                             return "Password dose not match";
@@ -118,9 +128,16 @@ class _LoginPageState extends State<LoginPage> with FostrTheme {
                 SigninWithGoogle(
                   text: "Login With Google",
                   onTap: () async {
-                    await auth
+                    auth
                         .signInWithGoogle(auth.userType!)
-                        .then((value) {});
+                        .catchError(handleError)
+                        .then((user) {
+                      if (user != null && user.createdOn == user.lastLogin) {
+                        FostrRouter.goto(context, Routes.addDetails);
+                      } else {
+                        print("done");
+                      }
+                    });
                   },
                 ),
                 SizedBox(
@@ -139,14 +156,14 @@ class _LoginPageState extends State<LoginPage> with FostrTheme {
                         )
                             .then((value) {
                           // FostrRouter.goto(context, R)
-                        }).catchError((e) {});
+                        }).catchError(handleError);
                       } else if (Validator.isPhone(idController.text.trim()) &&
                           !auth.isLoading) {
                         await auth
                             .signInWithPhone(context, idController.text.trim())
                             .then((value) {
                           FostrRouter.goto(context, Routes.otpVerification);
-                        });
+                        }).catchError(handleError);
                       }
                     }
                   },
@@ -186,5 +203,14 @@ class _LoginPageState extends State<LoginPage> with FostrTheme {
         ],
       ),
     ));
+  }
+
+  FutureOr<Null> handleError(Object error) async {
+    log(error.toString());
+    setState(() {
+      isError = true;
+      this.error = showAuthError(error.toString());
+    });
+    loginForm.currentState!.validate();
   }
 }

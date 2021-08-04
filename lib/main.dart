@@ -18,7 +18,8 @@ class MyApp extends StatelessWidget with FostrTheme {
   Widget build(BuildContext context) {
     return IndexProvider(
       child: MaterialApp(
-        initialRoute: "/",
+        // debugShowCheckedModeBanner: false,
+        initialRoute: "/splash",
         onGenerateRoute: (settings) =>
             FostrRouter.generateRoute(context, settings),
         title: "FOSTR",

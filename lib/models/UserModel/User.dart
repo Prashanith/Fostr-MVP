@@ -23,7 +23,12 @@ class User {
     required this.invites,
   });
 
-  factory User.fromJson(Map<String,dynamic>json)=> _$UserFromJson(json);
   Map<String, dynamic> toJson() => _$UserToJson(this);
 
+  factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
+
+  factory User.fromUser(User user) {
+    var json = user.toJson();
+    return User.fromJson(json);
+  }
 }

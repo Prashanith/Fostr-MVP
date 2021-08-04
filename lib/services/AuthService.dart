@@ -32,17 +32,20 @@ class AuthService {
       var firebaseUser = res.user!;
       verifyUser(firebaseUser);
       var user = await _userService.getUserById(firebaseUser.uid);
-      if (user != null && userType == user.userType) {
-        return user;
+      if (user != null) {
+        if (userType == user.userType) {
+          var updatedUser = updateLastLogin(user);
+          return updatedUser;
+        } else {
+          throw "user-type-mismatch";
+        }
       } else {
-        throw "Invalid Email or Password";
+        throw "invalid-email";
       }
     } on FirebaseAuthException catch (e) {
-      print(e.message);
-      throw e.message!;
+      throw e.code;
     } catch (e) {
-      print(e);
-      throw e;
+      throw e.toString();
     }
   }
 
@@ -64,18 +67,22 @@ class AuthService {
 
         if (!credential.additionalUserInfo!.isNewUser) {
           var user = await _userService.getUserById(credential.user!.uid);
-          if (user != null && user.userType != userType) {
-            await _googleSignIn.signOut();
-            throw "Account already exist as UserType.USER";
+          if (user != null) {
+            if (user.userType != userType) {
+              await _googleSignIn.signOut();
+              throw "user-type-mismatch";
+            }
+            var updatedUser = updateLastLogin(user);
+            return updatedUser;
           }
-          return user;
         } else {
           var user = await createUser(credential.user!, userType);
           return user;
         }
       }
+    } on FirebaseAuthException catch (e) {
+      throw e.code.toString();
     } catch (e) {
-      print(e);
       throw e;
     }
   }
@@ -111,6 +118,8 @@ class AuthService {
         var user = await signInWithPhone(context, otp, userType);
         return user;
       }
+    } on FirebaseAuthException catch (e) {
+      throw e.code.toString();
     } catch (e) {
       throw e;
     }
@@ -127,13 +136,17 @@ class AuthService {
       verifyUser(userCredential.user!);
       if (userCredential.additionalUserInfo!.isNewUser) {
         var user = await createUser(userCredential.user!, userType);
-        return user;
+        if (user != null) {
+          var updatedUser = updateLastLogin(user);
+          return updatedUser;
+        }
       } else {
         var user = await _userService.getUserById(userCredential.user!.uid);
         return user;
       }
+    } on FirebaseAuthException catch (e) {
+      throw e.code.toString();
     } catch (e) {
-      print(e);
       throw e;
     }
   }
@@ -147,8 +160,9 @@ class AuthService {
       verifyEmail(res.user!);
       var user = await createUser(res.user!, userType);
       return user;
+    } on FirebaseAuthException catch (e) {
+      throw e.code.toString();
     } catch (e) {
-      print(e);
       throw e;
     }
   }
@@ -167,13 +181,14 @@ class AuthService {
 
   Future<UserModel.User?> createUser(User user, UserType userType) async {
     try {
+      var time = DateTime.now();
       var newUser = UserModel.User(
         id: user.uid,
         name: user.displayName ?? "",
         userName: "",
         invites: 10,
-        createdOn: DateTime.now(),
-        lastLogin: DateTime.now(),
+        createdOn: time,
+        lastLogin: time,
         userType: userType,
       );
       await _userService.createUser(newUser);
@@ -181,10 +196,18 @@ class AuthService {
     } catch (e) {}
   }
 
-  Future<void> updateUser(UserModel.User user, String password) async {
+  Future<void> updateUser(UserModel.User user) async {
+    try {
+      await _userService.updateUser(user);
+    } catch (e) {
+      print(e);
+      throw e;
+    }
+  }
+
+  Future<void> updatePassword(String password) async {
     try {
       await _auth.currentUser!.updatePassword(password);
-      await _userService.updateUser(user);
     } catch (e) {
       print(e);
       throw e;
@@ -194,6 +217,19 @@ class AuthService {
   Future<void> addUsername(UserModel.User user) async {
     try {
       await _userService.addUsername(user);
+    } catch (e) {
+      print(e);
+      throw e;
+    }
+  }
+
+  UserModel.User updateLastLogin(UserModel.User user) {
+    try {
+      var json = user.toJson();
+      json['lastLogin'] = DateTime.now().toString();
+      var updatedUser = UserModel.User.fromJson(json);
+      _userService.updateUser(updatedUser);
+      return updatedUser;
     } catch (e) {
       print(e);
       throw e;
