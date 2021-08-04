@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fostr/router/router.dart';
 import 'package:fostr/router/routes.dart';
-import 'package:fostr/utils/constants.dart';
+import 'package:fostr/core/constants.dart';
 import 'package:fostr/widgets/Buttons.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -25,12 +25,38 @@ class _SplashScreenState extends State<SplashScreen> {
               fit: BoxFit.cover,
             ),
           ),
-          Align(
-            alignment: Alignment.center,
-            child: Container(
-              constraints: BoxConstraints(maxHeight: 300),
-              child: Column(),
-            ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              SizedBox(
+                width: double.infinity,
+              ),
+              Text(
+                "FOSTR",
+                style: TextStyle(
+                  fontSize: 30,
+                  fontFamily: "Lato",
+                  color: Colors.white,
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Text(
+                "Wheather we create history or\nwe are a part of history",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontFamily: "Lato",
+                  color: Colors.white,
+                ),
+              ),
+              SizedBox(
+                height:222,
+              ),
+              
+            ],
           ),
           Align(
             alignment: Alignment.bottomCenter,
@@ -39,7 +65,7 @@ class _SplashScreenState extends State<SplashScreen> {
               child: PrimaryButton(
                 text: "Get Started",
                 onTap: () {
-                  FostrRouter.goto(context, Routes.singup);
+                  FostrRouter.goto(context, Routes.userChoice);
                 },
               ),
             ),

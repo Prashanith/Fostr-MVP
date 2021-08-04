@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:fostr/pages/onboarding/Layout.dart';
+import 'package:fostr/providers/AuthProvider.dart';
 import 'package:fostr/router/router.dart';
 import 'package:fostr/router/routes.dart';
+import 'package:fostr/utils/Helpers.dart';
 import 'package:fostr/utils/theme.dart';
-import 'package:fostr/widgets/Background.dart';
 import 'package:fostr/widgets/Buttons.dart';
 import 'package:fostr/widgets/InputField.dart';
 import 'package:fostr/widgets/SigninWithGoogle.dart';
+import 'package:provider/provider.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({Key? key}) : super(key: key);
@@ -15,91 +18,138 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> with FostrTheme {
+  final signupForm = GlobalKey<FormState>();
+
+  bool isEmail = false;
+
+  TextEditingController _controller = TextEditingController();
+  void handlePasswordField() {
+    if (Validator.isEmail(_controller.text)) {
+      setState(() {
+        isEmail = true;
+      });
+    } else {
+      setState(() {
+        isEmail = false;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _controller.addListener(handlePasswordField);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.removeListener(handlePasswordField);
+    _controller.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Material(
-      child: Stack(
+    final auth = Provider.of<AuthProvider>(context);
+    return Layout(
+        child: Padding(
+      padding: paddingH,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Background(),
+          SizedBox(
+            height: 140,
+          ),
+          Container(
+            alignment: Alignment.center,
+            width: double.infinity,
+            child: Text("Create New Account", style: h1),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Text(
+            "Please fill the form to continue",
+            style: h2,
+          ),
+          SizedBox(
+            height: 90,
+          ),
+          Form(
+            key: signupForm,
+            child: InputField(
+              controller: _controller,
+              validator: (value) {
+                if (!Validator.isEmail(value!) && !Validator.isPhone(value)) {
+                  return "Please provide correct values";
+                }
+                return null;
+              },
+              hintText: "Email or Mobile Number",
+            ),
+          ),
+          Spacer(),
           Padding(
-            padding: paddingH,
+            padding: const EdgeInsets.only(bottom: 60),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                SigninWithGoogle(text: "Signup With Google", onTap: () {}),
                 SizedBox(
-                  height: 140,
+                  height: 20,
                 ),
-                Container(
-                  alignment: Alignment.center,
-                  width: double.infinity,
-                  child: Text("Create New Account", style: h1),
+                PrimaryButton(
+                  text: (!isEmail) ? "Send OTP" : "Next",
+                  onTap: () {
+                    if (signupForm.currentState!.validate()) {
+                      if (Validator.isEmail(_controller.text)) {
+                        auth.setEmail(_controller.text);
+                        FostrRouter.goto(context, Routes.addDetails);
+                      } else if (Validator.isPhone(_controller.text)) {
+                        if (!auth.isLoading) {
+                          auth
+                              .signInWithPhone(context, _controller.text)
+                              .then((value) {
+                            FostrRouter.goto(context, Routes.otpVerification);
+                          });
+                        }
+                      }
+                    }
+                  },
                 ),
                 SizedBox(
-                  height: 10,
+                  height: 20,
                 ),
-                Text(
-                  "Please fill the form to continue",
-                  style: h2,
-                ),
-                SizedBox(
-                  height: 90,
-                ),
-                Form(
-                  child: InputField(
-                    hintText: "Email or Mobile Number",
-                  ),
-                ),
-                Spacer(),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 60),
-                  child: Column(
-                    children: [
-                      SigninWithGoogle(
-                          text: "Signup With Google", onTap: () {}),
-                      SizedBox(
-                        height: 20,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Have an account?  ",
+                      style: TextStyle(
+                        fontFamily: "Lato",
+                        color: Colors.white,
+                        fontSize: 16,
                       ),
-                      PrimaryButton(
-                        text: "Send OTP",
-                        onTap: () {},
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        FostrRouter.pop(context);
+                      },
+                      child: Text(
+                        "Sign In",
+                        style: TextStyle(
+                          fontFamily: "Lato",
+                          color: Color(0xff476747),
+                          fontSize: 16,
+                        ),
                       ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            "Have an account?  ",
-                            style: TextStyle(
-                              fontFamily: "Lato",
-                              color: Colors.white,
-                              fontSize: 16,
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              FostrRouter.goto(context, Routes.signin);
-                            },
-                            child: Text(
-                              "Sign In",
-                              style: TextStyle(
-                                fontFamily: "Lato",
-                                color: Color(0xff476747),
-                                fontSize: 16,
-                              ),
-                            ),
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
-                ),
+                    ),
+                  ],
+                )
               ],
             ),
-          )
+          ),
         ],
       ),
-    );
+    ));
   }
 }

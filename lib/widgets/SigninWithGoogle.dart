@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:fostr/utils/theme.dart';
-import 'package:fostr/widgets/Buttons.dart';
 
 class SigninWithGoogle extends StatefulWidget {
   final String text;
@@ -13,12 +12,25 @@ class SigninWithGoogle extends StatefulWidget {
 }
 
 class _SigninWithGoogleState extends State<SigninWithGoogle> with FostrTheme {
+  double scale = 1;
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      splashColor: Colors.white,
+    return GestureDetector(
+      onTapDown: (e) {
+        setState(() {
+          scale = 0.8;
+        });
+      },
+      onTapUp: (e) {
+        setState(() {
+          scale = 1;
+        });
+      },
       onTap: widget.onTap,
-      child: Container(
+      child: AnimatedContainer(
+        transformAlignment: Alignment.center,
+        transform: Transform.scale(scale: scale).transform,
+        duration: Duration(milliseconds: 200),
         alignment: Alignment.center,
         width: 330,
         height: 70,

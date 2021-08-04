@@ -46,10 +46,18 @@
       "client_info": {
         "mobilesdk_app_id": "1:559126256610:android:2a76ea45609168cb2337bb",
         "android_client_info": {
-          "package_name": "com.example.fostr"
+          "package_name": "com.clubfostr.fostr"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "559126256610-anp4a6k0q6o0dv31ofnb9l1qjuk1nbtq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.clubfostr.fostr",
+            "certificate_hash": "85c62a72e39c0fe667df59f9ea91c85b7b5791ed"
+          }
+        },
         {
           "client_id": "559126256610-hr8vmbg8kdo0tfjp623n50upvr911cf6.apps.googleusercontent.com",
           "client_type": 3

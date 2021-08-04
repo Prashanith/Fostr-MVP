@@ -1,0 +1,141 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
+import 'package:fostr/core/constants.dart';
+import 'package:fostr/models/UserModel/User.dart';
+import 'package:fostr/services/AuthService.dart';
+import 'package:fostr/services/LocalStorage.dart';
+import 'package:fostr/services/UserService.dart';
+
+class AuthProvider with ChangeNotifier {
+  final AuthService _authService = AuthService();
+  final LocalStorage _localStorage = LocalStorage();
+  final UserService _userService = UserService();
+  User? _user;
+  Status _status = Status.Uninitialized;
+  UserType? _userType;
+  String? _email;
+  bool _isLoading = true;
+
+  AuthProvider.init() {
+    initAuth();
+  }
+
+  User? get user => _user;
+  Status get status => _status;
+  bool get isLoading => _isLoading;
+  bool get firstOpen => _localStorage.firstOpen;
+  bool get logedIn => _localStorage.loggedIn;
+  UserType? get userType => _userType;
+  String? get email => _email;
+
+  void setEmail(String email) {
+    _email = email;
+    notifyListeners();
+  }
+
+  void setUserType(UserType userType) {
+    _userType = userType;
+    notifyListeners();
+  }
+
+  Future<void> initAuth() async {
+    await _localStorage.readPrefs();
+    if (!logedIn) {
+      _status = Status.Unauthenticated;
+    } else if (_authService.currentUser != null) {
+      _user = await _userService.getUserById(_authService.currentUser!.uid);
+      _status = Status.Authenticated;
+    }
+    _setFree();
+  }
+
+  Future<void> signInWithPhone(BuildContext context, String number) async {
+    try {
+      _setBusy();
+      await _authService.verifyPhone(context, number);
+    } catch (e) {
+      _setFree();
+      print("from auth provider");
+      print(e);
+    }
+  }
+
+  Future<void> verifyOtp(
+      BuildContext context, String otp, UserType userType) async {
+    try {
+      _user = await _authService.verifyOTP(context, otp, userType);
+      _setFree();
+    } catch (e) {
+      _setFree();
+      print("from auth provider");
+      print(e);
+    }
+  }
+
+  Future<void> signInWithEmailPassword(
+      String email, String password, UserType userType) async {
+    try {
+      _setBusy();
+      _user =
+          await _authService.signInWithEmailPassword(email, password, userType);
+      _localStorage.setLoggedIn();
+      _setFree();
+    } catch (e) {
+      _setFree();
+      print("from auth provider");
+      print(e);
+    }
+  }
+
+  Future<void> signInWithGoogle(UserType userType) async {
+    try {
+      _setBusy();
+      _user = await _authService.signInWithGoogle(userType);
+      _localStorage.setLoggedIn();
+      _setFree();
+    } catch (e) {
+      _setFree();
+      print("from auth provider");
+      print(e);
+    }
+  }
+
+  Future<void> signupWithEmailPassword(
+      String email, String password, UserType userType) async {
+    try {
+      _setBusy();
+      await _authService.signOut();
+      _user =
+          await _authService.signUpWithEmailPassword(email, password, userType);
+      _localStorage.setLoggedIn();
+      _setFree();
+    } catch (e) {
+      _setFree();
+      print("from auth provider");
+      print(e);
+    }
+  }
+
+  Future<void> addUserDetails(User user, String password) async {
+    try {
+      _setBusy();
+      await _authService.updateUser(user, password);
+      await _userService.addUsername(user);
+      _setFree();
+    } catch (e) {
+      _setFree();
+      print(e);
+      throw e;
+    }
+  }
+
+  _setBusy() {
+    _isLoading = true;
+    notifyListeners();
+  }
+
+  _setFree() {
+    _isLoading = false;
+    notifyListeners();
+  }
+}

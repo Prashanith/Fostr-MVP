@@ -3,5 +3,8 @@ class Routes {
   //onboarding
   static const splash = "/splash";
   static const singup = "/signup";
-  static const signin = "/signin";
+  static const login = "/login";
+  static const userChoice = "/userChoice";
+  static const otpVerification = "/otpVerification";
+  static const addDetails = "/addDetails";
 }

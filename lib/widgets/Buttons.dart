@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fostr/utils/theme.dart';
 
-class PrimaryButton extends StatelessWidget with FostrTheme {
+class PrimaryButton extends StatefulWidget {
   final String text;
   final VoidCallback onTap;
 
@@ -9,11 +9,30 @@ class PrimaryButton extends StatelessWidget with FostrTheme {
       : super(key: key);
 
   @override
+  State<PrimaryButton> createState() => _PrimaryButtonState();
+}
+
+class _PrimaryButtonState extends State<PrimaryButton> with FostrTheme {
+  double scale = 1;
+
+  @override
   Widget build(BuildContext context) {
-    return InkWell(
-      splashColor: Colors.white,
-      onTap: onTap,
-      child: Container(
+    return GestureDetector(
+      onTapDown: (e) {
+        setState(() {
+          scale = 0.8;
+        });
+      },
+      onTapUp: (e) {
+        setState(() {
+          scale = 1;
+        });
+      },
+      onTap: widget.onTap,
+      child: AnimatedContainer(
+        transformAlignment: Alignment.center,
+        transform: Transform.scale(scale: scale).transform,
+        duration: Duration(milliseconds: 200),
         alignment: Alignment.center,
         width: 330,
         height: 70,
@@ -22,7 +41,7 @@ class PrimaryButton extends StatelessWidget with FostrTheme {
           gradient: primaryButton,
         ),
         child: Text(
-          text,
+          widget.text,
           style: actionTextStyle,
         ),
       ),
