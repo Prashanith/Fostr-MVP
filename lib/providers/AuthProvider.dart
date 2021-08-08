@@ -147,4 +147,8 @@ class AuthProvider with ChangeNotifier {
     _isLoading = false;
     notifyListeners();
   }
+
+  signOut() {
+    _authService.signOut();
+  }
 }
