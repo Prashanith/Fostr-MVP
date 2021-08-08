@@ -5,7 +5,7 @@ import 'package:fostr/providers/IndexProvider.dart';
 import 'package:fostr/router/router.dart';
 import 'package:fostr/services/Locators.dart';
 import 'package:fostr/utils/theme.dart';
-import 'widgets/user/OngoingRoomCard.dart';
+import 'widgets/rooms/OngoingRoomCard.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

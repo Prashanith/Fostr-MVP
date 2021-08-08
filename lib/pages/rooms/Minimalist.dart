@@ -151,7 +151,7 @@ class _MinimalistState extends State<Minimalist> {
               onPressed: () => Navigator.pop(context),
             ),
             Text(
-              widget.room.dateTime.toString(),
+              widget.room.title.toString(),
               style: TextStyle(color: Colors.black, fontSize: 15),
             ),
             Spacer(),

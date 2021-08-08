@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fostr/models/RoomModel.dart';
 import 'package:fostr/pages/onboarding/AddDetails.dart';
 import 'package:fostr/pages/onboarding/LoginPage.dart';
 import 'package:fostr/pages/onboarding/OtpVerification.dart';
@@ -11,6 +12,7 @@ import 'package:fostr/pages/quiz/BookSuggestionPage.dart';
 import 'package:fostr/pages/quiz/Quiz.dart';
 import 'package:fostr/pages/quiz/QuizIntro.dart';
 import 'package:fostr/pages/quiz/QuizPage.dart';
+import 'package:fostr/pages/rooms/SelectTheme.dart';
 import 'package:fostr/router/routes.dart';
 
 class FostrRouter {
@@ -72,6 +74,9 @@ class FostrRouter {
 
       case Routes.bookClubSuggetion:
         return BookSuggestionPage();
+
+      case Routes.theme:
+        return SelectTheme(room: Room());
 
       default:
         return Material(

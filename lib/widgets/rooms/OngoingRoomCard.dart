@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fostr/core/constants.dart';
+import 'package:fostr/models/RoomModel.dart';
 import 'package:fostr/utils/theme.dart';
 
-import 'BookmarkContainer.dart';
+import '../user/BookmarkContainer.dart';
 class OngoingRoomCard extends StatelessWidget with FostrTheme {
-  OngoingRoomCard({
-    Key? key,
-  }) : super(key: key);
+  final Room room;
+
+  OngoingRoomCard({Key? key, required this.room}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +59,7 @@ class OngoingRoomCard extends StatelessWidget with FostrTheme {
                               width: 8,
                             ),
                             Text(
-                              "250",
+                              room.participantsCount.toString(),
                               style: h2.copyWith(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
@@ -75,7 +76,7 @@ class OngoingRoomCard extends StatelessWidget with FostrTheme {
                               width: 8,
                             ),
                             Text(
-                              "5",
+                              room.speakersCount.toString(),
                               style: h2.copyWith(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
@@ -100,7 +101,7 @@ class OngoingRoomCard extends StatelessWidget with FostrTheme {
                 ),
                 Spacer(),
                 Text(
-                  "Autobiography of a Yogi",
+                  room.title.toString(),
                   style: h2.copyWith(
                       color: Colors.white, fontWeight: FontWeight.w700),
                 ),

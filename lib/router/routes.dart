@@ -17,4 +17,7 @@ class Routes {
   static const quiz = "/quiz";
   static const analyzingPage = "/analyzingPage";
   static const bookClubSuggetion = "/bookClubSuggetion";
+
+  //room
+  static const theme = "/theme";
 }
