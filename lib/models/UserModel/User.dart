@@ -1,17 +1,20 @@
 import 'package:fostr/core/constants.dart';
 import 'package:json_annotation/json_annotation.dart';
 
+import 'UserProfile.dart';
+
 part 'User.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class User {
   final String id;
-  final String name;
-  final String userName;
-  final UserType userType;
-  final DateTime createdOn;
-  final DateTime lastLogin;
-  final int invites;
+  String name;
+  String userName;
+  UserType userType;
+  DateTime createdOn;
+  DateTime lastLogin;
+  int invites;
+  UserProfile? userProfile;
 
   User({
     required this.id,
@@ -20,7 +23,8 @@ class User {
     required this.userType,
     required this.createdOn,
     required this.lastLogin,
-    required this.invites,
+    this.invites = 10,
+    this.userProfile,
   });
 
   Map<String, dynamic> toJson() => _$UserToJson(this);

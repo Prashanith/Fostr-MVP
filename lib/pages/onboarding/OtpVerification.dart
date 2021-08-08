@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:fostr/core/constants.dart';
+import 'package:fostr/pages/user/profile.dart';
 import 'package:fostr/providers/AuthProvider.dart';
 import 'package:fostr/router/router.dart';
 import 'package:fostr/router/routes.dart';
@@ -93,7 +94,10 @@ class _OtpVerificationState extends State<OtpVerification> with FostrTheme {
                       if (auth.user!.createdOn == auth.user!.lastLogin) {
                         FostrRouter.goto(context, Routes.addDetails);
                       } else {
-                        print("done");
+                        if (auth.userType == UserType.USER) {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (_) => UserProfilePage()));
+                        }
                       }
                     } catch (e) {
                       handleError(e);

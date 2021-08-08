@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fostr/pages/onboarding/AddDetails.dart';
 import 'package:fostr/pages/onboarding/LoginPage.dart';
+import 'package:fostr/pages/onboarding/Onboardingpage.dart';
 import 'package:fostr/pages/onboarding/OtpVerification.dart';
 import 'package:fostr/pages/onboarding/SignupPage.dart';
 import 'package:fostr/pages/onboarding/SplashScreen.dart';
@@ -38,7 +39,7 @@ class FostrRouter {
   static Widget _generateView(RouteSettings settings) {
     switch (settings.name) {
       case Routes.entry:
-        return SplashScreen();
+        return OnboardingPage();
 
       case Routes.splash:
         return SplashScreen();
