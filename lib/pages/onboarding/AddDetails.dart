@@ -10,6 +10,7 @@ import 'package:fostr/utils/Helpers.dart';
 import 'package:fostr/utils/theme.dart';
 import 'package:fostr/widgets/Buttons.dart';
 import 'package:fostr/widgets/InputField.dart';
+import 'package:fostr/widgets/Loader.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
@@ -36,85 +37,93 @@ class _AddDetailsState extends State<AddDetails> with FostrTheme {
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthProvider>(context);
     return Layout(
-      child: Padding(
-        padding: paddingH,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            SizedBox(
-              height: 140,
-            ),
-            Container(
-              alignment: Alignment.center,
-              width: double.infinity,
-              child: Text("Details", style: h1),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Text(
-              "Please enter your details",
-              style: h2,
-            ),
-            SizedBox(
-              height: 90,
-            ),
-            Form(
-              key: nameForm,
-              child: InputField(
-                onChange: checkUsername,
-                controller: usernameController,
-                validator: (value) {
-                  if (value!.isNotEmpty) {
-                    if (!Validator.isUsername(value)) {
-                      return "Username is not valid";
-                    }
-                    if (isExists) {
-                      return "Username already exists";
-                    }
-                  } else {
-                    return "Enter a user name";
-                  }
-                },
-                // controller: _controller,
-                hintText: "Username",
-                keyboardType: TextInputType.text,
-              ),
-            ),
-            Spacer(),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 111),
-              child: PrimaryButton(
-                text: "Save",
-                onTap: () async {
-                  await checkUsername();
-                  if (nameForm.currentState!.validate()) {
-                    var user = auth.user!;
-                    var newUser = User(
-                        id: user.id,
-                        name: "",
-                        userName: usernameController.text.trim().toLowerCase(),
-                        userType: user.userType,
-                        createdOn: user.createdOn,
-                        lastLogin: user.lastLogin,
-                        invites: user.invites);
-
-                    auth.addUserDetails(newUser).then((value) {
-                      print("done");
-                      if (user.lastLogin == user.createdOn &&
-                          user.userType == UserType.USER) {
-                        FostrRouter.removeUntillAndGoto(
-                            context, Routes.quizPage, (route) => route.isFirst);
+      child: Stack(
+        children: [
+          Padding(
+            padding: paddingH,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(
+                  height: 140,
+                ),
+                Container(
+                  alignment: Alignment.center,
+                  width: double.infinity,
+                  child: Text("Details", style: h1),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  "Please enter your details",
+                  style: h2,
+                ),
+                SizedBox(
+                  height: 90,
+                ),
+                Form(
+                  key: nameForm,
+                  child: InputField(
+                    onChange: checkUsername,
+                    controller: usernameController,
+                    validator: (value) {
+                      if (value!.isNotEmpty) {
+                        if (!Validator.isUsername(value)) {
+                          return "Username is not valid";
+                        }
+                        if (isExists) {
+                          return "Username already exists";
+                        }
+                      } else {
+                        return "Enter a user name";
                       }
-                    }).catchError((e) {
-                      print(e);
-                    });
-                  }
-                },
-              ),
+                    },
+                    // controller: _controller,
+                    hintText: "Username",
+                    keyboardType: TextInputType.text,
+                  ),
+                ),
+                Spacer(),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 111),
+                  child: PrimaryButton(
+                    text: "Save",
+                    onTap: () async {
+                      await checkUsername();
+                      if (nameForm.currentState!.validate()) {
+                        var user = auth.user!;
+                        var newUser = User(
+                            id: user.id,
+                            name: "",
+                            userName:
+                                usernameController.text.trim().toLowerCase(),
+                            userType: user.userType,
+                            createdOn: user.createdOn,
+                            lastLogin: user.lastLogin,
+                            invites: user.invites);
+
+                        auth.addUserDetails(newUser).then((value) {
+                          print("done");
+                          if (user.lastLogin == user.createdOn &&
+                              user.userType == UserType.USER) {
+                            FostrRouter.removeUntillAndGoto(context,
+                                Routes.quizPage, (route) => route.isFirst);
+                          }
+                        }).catchError((e) {
+                          print(e);
+                        });
+                      }
+                    },
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+          Loader(
+            isLoading: auth.isLoading,
+          )
+        ],
       ),
     );
   }

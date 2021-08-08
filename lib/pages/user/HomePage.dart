@@ -5,6 +5,7 @@ import 'package:fostr/core/functions.dart';
 import 'package:fostr/core/settings.dart';
 import 'package:fostr/models/RoomModel.dart';
 import 'package:fostr/pages/rooms/Minimalist.dart';
+import 'package:fostr/pages/user/SearchPage.dart';
 import 'package:fostr/pages/user/profile.dart';
 
 import 'package:fostr/utils/theme.dart';
@@ -25,7 +26,7 @@ class _OngoingRoomState extends State<OngoingRoom> with FostrTheme {
 
   final List<Widget> _children = [
     HomePage(),
-    Container(),
+    SearchPage(),
     Container(),
     UserProfilePage(),
   ];

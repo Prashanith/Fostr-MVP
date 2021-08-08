@@ -15,6 +15,8 @@ class User {
   DateTime lastLogin;
   int invites;
   UserProfile? userProfile;
+  List<String>? followers = [];
+  List<String>? followings = [];
 
   User({
     required this.id,

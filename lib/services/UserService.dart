@@ -88,4 +88,45 @@ class UserService {
       throw e;
     }
   }
+
+  Future<List<Map<String, dynamic>>> searchUser(String query) async {
+    try {
+      var rawRes = await _userCollection
+          .where("userName", isGreaterThanOrEqualTo: query)
+          .where("userName", isLessThan: query + 'z')
+          .get();
+      var res = rawRes.docs.map(
+        (e) {
+          print(e);
+          return e.data();
+        },
+      ).toList();
+      return res;
+    } catch (e) {
+      print(e);
+      throw e;
+    }
+  }
+
+  Future<void> followUser(User currentUser, User userToFollow) async {
+    try {
+      var newFollowings = currentUser.followings ?? [];
+      if (!newFollowings.contains(userToFollow.id)) {
+        var json = currentUser.toJson();
+        json['followings'] = newFollowings;
+        await updateUserField(json);
+      }
+
+      var newjson = userToFollow.toJson();
+      var followers = newjson['followers'] ?? [];
+      if (!followers.contains(currentUser.id)) {
+        followers.add(currentUser.id);
+        newjson['followers'] = followers;
+        await updateUserField(newjson);
+      }
+    } catch (e) {
+      print(e);
+      throw e;
+    }
+  }
 }

@@ -22,6 +22,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthProvider>(context);
 
+    print(auth.logedIn);
     if (!auth.isLoading) {
       if (auth.logedIn) {
         if (auth.userType == UserType.CLUBOWNER) {
