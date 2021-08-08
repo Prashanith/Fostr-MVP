@@ -44,6 +44,7 @@ dependencies:
   google_fonts: ^2.1.0
   google_nav_bar: ^5.0.5
   google_sign_in: ^5.0.5
+  intl: ^0.17.0
   json_annotation: ^4.0.0
   line_icons: ^2.0.1
   permission_handler: ^8.1.4+2

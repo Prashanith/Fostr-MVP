@@ -13,7 +13,6 @@ import 'package:fostr/pages/quiz/BookSuggestionPage.dart';
 import 'package:fostr/pages/quiz/Quiz.dart';
 import 'package:fostr/pages/quiz/QuizIntro.dart';
 import 'package:fostr/pages/quiz/QuizPage.dart';
-import 'package:fostr/pages/rooms/SelectTheme.dart';
 import 'package:fostr/pages/user/HomePage.dart';
 import 'package:fostr/router/routes.dart';
 
@@ -76,9 +75,6 @@ class FostrRouter {
 
       case Routes.bookClubSuggetion:
         return BookSuggestionPage();
-
-      case Routes.theme:
-        return SelectTheme(room: Room());
 
       case Routes.ongoingRoom:
         return OngoingRoom();

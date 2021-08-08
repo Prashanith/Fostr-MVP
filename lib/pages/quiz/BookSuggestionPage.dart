@@ -96,7 +96,9 @@ class _BookSuggestionPageState extends State<BookSuggestionPage>
                             ),
                             PrimaryButton(
                               text: "Explore Clubs",
-                              onTap: () {},
+                              onTap: () {
+                                FostrRouter.removeUntillAndGoto(context, Routes.ongoingRoom, (route) => false);
+                              },
                               width: 150,
                             ),
                           ],

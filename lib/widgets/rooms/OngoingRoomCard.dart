@@ -81,7 +81,7 @@ class OngoingRoomCard extends StatelessWidget with FostrTheme {
                   height: 5,
                 ),
                 Text(
-                  "by Indian Book Club",
+                  "by Book Club Name",
                   style: TextStyle(
                     color: Color(0xffffffff),
                     fontSize: 11,
@@ -98,8 +98,15 @@ class OngoingRoomCard extends StatelessWidget with FostrTheme {
                   height: 5,
                 ),
                 Text(
-                  "Autobiography of a Yogi is an autobiography of Paramahansa Yogananda. Paramahansa Yogananda was born as Mukunda Lal Ghosh in Gorakhpur, India, into a Bengali Hindu family.",
-                  style: TextStyle(fontSize: 10, color: Colors.white),
+                  room.agenda.toString(),
+                  style: TextStyle(fontSize: 12, color: Colors.white, overflow: TextOverflow.ellipsis),
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                Text(
+                  "Happening at: " + room.dateTime.toString(),
+                  style: TextStyle(fontSize: 15, color: Colors.white, overflow: TextOverflow.ellipsis),
                 )
               ],
             ),
