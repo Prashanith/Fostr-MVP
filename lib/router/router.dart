@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fostr/models/RoomModel.dart';
 import 'package:fostr/pages/onboarding/AddDetails.dart';
 import 'package:fostr/pages/onboarding/LoginPage.dart';
+import 'package:fostr/pages/onboarding/Onboardingpage.dart';
 import 'package:fostr/pages/onboarding/OtpVerification.dart';
 import 'package:fostr/pages/onboarding/SignupPage.dart';
 import 'package:fostr/pages/onboarding/SplashScreen.dart';
@@ -13,6 +14,7 @@ import 'package:fostr/pages/quiz/Quiz.dart';
 import 'package:fostr/pages/quiz/QuizIntro.dart';
 import 'package:fostr/pages/quiz/QuizPage.dart';
 import 'package:fostr/pages/rooms/SelectTheme.dart';
+import 'package:fostr/pages/user/HomePage.dart';
 import 'package:fostr/router/routes.dart';
 
 class FostrRouter {
@@ -40,7 +42,7 @@ class FostrRouter {
   static Widget _generateView(RouteSettings settings) {
     switch (settings.name) {
       case Routes.entry:
-        return SplashScreen();
+        return OnboardingPage();
 
       case Routes.splash:
         return SplashScreen();
@@ -77,6 +79,9 @@ class FostrRouter {
 
       case Routes.theme:
         return SelectTheme(room: Room());
+
+      case Routes.ongoingRoom:
+        return OngoingRoom();
 
       default:
         return Material(

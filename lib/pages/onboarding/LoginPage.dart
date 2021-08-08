@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:developer';
-
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:fostr/core/constants.dart';
 import 'package:fostr/widgets/Layout.dart';
 import 'package:fostr/providers/AuthProvider.dart';
 import 'package:fostr/router/router.dart';
@@ -196,7 +196,13 @@ class _LoginPageState extends State<LoginPage> with FostrTheme {
                                 passwordController.text.trim(),
                                 auth.userType!,
                               );
-                              print("done");
+                              if (auth.userType == UserType.USER) {
+                                FostrRouter.removeUntillAndGoto(
+                                    context,
+                                    Routes.ongoingRoom,
+                                    (route) =>
+                                        route.settings.name == Routes.entry);
+                              }
                             } catch (e) {
                               handleError(e);
                             }

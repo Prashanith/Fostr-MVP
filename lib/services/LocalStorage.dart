@@ -18,4 +18,11 @@ class LocalStorage {
     _prefs!.setBool(FIRST_OPEN, firstOpen);
     _prefs!.setBool(LOGGED_IN, loggedIn);
   }
+
+  setLoggedOut() {
+    firstOpen = false;
+    loggedIn = false;
+    _prefs!.setBool(FIRST_OPEN, firstOpen);
+    _prefs!.setBool(LOGGED_IN, loggedIn);
+  }
 }

@@ -70,6 +70,7 @@ class AuthProvider with ChangeNotifier {
     try {
       _setBusy();
       _user = await _authService.verifyOTP(context, otp, userType);
+      _localStorage.setLoggedIn();
       _setFree();
     } catch (e) {
       _setFree();
@@ -148,7 +149,9 @@ class AuthProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  signOut() {
-    _authService.signOut();
+  signOut() async {
+    await _authService.signOut();
+    _setFree();
+    notifyListeners();
   }
 }

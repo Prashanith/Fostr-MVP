@@ -42,62 +42,51 @@ class OngoingRoomCard extends StatelessWidget with FostrTheme {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            SvgPicture.asset(
-                              ICONS + "people.svg",
-                              height: 20,
-                            ),
-                            SizedBox(
-                              width: 8,
-                            ),
-                            Text(
-                              room.participantsCount.toString(),
-                              style: h2.copyWith(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            SizedBox(
-                              width: 25,
-                            ),
-                            SvgPicture.asset(
-                              ICONS + "mic.svg",
-                              height: 20,
-                            ),
-                            SizedBox(
-                              width: 8,
-                            ),
-                            Text(
-                              room.speakersCount.toString(),
-                              style: h2.copyWith(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          "by Indian Book Club",
-                          style: TextStyle(
-                            color: Color(0xffffffff),
-                            fontSize: 11,
-                            fontFamily: "Lato",
-                          ),
-                        )
-                      ],
+                    SvgPicture.asset(
+                      ICONS + "people.svg",
+                      height: 20,
+                    ),
+                    SizedBox(
+                      width: 8,
+                    ),
+                    Text(
+                      room.participantsCount.toString(),
+                      style: h2.copyWith(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(
+                      width: 25,
+                    ),
+                    SvgPicture.asset(
+                      ICONS + "mic.svg",
+                      height: 20,
+                    ),
+                    SizedBox(
+                      width: 8,
+                    ),
+                    Text(
+                      room.speakersCount.toString(),
+                      style: h2.copyWith(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ],
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                Text(
+                  "by Indian Book Club",
+                  style: TextStyle(
+                    color: Color(0xffffffff),
+                    fontSize: 11,
+                    fontFamily: "Lato",
+                  ),
                 ),
                 Spacer(),
                 Text(
