@@ -103,7 +103,7 @@ class AuthProvider with ChangeNotifier {
       return _user;
     } catch (e) {
       _setFree();
-      print("from auth provider");
+      print("from auth provider"+e.toString());
       print(e);
       throw e;
     }
