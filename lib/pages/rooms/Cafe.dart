@@ -1,23 +1,28 @@
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:fostr/core/constants.dart';
 import 'package:fostr/core/data.dart';
 import 'package:fostr/core/settings.dart';
 import 'package:fostr/models/RoomModel.dart';
 import 'package:fostr/models/UserModel/Old.dart';
+import 'package:fostr/providers/AuthProvider.dart';
+import 'package:fostr/utils/theme.dart';
 import 'package:fostr/widgets/UserProfile.dart';
+import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-class Minimalist extends StatefulWidget {
+class Cafe extends StatefulWidget {
   final Room room;
   final ClientRole role;
-  const Minimalist({Key? key, required this.room, required this.role}) : super(key: key);
+  const Cafe({Key? key, required this.room, required this.role}) : super(key: key);
 
   @override
-  _MinimalistState createState() => _MinimalistState();
+  State<Cafe> createState() => _CafeState();
 }
 
-class _MinimalistState extends State<Minimalist> {
+class _CafeState extends State<Cafe> with FostrTheme {
   int speakersCount = 0, participantsCount = 0;
   RefreshController _refreshController = RefreshController(
     initialRefresh: false,
@@ -43,6 +48,17 @@ class _MinimalistState extends State<Minimalist> {
     super.dispose();
   }
 
+  initRoom() async {
+    // get the details of room
+    roomCollection.doc(widget.room.dateTime).snapshots().listen((result) {
+      print(result.data()!['speakersCount']);
+      setState(() {
+        participantsCount = result.data()!['participantsCount'];
+        speakersCount = result.data()!['speakersCount'];
+      });
+    });
+  }
+  
   removeUser() async {
     if (widget.role == ClientRole.Broadcaster) {
       // update the list of speakers
@@ -138,42 +154,75 @@ class _MinimalistState extends State<Minimalist> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color(0xffe9ffee),
-        toolbarHeight: 150,
-        automaticallyImplyLeading: false,
-        title: Row(
-          children: [
-            IconButton(
-              iconSize: 30,
-              icon: Icon(Icons.keyboard_arrow_down),
-              onPressed: () => Navigator.pop(context),
-            ),
-            Text(
-              widget.room.title.toString(),
-              style: TextStyle(color: Colors.black, fontSize: 15),
-            ),
-            Spacer(),
-            GestureDetector(
-              onTap: () => Navigator.of(context)
-                  .pushNamed('/profile', arguments: myProfile),
-              child: Container(
+    final auth = Provider.of<AuthProvider>(context);
+    final user = auth.user!;
+    return Material(
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment(-0.6, -1),
+            end: Alignment(1, 0.6),
+            colors: [
+              Color.fromRGBO(148, 181, 172, 1),
+              Color.fromRGBO(229, 229, 229, 1),
+            ],
+          ),
+        ),
+        child: SafeArea(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: paddingH + const EdgeInsets.only(top: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SvgPicture.asset(ICONS + "menu.svg"),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Text(
+                      "Hello, ${user.name}",
+                      style: h1.apply(color: Colors.white),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
                 height: 40,
-                width: 40,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(40),
-                  image: DecorationImage(
-                    image: NetworkImage(myProfile.profileImage),
-                    fit: BoxFit.cover,
+              ),
+              Expanded(
+                child: Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadiusDirectional.only(
+                      topStart: Radius.circular(32),
+                      topEnd: Radius.circular(32),
+                    ),
+                    color: Colors.white,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            "${widget.room.title}",
+                            style: h1,
+                          ),
+                        ),
+                      ),
+                      Expanded(child: body())
+                    ],
                   ),
                 ),
-              )
-            ),
-          ],
+              ),
+            ],
+          ),
         ),
       ),
-      body: body(),
     );
   }
 
@@ -186,7 +235,7 @@ class _MinimalistState extends State<Minimalist> {
       ),
       decoration: BoxDecoration(
         image: new DecorationImage(
-          image: new AssetImage("assets/images/minimalist-main.png"),
+          image: new AssetImage("assets/images/cafe-main.png"),
           fit: BoxFit.fill,
         ),
         borderRadius: BorderRadius.only(
@@ -199,7 +248,7 @@ class _MinimalistState extends State<Minimalist> {
           // list of speakers
           StreamBuilder(
               stream: roomCollection
-                  .doc(widget.room.dateTime)
+                  .doc(widget.room.title)
                   .collection('speakers')
                   .snapshots(),
               builder: (BuildContext context,
@@ -212,11 +261,14 @@ class _MinimalistState extends State<Minimalist> {
                     itemCount: map.length,
                     padding: EdgeInsets.all(2.0),
                     itemBuilder: (BuildContext context, int index) {
-                      return UserProfile(
-                          user: OldUser.fromJson(map[index]),
-                          size: 50,
-                          isMute: false,
-                          isSpeaker: true);
+                      return Container(
+                        color: Colors.red,
+                        child: UserProfile(
+                            user: OldUser.fromJson(map[index]),
+                            size: 50,
+                            isMute: false,
+                            isSpeaker: true),
+                      );
                     },
                   );
                 } else {
@@ -280,80 +332,6 @@ class _MinimalistState extends State<Minimalist> {
     );
   }
 
-  Widget title(String title) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Flexible(
-          child: Text(
-            title,
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-        Container(
-          child: IconButton(
-            onPressed: () {},
-            iconSize: 30,
-            icon: Icon(Icons.more_horiz),
-          ),
-        ),
-      ],
-    );
-  }
-
-  // Widget speakers(List<UserModel> users) {
-  //   return GridView.builder(
-  //     shrinkWrap: true,
-  //     physics: ScrollPhysics(),
-  //     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-  //       crossAxisCount: 3,
-  //     ),
-  //     itemCount: users.length,
-  //     itemBuilder: (gc, index) {
-  //       return UserProfile(
-  //         user: users[index],
-  //         isSpeaker: index == 0,
-  //         isMute: false,
-  //         size: 50,
-  //       );
-  //     },
-  //   );
-  // }
-
-  // Widget others(List<UserModel> users) {
-  //   return Column(
-  //     crossAxisAlignment: CrossAxisAlignment.start,
-  //     children: [
-  //       Padding(
-  //         padding: const EdgeInsets.all(16),
-  //         child: Text(
-  //           'Others in the room',
-  //           style: TextStyle(
-  //             fontWeight: FontWeight.bold,
-  //             fontSize: 15,
-  //             color: Colors.grey.withOpacity(0.6),
-  //           ),
-  //         ),
-  //       ),
-  //       GridView.builder(
-  //         shrinkWrap: true,
-  //         physics: ScrollPhysics(),
-  //         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-  //           crossAxisCount: 3,
-  //         ),
-  //         itemCount: users.length,
-  //         itemBuilder: (gc, index) {
-  //           return UserProfile(user: users[index], size: 50, isMute: false);
-  //         },
-  //       ),
-  //     ],
-  //   );
-  // }
-
   Widget bottom(BuildContext context) {
     return Align(
       alignment: Alignment.bottomCenter,
@@ -364,13 +342,13 @@ class _MinimalistState extends State<Minimalist> {
               Navigator.pop(context);
             },
             style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all(Color(0xffE8FCD9)),
               shape: MaterialStateProperty.all<OutlinedBorder>(
                 RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30),
                 ),
               ),
             ),
-            // color: Color(0xffE8FCD9),
             child: Text(
               'Leave room',
               style: TextStyle(
@@ -399,14 +377,4 @@ class _MinimalistState extends State<Minimalist> {
     );
   }
 
-  initRoom() async {
-    // get the details of room
-    roomCollection.doc(widget.room.dateTime).snapshots().listen((result) {
-      print(result.data()!['speakersCount']);
-      setState(() {
-        participantsCount = result.data()!['participantsCount'];
-        speakersCount = result.data()!['speakersCount'];
-      });
-    });
-  }
 }

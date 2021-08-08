@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fostr/core/constants.dart';
+import 'package:fostr/pages/clubOwner/dashboard.dart';
 import 'package:fostr/pages/user/profile.dart';
 import 'package:fostr/providers/AuthProvider.dart';
 import 'package:fostr/router/router.dart';
@@ -100,6 +102,11 @@ class _OtpVerificationState extends State<OtpVerification> with FostrTheme {
                             if (auth.userType == UserType.USER) {
                               FostrRouter.removeUntillAndGoto(context,
                                   Routes.ongoingRoom, (route) => false);
+                            }else if(auth.userType == UserType.CLUBOWNER){
+                               Navigator.of(context).pushAndRemoveUntil(
+                                        CupertinoPageRoute(
+                                            builder: (_) => Dashboard()),
+                                        (route) => false);
                             }
                           }
                         } catch (e) {

@@ -1,17 +1,28 @@
+
 import 'package:agora_rtc_engine/rtc_engine.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:fostr/core/constants.dart';
 import 'package:fostr/core/data.dart';
 import 'package:fostr/core/functions.dart';
 import 'package:fostr/core/settings.dart';
 import 'package:fostr/models/RoomModel.dart';
 import 'package:fostr/pages/rooms/Minimalist.dart';
-import 'package:fostr/pages/user/SearchPage.dart';
+import 'package:fostr/pages/rooms/ThemePage.dart';
 import 'package:fostr/pages/user/profile.dart';
-
+import 'package:fostr/providers/AuthProvider.dart';
 import 'package:fostr/utils/theme.dart';
-import 'package:fostr/widgets/user/OngoingRoomCard.dart';
+import 'package:fostr/widgets/rooms/OngoingRoomCard.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:intl/intl.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
+
+import 'SearchPage.dart';
 
 class OngoingRoom extends StatefulWidget {
   const OngoingRoom({Key? key}) : super(key: key);
@@ -96,9 +107,45 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> with FostrTheme {
+  String now = DateFormat('yyyy-MM-dd').format(DateTime.now()) + " " + DateFormat.Hm().format(DateTime.now());
   TextEditingController _textFieldController = TextEditingController();
+  RefreshController _refreshController = RefreshController(
+    initialRefresh: false,
+  );
+
+  @override
+  void initState() {
+    askPermission();
+    super.initState();
+  }
+
+  askPermission() async {
+    await Permission.microphone.request();
+    await Permission.storage.request();
+  }
+
+  /// Method for refreshing list
+
+  void _onRefresh() async {
+    await Future.delayed(
+      Duration(milliseconds: 1000),
+    );
+    _refreshController.refreshCompleted();
+  }
+
+  /// Method for loading list
+
+  void _onLoading() async {
+    await Future.delayed(
+      Duration(milliseconds: 1000),
+    );
+    _refreshController.loadComplete();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final auth = Provider.of<AuthProvider>(context);
+    final user = auth.user!;
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -121,13 +168,12 @@ class _HomePageState extends State<HomePage> with FostrTheme {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // SvgPicture.asset(ICONS + "menu.svg"),
-                      // SizedBox(
-                      //   height: 30,
-                      // ),
+                      SvgPicture.asset(ICONS + "menu.svg"),
+                      SizedBox(
+                        height: 20,
+                      ),
                       Text(
-                        // "Hello, ${user.name} James",
-                        "Hello,  James",
+                        "Hello, ${user.name}",
                         style: h1.apply(color: Colors.white),
                       ),
                     ],
@@ -151,13 +197,40 @@ class _HomePageState extends State<HomePage> with FostrTheme {
                       child: ListView(
                         physics: BouncingScrollPhysics(),
                         children: [
-                          OngoingRoomCard(),
-                          OngoingRoomCard(),
-                          OngoingRoomCard(),
-                          OngoingRoomCard(),
-                          OngoingRoomCard(),
-                          OngoingRoomCard(),
-                          OngoingRoomCard(),
+                          StreamBuilder<QuerySnapshot>(
+                            stream: roomCollection.snapshots(),
+                            builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                              // Handling errors from firebase
+                              if (snapshot.hasError)
+                                return Center(child: Text('Error: ${snapshot.error}'));
+
+                              if (snapshot.hasData && snapshot.data!.docs.length == 0)
+                                return Center(child: Text('No Ongoing Rooms Yet'));
+
+                              return snapshot.hasData
+                                ? SizedBox(
+                                  height: MediaQuery.of(context).size.height,
+                                  child: SmartRefresher(
+                                      enablePullDown: true,
+                                      controller: _refreshController,
+                                      onRefresh: _onRefresh,
+                                      onLoading: _onLoading,
+                                      child: ListView(
+                                        children: snapshot.data!.docs.map((DocumentSnapshot document) {
+                                          return GestureDetector(
+                                            onTap: () async {
+                                              Navigator.push(context, CupertinoPageRoute(builder: (BuildContext context) => ThemePage(room: Room.fromJson(document))));
+                                            },
+                                            child: OngoingRoomCard(room: Room.fromJson(document))
+                                          );
+                                        }).toList(),
+                                      ),
+                                    ),
+                                )
+                                // Display if still loading data
+                                : Center(child: CircularProgressIndicator());
+                            },
+                          ),
                         ],
                       ),
                     ),
@@ -243,6 +316,9 @@ class _HomePageState extends State<HomePage> with FostrTheme {
       'title': '$channelName',
       'roomCreator': profileData['username'],
       'token': roomToken.toString(),
+      'agenda': '',
+      'dateTime': '$now',
+      'image': ''
     });
     await roomCollection
         .doc(channelName)
@@ -259,7 +335,6 @@ class _HomePageState extends State<HomePage> with FostrTheme {
           builder: (context) => Minimalist(
             room: Room(
               title: '$channelName',
-              // users: [myProfile],
               participantsCount: 1,
               roomCreator: profileData['username'],
               speakersCount: 1,

@@ -1,9 +1,18 @@
+import 'package:agora_rtc_engine/rtc_engine.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fostr/core/data.dart';
+import 'package:fostr/core/settings.dart';
+import 'package:fostr/models/RoomModel.dart';
+import 'package:fostr/pages/rooms/Cafe.dart';
+import 'package:fostr/pages/rooms/Library.dart';
+import 'package:fostr/pages/rooms/Minimal.dart';
+import 'package:fostr/pages/rooms/Minimalist.dart';
 import 'package:fostr/utils/theme.dart';
 
 class SelectTheme extends StatefulWidget {
-  // final Room room;
-  // SelectTheme({this.room});
+  final Room room;
+  SelectTheme({required this.room});
 
   @override
   _SelectThemeState createState() => _SelectThemeState();
@@ -13,19 +22,18 @@ class _SelectThemeState extends State<SelectTheme> {
   String roomTheme = "Minimalist", userKind = "participant";
   String img = "minimalistbg.png";
   int speakersCount = 0, participantsCount = 0;
-  // ClientRole role = ClientRole.Audience;
+  ClientRole role = ClientRole.Audience;
   bool isLoading = false;
   String msg = 'Participants can only listen :)';
 
   @override
   void initState() {
-    // initRoom();
+    initRoom();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    // SizeConfig().init(context);
     return Material(
       child: Container(
         decoration: BoxDecoration(
@@ -33,6 +41,10 @@ class _SelectThemeState extends State<SelectTheme> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [gradientTop, gradientBottom]
+          ),
+          borderRadius: BorderRadius.only(
+            topRight: Radius.circular(40),
+            topLeft: Radius.circular(40),
           ),
         ),
         child: ListView(
@@ -154,7 +166,7 @@ class _SelectThemeState extends State<SelectTheme> {
             ),
             Container(
               width: MediaQuery.of(context).size.width,
-              padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.height*5),
+              padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.height*0.02),
               decoration: BoxDecoration(
                 color: Colors.white,
                 image: new DecorationImage(
@@ -162,8 +174,8 @@ class _SelectThemeState extends State<SelectTheme> {
                   fit: BoxFit.cover, 
                 ),
                 borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(35),
-                  topLeft: Radius.circular(35),
+                  topRight: Radius.circular(40),
+                  topLeft: Radius.circular(40),
                 ),
               ),
               child: Column(
@@ -178,7 +190,7 @@ class _SelectThemeState extends State<SelectTheme> {
                         onTap: () {
                           setState(() {
                             userKind = "participant";
-                            // role = ClientRole.Audience;
+                            role = ClientRole.Audience;
                             msg = 'Participants can only listen :)';
                           });
                         },
@@ -206,7 +218,7 @@ class _SelectThemeState extends State<SelectTheme> {
                           onTap: () {
                             setState(() {
                               userKind = "speaker";
-                              // role = ClientRole.Broadcaster;
+                              role = ClientRole.Broadcaster;
                               msg = 'Only Speakers can talk :)';
                             });
                           },
@@ -261,7 +273,7 @@ class _SelectThemeState extends State<SelectTheme> {
                   isLoading
                     ? CircularProgressIndicator()
                     : GestureDetector(
-                      // onTap: () => updateRoom(),
+                      onTap: () => updateRoom(),
                       child: Container(
                         alignment: Alignment.center,
                         width: MediaQuery.of(context).size.width*0.4,
@@ -292,116 +304,77 @@ class _SelectThemeState extends State<SelectTheme> {
     );
   }
 
-  // initRoom() async {
-  //   // get the details of room
-  //   roomCollection
-  //     .doc(widget.room.dateTime)
-  //     .snapshots()
-  //     .listen((result) {
-  //       print(result.data()['speakersCount']);
-  //       setState(() {
-  //         participantsCount = result.data()['participantsCount'];
-  //         speakersCount = result.data()['speakersCount'];
-  //         token = result.data()['token'];
-  //         channelName = widget.room.dateTime;
-  //       });
-  //       print("set");
-  //     });
-  // }
+  initRoom() async {
+    // get the details of room
+    roomCollection
+      .doc(widget.room.title)
+      .snapshots()
+      .listen((result) {
+        print(result.data()!['speakersCount']);
+        setState(() {
+          participantsCount = result.data()!['participantsCount'];
+          speakersCount = result.data()!['speakersCount'];
+          token = result.data()!['token'];
+          channelName = widget.room.title!;
+        });
+        print("set");
+      });
+  }
 
-  // updateRoom() async {
-  //   setState(() {
-  //     isLoading = true;
-  //   });
+  updateRoom() async {
+    setState(() {
+      isLoading = true;
+    });
 
-  //   if(userKind == "speaker") {
-  //     // update the list of speakers
-  //     await roomCollection.doc(widget.room.dateTime).update({
-  //       'speakersCount': speakersCount + 1,
-  //     });
-  //     await roomCollection.doc(widget.room.dateTime).collection("speakers").doc(profileData['username']).set({
-  //       'username': profileData['username'],
-  //       'name': profileData['name'],
-  //       'profileImage': profileData['profileImage'],
-  //     });
-  //   } else {
-  //     // update the list of participants
-  //     await roomCollection.doc(widget.room.dateTime).update({
-  //       'participantsCount': participantsCount + 1,
-  //     });
-  //     await roomCollection.doc(widget.room.dateTime).collection("participants").doc(profileData['username']).set({
-  //       'username': profileData['username'],
-  //       'name': profileData['name'],
-  //       'profileImage': profileData['profileImage'],
-  //     });
-  //   }    
+    if(userKind == "speaker") {
+      // update the list of speakers
+      await roomCollection.doc(widget.room.title).update({
+        'speakersCount': speakersCount + 1,
+      });
+      await roomCollection.doc(widget.room.title).collection("speakers").doc(profileData['username']).set({
+        'username': profileData['username'],
+        'name': profileData['name'],
+        'profileImage': profileData['profileImage'],
+      });
+    } else {
+      // update the list of participants
+      await roomCollection.doc(widget.room.title).update({
+        'participantsCount': participantsCount + 1,
+      });
+      await roomCollection.doc(widget.room.title).collection("participants").doc(profileData['username']).set({
+        'username': profileData['username'],
+        'name': profileData['name'],
+        'profileImage': profileData['profileImage'],
+      });
+    }
 
-  //   navigateToRoom();
-  // }
+    navigateToRoom();
+  }
 
-  // navigateToRoom() {
-  //   // navigate to the room
-  //   if(roomTheme == "Minimalist") {
-  //     // showModalBottomSheet(
-  //     //   // enableDrag: false,
-  //     //   isScrollControlled: true,
-  //     //   context: context,
-  //     //   builder: (context) {
-  //     //     return RoomScreen(
-  //     //       room: widget.room,
-  //     //       // Pass user role
-  //     //       role: role,
-  //     //     );
-  //     //   },
-  //     // );
-      
-  //     Navigator.pushReplacement(context, MaterialPageRoute(
-  //       builder: (context) => RoomScreen(
-  //         room: widget.room,
-  //         role: role,
-  //       ))
-  //     );
-  //   } else if(roomTheme == "Cafe") {
-  //     // showModalBottomSheet(
-  //     //   // enableDrag: false,
-  //     //   isScrollControlled: true,
-  //     //   context: context,
-  //     //   builder: (context) {
-  //     //     return CafeRoomScreen(
-  //     //       room: widget.room,
-  //     //       // Pass user role
-  //     //       role: role,
-  //     //     );
-  //     //   },
-  //     // );
-      
-  //     Navigator.pushReplacement(context, MaterialPageRoute(
-  //       builder: (context) => CafeRoomScreen(
-  //         room: widget.room,
-  //         role: role,
-  //       ))
-  //     );
-  //   } else if(roomTheme == "Library") {
-  //     // showModalBottomSheet(
-  //     //   // enableDrag: false,
-  //     //   isScrollControlled: true,
-  //     //   context: context,
-  //     //   builder: (context) {
-  //     //     return CafeRoomScreen(
-  //     //       room: widget.room,
-  //     //       // Pass user role
-  //     //       role: role,
-  //     //     );
-  //     //   },
-  //     // );
-      
-  //     Navigator.pushReplacement(context, MaterialPageRoute(
-  //       builder: (context) => LibraryRoomScreen(
-  //         room: widget.room,
-  //         role: role,
-  //       ))
-  //     );
-  //   }
-  // }
+  navigateToRoom() {
+    // navigate to the room
+    if(roomTheme == "Minimalist") {
+      Navigator.pushReplacement(context, CupertinoPageRoute(
+        builder: (context) => Minimal(
+          room: widget.room,
+          role: role,
+        ))
+      );
+    } else if(roomTheme == "Cafe") {
+      Navigator.pushReplacement(context, CupertinoPageRoute(
+        builder: (context) => Cafe(
+          room: widget.room,
+          role: role,
+        ))
+      );
+    } else if(roomTheme == "Library") {
+      Navigator.pushReplacement(context, CupertinoPageRoute(
+        builder: (context) => Library(
+          room: widget.room,
+          role: role,
+        ))
+      );
+    }
+  }
 
 }

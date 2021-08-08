@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:developer';
 import 'package:country_code_picker/country_code_picker.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fostr/core/constants.dart';
+import 'package:fostr/pages/clubOwner/dashboard.dart';
 import 'package:fostr/widgets/Layout.dart';
 import 'package:fostr/providers/AuthProvider.dart';
 import 'package:fostr/router/router.dart';
@@ -206,6 +208,12 @@ class _LoginPageState extends State<LoginPage> with FostrTheme {
                                         (route) =>
                                             route.settings.name ==
                                             Routes.entry);
+                                  } else if (auth.userType ==
+                                      UserType.CLUBOWNER) {
+                                    Navigator.of(context).pushAndRemoveUntil(
+                                        CupertinoPageRoute(
+                                            builder: (_) => Dashboard()),
+                                        (route) => false);
                                   }
                                 } catch (e) {
                                   handleError(e);

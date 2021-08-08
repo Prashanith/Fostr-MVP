@@ -1,6 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fostr/core/constants.dart';
 import 'package:fostr/models/UserModel/User.dart';
+import 'package:fostr/pages/clubOwner/dashboard.dart';
 import 'package:fostr/router/router.dart';
 import 'package:fostr/router/routes.dart';
 import 'package:fostr/widgets/Layout.dart';
@@ -109,6 +111,10 @@ class _AddDetailsState extends State<AddDetails> with FostrTheme {
                               user.userType == UserType.USER) {
                             FostrRouter.removeUntillAndGoto(context,
                                 Routes.quizPage, (route) => route.isFirst);
+                          } else if (auth.userType == UserType.CLUBOWNER) {
+                            Navigator.of(context).pushAndRemoveUntil(
+                                CupertinoPageRoute(builder: (_) => Dashboard()),
+                                (route) => false);
                           }
                         }).catchError((e) {
                           print(e);

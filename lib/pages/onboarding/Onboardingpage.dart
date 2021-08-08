@@ -21,13 +21,12 @@ class _OnboardingPageState extends State<OnboardingPage> {
   @override
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthProvider>(context);
-
-    print(auth.logedIn);
     if (!auth.isLoading) {
+      print("hi");
       if (auth.logedIn) {
-        if (auth.userType == UserType.CLUBOWNER) {
+        if (auth.user!.userType == UserType.CLUBOWNER) {
           return Dashboard();
-        } else if (auth.userType == UserType.USER) {
+        } else if (auth.user!.userType == UserType.USER) {
           return OngoingRoom();
         } else {
           return SplashScreen();
