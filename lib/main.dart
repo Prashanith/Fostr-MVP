@@ -1,12 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:fostr/pages/onboarding/SplashScreen.dart';
-import 'package:fostr/pages/quiz/BookSuggestionPage.dart';
-import 'package:fostr/pages/quiz/QuizPage.dart';
 import 'package:fostr/providers/IndexProvider.dart';
 import 'package:fostr/router/router.dart';
 import 'package:fostr/services/Locators.dart';
 import 'package:fostr/utils/theme.dart';
+import 'widgets/user/OngoingRoomCard.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,7 +18,6 @@ class MyApp extends StatelessWidget with FostrTheme {
   Widget build(BuildContext context) {
     return IndexProvider(
       child: MaterialApp(
-        // debugShowCheckedModeBanner: false,
         initialRoute: "/",
         onGenerateRoute: (settings) =>
             FostrRouter.generateRoute(context, settings),
