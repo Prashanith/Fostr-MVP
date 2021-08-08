@@ -95,8 +95,8 @@ class _OtpVerificationState extends State<OtpVerification> with FostrTheme {
                         FostrRouter.goto(context, Routes.addDetails);
                       } else {
                         if (auth.userType == UserType.USER) {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (_) => UserProfilePage()));
+                          FostrRouter.removeUntillAndGoto(
+                              context, Routes.ongoingRoom, (route) => false);
                         }
                       }
                     } catch (e) {

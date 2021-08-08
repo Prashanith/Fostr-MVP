@@ -95,6 +95,7 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
               ),
             ),
             SingleChildScrollView(
+              physics: BouncingScrollPhysics(),
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Column(
@@ -116,12 +117,12 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                           ),
                           Spacer(),
                           InkWell(
-                            onTap: () {
-                              auth.signOut();
+                            onTap: () async {
+                              await auth.signOut();
                               FostrRouter.removeUntillAndGoto(
                                 context,
-                                Routes.login,
-                                (route) => route.settings.name == Routes.entry,
+                                Routes.userChoice,
+                                (route) => false,
                               );
                             },
                             child: Icon(
@@ -159,7 +160,7 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                                       user.userProfile!.profileImage = url;
                                     }
                                     updateProfile({
-                                      "userProfile": user.userProfile,
+                                      "userProfile": user.userProfile!.toJson(),
                                       "id": user.id
                                     });
                                   });

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fostr/core/constants.dart';
+import 'package:fostr/pages/clubOwner/dashboard.dart';
 import 'package:fostr/pages/onboarding/SplashScreen.dart';
+import 'package:fostr/pages/user/HomePage.dart';
 import 'package:fostr/providers/AuthProvider.dart';
 import 'package:provider/provider.dart';
 
@@ -22,8 +24,13 @@ class _OnboardingPageState extends State<OnboardingPage> {
 
     if (!auth.isLoading) {
       if (auth.logedIn) {
-        if (auth.userType == UserType.CLUBOWNER) {}
-        // return HomeScreen();
+        if (auth.userType == UserType.CLUBOWNER) {
+          return Dashboard();
+        } else if (auth.userType == UserType.USER) {
+          return OngoingRoom();
+        } else {
+          return SplashScreen();
+        }
       } else {
         return SplashScreen();
       }
