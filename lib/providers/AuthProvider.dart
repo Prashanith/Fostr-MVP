@@ -49,6 +49,7 @@ class AuthProvider with ChangeNotifier {
       _user = await _userService.getUserById(_authService.currentUser!.uid);
       _status = Status.Authenticated;
     }
+    print("object");
     _setFree();
   }
 
@@ -70,6 +71,7 @@ class AuthProvider with ChangeNotifier {
     try {
       _setBusy();
       _user = await _authService.verifyOTP(context, otp, userType);
+      _localStorage.setLoggedIn();
       _setFree();
     } catch (e) {
       _setFree();
@@ -146,5 +148,9 @@ class AuthProvider with ChangeNotifier {
   _setFree() {
     _isLoading = false;
     notifyListeners();
+  }
+
+  signOut() {
+    _authService.signOut();
   }
 }

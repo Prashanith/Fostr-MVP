@@ -15,6 +15,9 @@ User _$UserFromJson(Map<String, dynamic> json) {
     createdOn: DateTime.parse(json['createdOn'] as String),
     lastLogin: DateTime.parse(json['lastLogin'] as String),
     invites: json['invites'] as int,
+    userProfile: json['userProfile'] == null
+        ? null
+        : UserProfile.fromJson(json['userProfile'] as Map<String, dynamic>),
   );
 }
 
@@ -26,6 +29,7 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'createdOn': instance.createdOn.toIso8601String(),
       'lastLogin': instance.lastLogin.toIso8601String(),
       'invites': instance.invites,
+      'userProfile': instance.userProfile?.toJson(),
     };
 
 K _$enumDecode<K, V>(

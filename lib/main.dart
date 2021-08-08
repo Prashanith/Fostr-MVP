@@ -20,11 +20,11 @@ class MyApp extends StatelessWidget with FostrTheme {
   Widget build(BuildContext context) {
     return IndexProvider(
       child: MaterialApp(
-        // initialRoute: "/",
-        // onGenerateRoute: (settings) =>
-        //     FostrRouter.generateRoute(context, settings),
+        initialRoute: "/",
+        onGenerateRoute: (settings) =>
+            FostrRouter.generateRoute(context, settings),
         title: "FOSTR",
-        home: CafeRoomScreen()
+        // home: CafeRoomScreen()
       ),
     );
   }
