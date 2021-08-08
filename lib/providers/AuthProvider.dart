@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:fostr/core/constants.dart';
 import 'package:fostr/models/UserModel/User.dart';
 import 'package:fostr/services/AuthService.dart';
 import 'package:fostr/services/LocalStorage.dart';
 import 'package:fostr/services/UserService.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
 
 class AuthProvider with ChangeNotifier {
   final AuthService _authService = AuthService();
@@ -27,6 +29,7 @@ class AuthProvider with ChangeNotifier {
   bool get logedIn => _localStorage.loggedIn;
   UserType? get userType => _userType;
   String? get email => _email;
+  Stream<auth.User?> get authStateStream => _authService.authStateStream;
 
   void setEmail(String email) {
     _email = email;
@@ -53,22 +56,24 @@ class AuthProvider with ChangeNotifier {
     try {
       _setBusy();
       await _authService.verifyPhone(context, number);
+      _setFree();
     } catch (e) {
       _setFree();
       print("from auth provider");
       print(e);
+      throw e;
     }
   }
 
   Future<void> verifyOtp(
       BuildContext context, String otp, UserType userType) async {
     try {
+      _setBusy();
       _user = await _authService.verifyOTP(context, otp, userType);
       _setFree();
     } catch (e) {
       _setFree();
-      print("from auth provider");
-      print(e);
+      throw e;
     }
   }
 
@@ -99,6 +104,7 @@ class AuthProvider with ChangeNotifier {
       _setFree();
       print("from auth provider");
       print(e);
+      throw e;
     }
   }
 
@@ -123,6 +129,7 @@ class AuthProvider with ChangeNotifier {
       _setBusy();
       await _authService.updateUser(user);
       await _userService.addUsername(user);
+      _user = user;
       _setFree();
     } catch (e) {
       _setFree();

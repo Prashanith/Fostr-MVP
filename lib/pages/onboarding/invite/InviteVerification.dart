@@ -6,7 +6,7 @@ import 'package:fostr/widgets/Buttons.dart';
 import 'package:fostr/widgets/InputField.dart';
 import 'package:fostr/widgets/SigninWithGoogle.dart';
 
-import '../Layout.dart';
+import '../../../widgets/Layout.dart';
 
 class OtpVerification extends StatefulWidget {
   const OtpVerification({Key? key}) : super(key: key);

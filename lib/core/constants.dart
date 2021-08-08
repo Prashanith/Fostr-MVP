@@ -1,5 +1,6 @@
 // assets
 const String IMAGES = "assets/images/";
+const String ICONS = "assets/icons/";
 
 // enums
 enum UserType { USER, CLUBOWNER }

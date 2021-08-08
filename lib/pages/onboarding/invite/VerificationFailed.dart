@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fostr/pages/onboarding/Layout.dart';
+import 'package:fostr/widgets/Layout.dart';
 
 import 'package:fostr/utils/theme.dart';
 import 'package:fostr/widgets/Buttons.dart';

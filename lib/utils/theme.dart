@@ -31,7 +31,7 @@ mixin FostrTheme {
     fontSize: 24,
     color: Color(0xff476747),
     fontFamily: "Lato",
-  );
+);
   final h2 = const TextStyle(
     fontSize: 16,
     color: Color(0xB2476747),

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:fostr/core/constants.dart';
 import 'package:fostr/models/UserModel/User.dart';
-import 'package:fostr/pages/onboarding/Layout.dart';
+import 'package:fostr/router/router.dart';
+import 'package:fostr/router/routes.dart';
+import 'package:fostr/widgets/Layout.dart';
 import 'package:fostr/providers/AuthProvider.dart';
 import 'package:fostr/services/UserService.dart';
 import 'package:fostr/utils/Helpers.dart';
@@ -98,6 +101,11 @@ class _AddDetailsState extends State<AddDetails> with FostrTheme {
 
                     auth.addUserDetails(newUser).then((value) {
                       print("done");
+                      if (user.lastLogin == user.createdOn &&
+                          user.userType == UserType.USER) {
+                        FostrRouter.removeUntillAndGoto(
+                            context, Routes.quizPage, (route) => route.isFirst);
+                      }
                     }).catchError((e) {
                       print(e);
                     });

@@ -1,6 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:fostr/pages/onboarding/SplashScreen.dart';
+import 'package:fostr/pages/quiz/BookSuggestionPage.dart';
+import 'package:fostr/pages/quiz/QuizPage.dart';
 import 'package:fostr/providers/IndexProvider.dart';
 import 'package:fostr/router/router.dart';
 import 'package:fostr/services/Locators.dart';
@@ -19,11 +21,10 @@ class MyApp extends StatelessWidget with FostrTheme {
     return IndexProvider(
       child: MaterialApp(
         // debugShowCheckedModeBanner: false,
-        initialRoute: "/splash",
+        initialRoute: "/",
         onGenerateRoute: (settings) =>
             FostrRouter.generateRoute(context, settings),
         title: "FOSTR",
-        home: SplashScreen(),
       ),
     );
   }

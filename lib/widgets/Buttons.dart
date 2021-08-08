@@ -4,8 +4,9 @@ import 'package:fostr/utils/theme.dart';
 class PrimaryButton extends StatefulWidget {
   final String text;
   final VoidCallback onTap;
+  final double? width;
 
-  PrimaryButton({Key? key, required this.text, required this.onTap})
+  PrimaryButton({Key? key, required this.text, required this.onTap, this.width})
       : super(key: key);
 
   @override
@@ -34,7 +35,7 @@ class _PrimaryButtonState extends State<PrimaryButton> with FostrTheme {
         transform: Transform.scale(scale: scale).transform,
         duration: Duration(milliseconds: 200),
         alignment: Alignment.center,
-        width: 330,
+        width: (widget.width) ?? 330,
         height: 70,
         decoration: BoxDecoration(
           borderRadius: buttonBorderRadius,

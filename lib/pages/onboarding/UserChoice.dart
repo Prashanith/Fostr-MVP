@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fostr/core/constants.dart';
-import 'package:fostr/pages/onboarding/Layout.dart';
+import 'package:fostr/widgets/Layout.dart';
 import 'package:fostr/providers/AuthProvider.dart';
 import 'package:fostr/router/router.dart';
 import 'package:fostr/router/routes.dart';

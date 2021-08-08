@@ -6,14 +6,23 @@ import 'package:fostr/pages/onboarding/OtpVerification.dart';
 import 'package:fostr/pages/onboarding/SignupPage.dart';
 import 'package:fostr/pages/onboarding/SplashScreen.dart';
 import 'package:fostr/pages/onboarding/UserChoice.dart';
+import 'package:fostr/pages/quiz/AnalyzingPage.dart';
+import 'package:fostr/pages/quiz/BookSuggestionPage.dart';
+import 'package:fostr/pages/quiz/Quiz.dart';
+import 'package:fostr/pages/quiz/QuizIntro.dart';
+import 'package:fostr/pages/quiz/QuizPage.dart';
 import 'package:fostr/router/routes.dart';
 
 class FostrRouter {
-  static goto(BuildContext context, String name) =>
-      Navigator.pushNamed(context, name);
-  
-  static replaceGoto(BuildContext context, String name) =>
-      Navigator.pushReplacementNamed(context, name);
+  static goto(BuildContext context, String route) =>
+      Navigator.pushNamed(context, route);
+
+  static replaceGoto(BuildContext context, String route) =>
+      Navigator.pushReplacementNamed(context, route);
+
+  static removeUntillAndGoto(BuildContext context, String route,
+          bool Function(Route<dynamic> route) predicate) =>
+      Navigator.pushNamedAndRemoveUntil(context, route, predicate);
 
   static pop(BuildContext context) => Navigator.pop(context);
 
@@ -28,6 +37,9 @@ class FostrRouter {
 
   static Widget _generateView(RouteSettings settings) {
     switch (settings.name) {
+      case Routes.entry:
+        return SplashScreen();
+
       case Routes.splash:
         return SplashScreen();
 
@@ -45,6 +57,21 @@ class FostrRouter {
 
       case Routes.addDetails:
         return AddDetails();
+
+      case Routes.quizPage:
+        return QuizPage();
+
+      case Routes.quizIntro:
+        return QuizIntro();
+
+      case Routes.quiz:
+        return Quiz();
+
+      case Routes.analyzingPage:
+        return AnalyzingPage();
+
+      case Routes.bookClubSuggetion:
+        return BookSuggestionPage();
 
       default:
         return Material(

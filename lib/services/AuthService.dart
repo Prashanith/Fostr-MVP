@@ -13,6 +13,7 @@ class AuthService {
   String verificationId = "";
 
   User? get currentUser => _auth.currentUser;
+  Stream<User?> get authStateStream => _auth.authStateChanges();
 
   Future<void> signOut() async {
     try {
@@ -95,7 +96,7 @@ class AuthService {
 
     try {
       await _auth.verifyPhoneNumber(
-          phoneNumber: "+91" + number.trim(),
+          phoneNumber: number.trim(),
           codeAutoRetrievalTimeout: (String verId) {
             verificationId = verId;
           },
@@ -113,11 +114,9 @@ class AuthService {
   Future<UserModel.User?> verifyOTP(
       BuildContext context, String otp, UserType userType) async {
     try {
-      final userr = _auth.currentUser;
-      if (userr == null) {
-        var user = await signInWithPhone(context, otp, userType);
-        return user;
-      }
+      var user = await signInWithPhone(context, otp, userType);
+      print(user);
+      return user;
     } on FirebaseAuthException catch (e) {
       throw e.code.toString();
     } catch (e) {
@@ -136,13 +135,15 @@ class AuthService {
       verifyUser(userCredential.user!);
       if (userCredential.additionalUserInfo!.isNewUser) {
         var user = await createUser(userCredential.user!, userType);
-        if (user != null) {
-          var updatedUser = updateLastLogin(user);
-          return updatedUser;
-        }
+        return user;
       } else {
         var user = await _userService.getUserById(userCredential.user!.uid);
-        return user;
+        if (user!.userType == userType) {
+          var updatedUser = updateLastLogin(user);
+          return updatedUser;
+        } else {
+          throw "user-type-mismatch";
+        }
       }
     } on FirebaseAuthException catch (e) {
       throw e.code.toString();

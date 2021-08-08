@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 
 class Validator {
   static bool isEmail(String email) => RegExp(
@@ -9,6 +8,8 @@ class Validator {
   static bool isUsername(String username) =>
       RegExp(r"^(?=.{3,20}$)(?![_.])(?!.*[_.]{3})[a-z0-9._]+(?<![_.])$")
           .hasMatch(username);
+
+  static bool isNumber(String value) => RegExp(r"^[0-9]{6}").hasMatch(value);
 }
 
 String showAuthError(String errorCode) {
@@ -24,6 +25,8 @@ String showAuthError(String errorCode) {
       return "No user found with this email";
     case "wrong-password":
       return "Wrong password";
+    case "invalid-verification-code":
+      return "Wrong otp entered";
     default:
       return "";
   }
