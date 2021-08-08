@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:fostr/pages/clubOwner/HomePage.dart';
 import 'package:fostr/providers/IndexProvider.dart';
 import 'package:fostr/router/router.dart';
 import 'package:fostr/services/Locators.dart';
@@ -19,6 +20,9 @@ class MyApp extends StatelessWidget with FostrTheme {
     return IndexProvider(
       child: MaterialApp(
         initialRoute: "/",
+        routes: {
+          "/": (context) => OngoingRoom(),
+        },
         onGenerateRoute: (settings) =>
             FostrRouter.generateRoute(context, settings),
         title: "FOSTR",
