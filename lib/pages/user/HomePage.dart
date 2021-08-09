@@ -8,11 +8,13 @@ import 'package:fostr/core/data.dart';
 import 'package:fostr/core/functions.dart';
 import 'package:fostr/core/settings.dart';
 import 'package:fostr/models/RoomModel.dart';
-import 'package:fostr/pages/rooms/Minimalist.dart';
+import 'package:fostr/pages/rooms/Minimal.dart';
 import 'package:fostr/pages/rooms/ThemePage.dart';
 import 'package:fostr/pages/user/CalendarPage.dart';
 import 'package:fostr/pages/user/profile.dart';
 import 'package:fostr/providers/AuthProvider.dart';
+import 'package:fostr/router/router.dart';
+import 'package:fostr/router/routes.dart';
 import 'package:fostr/utils/theme.dart';
 import 'package:fostr/widgets/rooms/OngoingRoomCard.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
@@ -169,14 +171,19 @@ class _HomePageState extends State<HomePage> with FostrTheme {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SvgPicture.asset(ICONS + "menu.svg"),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Text(
-                        "Hello, ${user.name}",
-                        style: h1.apply(color: Colors.white),
-                      ),
+                      // SvgPicture.asset(ICONS + "menu.svg"),
+                      // SizedBox(
+                      //   height: 20,
+                      // ),
+                      (user.name == "")
+                          ? Text(
+                              "Hello, User",
+                              style: h1.apply(color: Colors.white),
+                            )
+                          : Text(
+                              "Hello, ${user.name}",
+                              style: h1.apply(color: Colors.white),
+                            ),
                     ],
                   ),
                 ),
@@ -194,7 +201,8 @@ class _HomePageState extends State<HomePage> with FostrTheme {
                       color: Colors.white,
                     ),
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      padding:
+                          const EdgeInsets.only(top: 5, left: 10, right: 10),
                       child: ListView(
                         physics: BouncingScrollPhysics(),
                         children: [
@@ -214,8 +222,11 @@ class _HomePageState extends State<HomePage> with FostrTheme {
 
                               return snapshot.hasData
                                   ? SizedBox(
-                                      height:
-                                          MediaQuery.of(context).size.height,
+                                      height: MediaQuery.of(context)
+                                              .size
+                                              .height -
+                                          MediaQuery.of(context).size.height *
+                                              0.24,
                                       child: SmartRefresher(
                                         enablePullDown: true,
                                         controller: _refreshController,
@@ -242,9 +253,7 @@ class _HomePageState extends State<HomePage> with FostrTheme {
                                                         document)));
                                           }).toList(),
                                         ),
-                                      ),
-                                    )
-                                  // Display if still loading data
+                                      )) // Display if still loading data
                                   : Center(child: CircularProgressIndicator());
                             },
                           ),
@@ -268,7 +277,8 @@ class _HomePageState extends State<HomePage> with FostrTheme {
       child: ElevatedButton(
         child: Text('Start Room'),
         onPressed: () {
-          _displayTextInputDialog(context);
+          FostrRouter.goto(context, Routes.roomDetails);
+          // _displayTextInputDialog(context);
         },
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all(Color(0xff94B5AC)),
@@ -349,7 +359,7 @@ class _HomePageState extends State<HomePage> with FostrTheme {
       (value) => Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => Minimalist(
+          builder: (context) => Minimal(
             room: Room(
               title: '$channelName',
               participantsCount: 1,

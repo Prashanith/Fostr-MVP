@@ -39,10 +39,10 @@ class _QuizPageState extends State<QuizPage> with FostrTheme {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SvgPicture.asset(ICONS + "menu.svg"),
-                    SizedBox(
-                      height: 30,
-                    ),
+                    // SvgPicture.asset(ICONS + "menu.svg"),
+                    // SizedBox(
+                    //   height: 30,
+                    // ),
                     Text(
                       "Hello, ${user.name} James",
                       style: h1.apply(color: Colors.white),

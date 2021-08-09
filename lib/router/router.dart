@@ -13,6 +13,7 @@ import 'package:fostr/pages/quiz/BookSuggestionPage.dart';
 import 'package:fostr/pages/quiz/Quiz.dart';
 import 'package:fostr/pages/quiz/QuizIntro.dart';
 import 'package:fostr/pages/quiz/QuizPage.dart';
+import 'package:fostr/pages/rooms/RoomDetails.dart';
 import 'package:fostr/pages/user/HomePage.dart';
 import 'package:fostr/router/routes.dart';
 import 'package:fostr/screen/FollowFollowing.dart';
@@ -81,6 +82,9 @@ class FostrRouter {
 
       case Routes.ongoingRoom:
         return OngoingRoom();
+      
+      case Routes.roomDetails:
+        return RoomDetails();
 
       default:
         return Material(
