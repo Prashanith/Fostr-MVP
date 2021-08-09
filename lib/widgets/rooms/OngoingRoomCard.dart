@@ -3,8 +3,9 @@ import 'package:flutter_svg/svg.dart';
 import 'package:fostr/core/constants.dart';
 import 'package:fostr/models/RoomModel.dart';
 import 'package:fostr/utils/theme.dart';
+import 'package:intl/intl.dart';
 
-import '../user/BookmarkContainer.dart';
+import 'BookmarkContainer.dart';
 class OngoingRoomCard extends StatelessWidget with FostrTheme {
   final Room room;
 
@@ -105,6 +106,7 @@ class OngoingRoomCard extends StatelessWidget with FostrTheme {
                   height: 5,
                 ),
                 Text(
+                  // "Happening at: " + DateFormat('yyyy-MM-dd').format(room.dateTime),
                   "Happening at: " + room.dateTime.toString(),
                   style: TextStyle(fontSize: 15, color: Colors.white, overflow: TextOverflow.ellipsis),
                 )
@@ -115,7 +117,7 @@ class OngoingRoomCard extends StatelessWidget with FostrTheme {
         Positioned(
           right: 20,
           top: 20,
-          child: BookmarkContainer(),
+          child: BookmarkContainer(imgURL: room.imageUrl.toString()),
         ),
       ],
     );

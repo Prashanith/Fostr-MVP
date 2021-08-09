@@ -50,42 +50,13 @@ class _MinimalState extends State<Minimal> with FostrTheme {
 
   initRoom() async {
     // get the details of room
-    roomCollection.doc(widget.room.dateTime).snapshots().listen((result) {
+    roomCollection.doc(widget.room.title).snapshots().listen((result) {
       print(result.data()!['speakersCount']);
       setState(() {
         participantsCount = result.data()!['participantsCount'];
         speakersCount = result.data()!['speakersCount'];
       });
     });
-  }
-  
-  removeUser() async {
-    if (widget.role == ClientRole.Broadcaster) {
-      // update the list of speakers
-      await roomCollection.doc(widget.room.dateTime).update({
-        'speakersCount': speakersCount - 1,
-      });
-      await roomCollection
-          .doc(widget.room.dateTime)
-          .collection("speakers")
-          .doc(profileData['username'])
-          .delete();
-    } else {
-      // update the list of participants
-      await roomCollection.doc(widget.room.dateTime).update({
-        'participantsCount': participantsCount - 1,
-      });
-      await roomCollection
-          .doc(widget.room.dateTime)
-          .collection("participants")
-          .doc(profileData['username'])
-          .delete();
-    }
-
-    if ((participantsCount == 0 && speakersCount == 1) ||
-        (participantsCount == 1 && speakersCount == 0)) {
-      await roomCollection.doc(widget.room.dateTime).delete();
-    }
   }
 
   /// Create Agora SDK instance and initialize
@@ -177,10 +148,10 @@ class _MinimalState extends State<Minimal> with FostrTheme {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SvgPicture.asset(ICONS + "menu.svg"),
-                    SizedBox(
-                      height: 30,
-                    ),
+                    // SvgPicture.asset(ICONS + "menu.svg"),
+                    // SizedBox(
+                    //   height: 30,
+                    // ),
                     Text(
                       "Hello, ${user.name}",
                       style: h1.apply(color: Colors.white),

@@ -20,4 +20,7 @@ class Routes {
 
   //user
   static const ongoingRoom = "/ongoingRoom";
+
+  //room
+  static const roomDetails = "/roomDetails";
 }

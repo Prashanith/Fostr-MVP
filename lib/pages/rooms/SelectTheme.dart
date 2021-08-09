@@ -35,6 +35,7 @@ class _SelectThemeState extends State<SelectTheme> {
   @override
   Widget build(BuildContext context) {
     return Material(
+      color: gradientBottom,
       child: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -42,9 +43,9 @@ class _SelectThemeState extends State<SelectTheme> {
             end: Alignment.bottomCenter,
             colors: [gradientTop, gradientBottom]
           ),
-          borderRadius: BorderRadius.only(
-            topRight: Radius.circular(40),
-            topLeft: Radius.circular(40),
+          borderRadius: BorderRadiusDirectional.only(
+            topStart: Radius.circular(32),
+            topEnd: Radius.circular(32),
           ),
         ),
         child: ListView(
@@ -272,29 +273,21 @@ class _SelectThemeState extends State<SelectTheme> {
                   Divider(color: Colors.teal.shade500,),
                   isLoading
                     ? CircularProgressIndicator()
-                    : GestureDetector(
-                      onTap: () => updateRoom(),
-                      child: Container(
-                        alignment: Alignment.center,
-                        width: MediaQuery.of(context).size.width*0.4,
-                        padding: EdgeInsets.all(20,),
-                        decoration: BoxDecoration(
-                          color: const Color(0xffa3c4bc),
-                          borderRadius: BorderRadius.circular(30),
-                          gradient: LinearGradient(
-                            colors: [
-                              const Color(0xffa3c4bc),
-                              const Color(0xffe9ffee),
-                            ],
+                    : ElevatedButton(
+                        child: Text('Join Room'),
+                        onPressed: () {
+                          updateRoom();
+                        },
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(Color(0xff94B5AC)),
+                          shape: MaterialStateProperty.all<OutlinedBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
                           ),
                         ),
-                        child: Text("Join", style: TextStyle(
-                          color: Colors.teal.shade800,
-                          fontSize: 16,
-                        ),),
-                      ),
                     ),
-                  SizedBox(height: 20,),
+                  SizedBox(height: MediaQuery.of(context).size.height*0.05)
                 ],
               ),
             ),

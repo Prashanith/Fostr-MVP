@@ -104,13 +104,13 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                       padding: const EdgeInsets.only(top: 10.0),
                       child: Row(
                         children: [
-                          SvgPicture.asset(
-                            ICONS + "menu.svg",
-                            color: Color(0xffA2ABB9),
-                          ),
-                          SizedBox(
-                            width: 10,
-                          ),
+                          // SvgPicture.asset(
+                          //   ICONS + "menu.svg",
+                          //   color: Color(0xffA2ABB9),
+                          // ),
+                          // SizedBox(
+                          //   width: 10,
+                          // ),
                           Text(
                             "Profile",
                             style: h1.copyWith(fontWeight: FontWeight.bold),

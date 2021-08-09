@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class BookmarkContainer extends StatelessWidget {
-  const BookmarkContainer({Key? key}) : super(key: key);
+  String imgURL;
+  BookmarkContainer({Key? key, required this.imgURL}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -10,6 +11,7 @@ class BookmarkContainer extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
+          image: DecorationImage(image: NetworkImage(imgURL), fit: BoxFit.fill)
         ),
         height: 88,
         width: 70,
