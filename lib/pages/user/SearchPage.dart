@@ -8,6 +8,7 @@ import 'package:fostr/utils/theme.dart';
 import 'package:fostr/widgets/Layout.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
+import 'package:sizer/sizer.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({Key? key}) : super(key: key);
@@ -36,11 +37,11 @@ class _SearchPageState extends State<SearchPage> with FostrTheme {
                 Padding(
                   padding: const EdgeInsets.only(top: 30.0),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Container(
-                        constraints:
-                            BoxConstraints.expand(height: 50, width: 300),
+                        margin: const EdgeInsets.only(right: 20),
+                        width: 70.w,
                         decoration: BoxDecoration(
                             color: Color(0XFFEBFFEE),
                             borderRadius: BorderRadius.circular(25),
@@ -196,7 +197,7 @@ class _UserCardState extends State<UserCard> with FostrTheme {
     super.initState();
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
       final auth = Provider.of<AuthProvider>(context, listen: false);
-      if (!auth.user!.followings!.contains(widget.user.id)) {
+      if (auth.user!.followings!.contains(widget.user.id)) {
         setState(() {
           followed = true;
         });
@@ -262,7 +263,9 @@ class _UserCardState extends State<UserCard> with FostrTheme {
               print(auth.user!.id);
               try {
                 if (!followed) {
-                  await userService.followUser(auth.user!, widget.user);
+                  var user =
+                      await userService.followUser(auth.user!, widget.user);
+                  auth.refreshUser(user);
                   setState(() {
                     followed = true;
                   });

@@ -108,13 +108,18 @@ class UserService {
     }
   }
 
-  Future<void> followUser(User currentUser, User userToFollow) async {
+  Future<User> followUser(User currentUser, User userToFollow) async {
     try {
+      User user = currentUser;
       var newFollowings = currentUser.followings ?? [];
       if (!newFollowings.contains(userToFollow.id)) {
+        newFollowings.add(userToFollow.id);
         var json = currentUser.toJson();
         json['followings'] = newFollowings;
+        user = User.fromJson(json);
+        print(json);
         await updateUserField(json);
+        print("object");
       }
 
       var newjson = userToFollow.toJson();
@@ -124,6 +129,7 @@ class UserService {
         newjson['followers'] = followers;
         await updateUserField(newjson);
       }
+      return user;
     } catch (e) {
       print(e);
       throw e;

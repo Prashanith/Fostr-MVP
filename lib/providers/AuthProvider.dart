@@ -103,7 +103,7 @@ class AuthProvider with ChangeNotifier {
       return _user;
     } catch (e) {
       _setFree();
-      print("from auth provider"+e.toString());
+      print("from auth provider" + e.toString());
       print(e);
       throw e;
     }
@@ -152,6 +152,11 @@ class AuthProvider with ChangeNotifier {
   signOut() async {
     await _authService.signOut();
     _setFree();
+    notifyListeners();
+  }
+
+  void refreshUser(User user) {
+    _user = user;
     notifyListeners();
   }
 }

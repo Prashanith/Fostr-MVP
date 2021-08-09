@@ -10,6 +10,7 @@ import 'package:fostr/core/settings.dart';
 import 'package:fostr/models/RoomModel.dart';
 import 'package:fostr/pages/rooms/Minimalist.dart';
 import 'package:fostr/pages/rooms/ThemePage.dart';
+import 'package:fostr/pages/user/CalendarPage.dart';
 import 'package:fostr/pages/user/profile.dart';
 import 'package:fostr/providers/AuthProvider.dart';
 import 'package:fostr/utils/theme.dart';
@@ -21,8 +22,6 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'SearchPage.dart';
-
-
 
 class OngoingRoom extends StatefulWidget {
   const OngoingRoom({Key? key}) : super(key: key);
@@ -38,7 +37,7 @@ class _OngoingRoomState extends State<OngoingRoom> with FostrTheme {
   final List<Widget> _children = [
     HomePage(),
     SearchPage(),
-    Container(),
+    CalendarPage(),
     UserProfilePage(),
   ];
 

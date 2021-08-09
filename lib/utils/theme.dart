@@ -54,7 +54,7 @@ mixin FostrTheme {
   final boxShadow = [
     BoxShadow(
       offset: Offset(0, 4),
-      blurRadius: 4,
+      blurRadius: 16,
       color: Colors.black.withOpacity(0.25),
     ),
   ];

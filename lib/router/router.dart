@@ -15,10 +15,13 @@ import 'package:fostr/pages/quiz/QuizIntro.dart';
 import 'package:fostr/pages/quiz/QuizPage.dart';
 import 'package:fostr/pages/user/HomePage.dart';
 import 'package:fostr/router/routes.dart';
+import 'package:fostr/screen/FollowFollowing.dart';
 
 class FostrRouter {
   static goto(BuildContext context, String route) =>
       Navigator.pushNamed(context, route);
+  static gotoWithArg(BuildContext context, Widget page) => Navigator.of(context)
+      .push(CupertinoPageRoute(builder: (context) => page));
 
   static replaceGoto(BuildContext context, String route) =>
       Navigator.pushReplacementNamed(context, route);

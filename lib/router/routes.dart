@@ -20,4 +20,7 @@ class Routes {
 
   //user
   static const ongoingRoom = "/ongoingRoom";
+
+  //follow following page
+  static const followFollowing = "/followFollowing";
 }

@@ -185,7 +185,7 @@ class AuthService {
       var time = DateTime.now();
       var newUser = UserModel.User(
         id: user.uid,
-        name: user.displayName ?? "",
+        name: user.displayName ?? "Enter your name",
         userName: "",
         invites: 10,
         createdOn: time,

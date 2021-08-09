@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:fostr/core/constants.dart';
 import 'package:fostr/models/UserModel/User.dart';
 import 'package:fostr/models/UserModel/UserProfile.dart';
 import 'package:fostr/providers/AuthProvider.dart';
 import 'package:fostr/router/router.dart';
 import 'package:fostr/router/routes.dart';
+import 'package:fostr/screen/FollowFollowing.dart';
 import 'package:fostr/services/FilePicker.dart';
 import 'package:fostr/services/StorageService.dart';
 import 'package:fostr/services/UserService.dart';
@@ -15,7 +14,7 @@ import 'package:fostr/widgets/RoundedImage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
-// /// Contain information about current user profile
+import 'package:sizer/sizer.dart';
 
 class UserProfilePage extends StatefulWidget {
   @override
@@ -23,6 +22,8 @@ class UserProfilePage extends StatefulWidget {
 }
 
 class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
+  TextEditingController controller = TextEditingController();
+
   UserService userServices = GetIt.I<UserService>();
   User user = User.fromJson({
     "name": "dsd",
@@ -38,8 +39,12 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
     await userServices.updateUserField(data);
   }
 
-  Future<void> showPopUp(String field, String uid, Function cb) {
-    return displayTextInputDialog(context, field).then((shouldUpdate) {
+  Future<void> showPopUp(String field, String uid, Function cb,
+      {String? value}) {
+    return displayTextInputDialog(
+      context,
+      field,
+    ).then((shouldUpdate) {
       if (shouldUpdate[0]) {
         final json = {
           "id": uid,
@@ -101,16 +106,9 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                 child: Column(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(top: 10.0),
+                      padding: EdgeInsets.symmetric(vertical: 3.h),
                       child: Row(
                         children: [
-                          SvgPicture.asset(
-                            ICONS + "menu.svg",
-                            color: Color(0xffA2ABB9),
-                          ),
-                          SizedBox(
-                            width: 10,
-                          ),
                           Text(
                             "Profile",
                             style: h1.copyWith(fontWeight: FontWeight.bold),
@@ -132,215 +130,237 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                         ],
                       ),
                     ),
-                    Row(
-                      children: [
-                        Row(
-                          children: [
-                            //profileBody(),
-                            /*Container(
-                                width: 100.0,
-                                height: 100.0,
-                                decoration: BoxDecoration(
-                                  color: Colors.blue,
-                                  shape: BoxShape.circle,
-                                ),
-                              ),*/
-                            InkWell(
-                              onTap: () async {
-                                try {
-                                  final file = await Files.getFile();
-                                  final url =
-                                      await Storage.saveFile(file, user.id);
-                                  setState(() {
-                                    if (user.userProfile == null) {
-                                      var userProfile = UserProfile();
-                                      userProfile.profileImage = url;
-                                      user.userProfile = userProfile;
-                                    } else {
-                                      user.userProfile!.profileImage = url;
-                                    }
-                                    updateProfile({
-                                      "userProfile": user.userProfile!.toJson(),
-                                      "id": user.id
-                                    });
+                    Padding(
+                      padding: EdgeInsets.only(bottom: 3.h),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          InkWell(
+                            onTap: () async {
+                              try {
+                                final file = await Files.getFile();
+                                final url =
+                                    await Storage.saveFile(file, user.id);
+                                setState(() {
+                                  if (user.userProfile == null) {
+                                    var userProfile = UserProfile();
+                                    userProfile.profileImage = url;
+                                    user.userProfile = userProfile;
+                                  } else {
+                                    user.userProfile!.profileImage = url;
+                                  }
+                                  updateProfile({
+                                    "userProfile": user.userProfile!.toJson(),
+                                    "id": user.id
                                   });
-                                } catch (e) {
-                                  print(e);
-                                }
-                              },
-                              child: RoundedImage(
-                                width: 100,
-                                height: 100,
-                                borderRadius: 35,
-                                url: user.userProfile?.profileImage,
-                              ),
+                                });
+                              } catch (e) {
+                                print(e);
+                              }
+                            },
+                            child: RoundedImage(
+                              width: 100,
+                              height: 100,
+                              borderRadius: 35,
+                              url: user.userProfile?.profileImage,
                             ),
-                            SizedBox(height: 20),
-                            SizedBox(
-                              width: 25,
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                SizedBox(
-                                  height: 30,
-                                ),
-                                Text(
+                          ),
+                          SizedBox(
+                            width: 25,
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              InkWell(
+                                onTap: () async {
+                                  controller.text = user.name;
+                                  await showPopUp(
+                                    "Name",
+                                    user.id,
+                                    (e) {
+                                      setState(() {
+                                        user.name = e[1];
+                                        updateProfile(
+                                            {"name": user.name, "id": user.id});
+                                      });
+                                    },
+                                  );
+                                },
+                                child: Text(
                                   (user.name.isEmpty)
                                       ? "Enter your name"
                                       : user.name,
                                   style:
                                       h1.copyWith(fontWeight: FontWeight.bold),
                                 ),
-                                SizedBox(height: 5),
-                                Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 5),
-                                  alignment: Alignment.topLeft,
-                                  child: GestureDetector(
-                                    onTap: () async {
-                                      await showPopUp("Name", user.id, (e) {
-                                        setState(() {
-                                          user.name = e[1];
-                                          updateProfile({
-                                            "name": user.name,
-                                            "id": user.id
-                                          });
-                                        });
-                                      });
-                                    },
-                                    child: Row(
-                                      children: [
-                                        Text(
-                                          'Change Profile',
-                                          style: TextStyle(
-                                            color: Colors.grey,
-                                            decoration:
-                                                TextDecoration.underline,
-                                          ),
-                                        ),
-                                        IconButton(
-                                          icon: FaIcon(FontAwesomeIcons.pen),
-                                          color: Colors.teal[800],
-                                          iconSize: 16,
-                                          onPressed: () => null,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                /*Text(
-                                profile.username,
-                                style: TextStyle(
-                                  fontSize: 15,
+                              ),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              Text(
+                                (user.userName.isEmpty)
+                                    ? ""
+                                    : '@' + user.userName,
+                                style: h1.copyWith(
                                   fontWeight: FontWeight.bold,
+                                  fontSize: 12.sp,
                                 ),
-                              ),*/
-                                Container(
-                                  child: Row(
-                                    children: [
-                                      IconButton(
-                                        icon: FaIcon(FontAwesomeIcons.twitter),
-                                        color: Colors.teal[800],
-                                        iconSize: 30,
-                                        onPressed: () {
-                                          showPopUp("Twitter", user.id, (e) {
-                                            setState(() {
-                                              if (user.userProfile == null) {
-                                                var userProfile = UserProfile();
-                                                userProfile.twitter = e[1];
-                                                user.userProfile = userProfile;
-                                              } else {
-                                                user.userProfile!.twitter =
-                                                    e[1];
-                                              }
-                                              updateProfile({
-                                                "userProfile":
-                                                    user.userProfile!.toJson(),
-                                                "id": user.id
-                                              });
-                                            });
-                                          });
-                                        },
+                              ),
+                              SizedBox(
+                                height: 30,
+                              ),
+                              Container(
+                                padding: const EdgeInsets.all(10),
+                                constraints: BoxConstraints(
+                                  maxWidth: 200,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Color(0xffEBFFEE),
+                                  borderRadius: BorderRadius.circular(13),
+                                  boxShadow: boxShadow,
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    InkWell(
+                                      onTap: () {
+                                        FostrRouter.gotoWithArg(
+                                          context,
+                                          FollowFollowing(
+                                            items: user.followers,
+                                            title: "Followers",
+                                          ),
+                                        );
+                                      },
+                                      child: Column(
+                                        children: [
+                                          Text(
+                                            user.followers?.length.toString() ??
+                                                "0",
+                                            style: h2,
+                                          ),
+                                          Text(
+                                            "Followers",
+                                            style: h2,
+                                          )
+                                        ],
                                       ),
-                                      IconButton(
-                                        icon:
-                                            FaIcon(FontAwesomeIcons.instagram),
-                                        color: Colors.teal[800],
-                                        iconSize: 30,
-                                        onPressed: () {
-                                          showPopUp("Instagram", user.id, (e) {
-                                            setState(() {
-                                              if (user.userProfile == null) {
-                                                var userProfile = UserProfile();
-                                                userProfile.instagram = e[1];
-                                                user.userProfile = userProfile;
-                                              } else {
-                                                user.userProfile!.instagram =
-                                                    e[1];
-                                              }
-                                              updateProfile({
-                                                "userProfile":
-                                                    user.userProfile!.toJson(),
-                                                "id": user.id
-                                              });
-                                            });
-                                          });
-                                        },
+                                    ),
+                                    InkWell(
+                                      onTap: () {
+                                        FostrRouter.gotoWithArg(
+                                          context,
+                                          FollowFollowing(
+                                            items: user.followings,
+                                            title: "Followings",
+                                          ),
+                                        );
+                                      },
+                                      child: Column(
+                                        children: [
+                                          Text(
+                                            user.followings?.length
+                                                    .toString() ??
+                                                "0",
+                                            style: h2,
+                                          ),
+                                          Text(
+                                            "Followings",
+                                            style: h2,
+                                          )
+                                        ],
                                       ),
-                                      IconButton(
-                                        icon:
-                                            FaIcon(FontAwesomeIcons.linkedinIn),
-                                        color: Colors.teal[800],
-                                        iconSize: 30,
-                                        onPressed: () {
-                                          showPopUp("linkedIn", user.id, (e) {
-                                            setState(() {
-                                              if (user.userProfile == null) {
-                                                var userProfile = UserProfile();
-                                                userProfile.linkedIn = e[1];
-                                                user.userProfile = userProfile;
-                                              } else {
-                                                user.userProfile!.linkedIn =
-                                                    e[1];
-                                              }
-                                              updateProfile({
-                                                "userProfile":
-                                                    user.userProfile!.toJson(),
-                                                "id": user.id
-                                              });
-                                            });
-                                          });
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                )
-                              ],
-                            ),
-                            SizedBox(height: 15),
-                          ],
-                        ),
-                      ],
+                                    ),
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                     SizedBox(
                       height: 10,
                     ),
-                    /*Container(
-                        padding: EdgeInsets.symmetric(horizontal: 5),
-                        alignment: Alignment.topLeft,
-                        child: GestureDetector(
-                          onTap: () {},
-                          child: Text(
-                            'Change Profile',
-                            style: TextStyle(
-                              color: Colors.blueAccent,
-                              decoration: TextDecoration.underline,
-                            ),
-                          ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        IconButton(
+                          icon: FaIcon(FontAwesomeIcons.twitter),
+                          color: Colors.teal[800],
+                          iconSize: 30,
+                          onPressed: () async {
+                            controller.text = user.userProfile?.twitter ?? "";
+                            await showPopUp("Twitter", user.id, (e) {
+                              setState(() {
+                                if (user.userProfile == null) {
+                                  var userProfile = UserProfile();
+                                  userProfile.twitter = e[1];
+                                  user.userProfile = userProfile;
+                                } else {
+                                  user.userProfile!.twitter = e[1];
+                                }
+                                updateProfile({
+                                  "userProfile": user.userProfile!.toJson(),
+                                  "id": user.id
+                                });
+                              });
+                            });
+                          },
                         ),
-                      ),*/
+                        IconButton(
+                          icon: FaIcon(FontAwesomeIcons.instagram),
+                          color: Colors.teal[800],
+                          iconSize: 30,
+                          onPressed: () {
+                            controller.text = user.userProfile?.instagram ?? "";
+                            showPopUp("Instagram", user.id, (e) {
+                              setState(() {
+                                if (user.userProfile == null) {
+                                  var userProfile = UserProfile();
+                                  userProfile.instagram = e[1];
+                                  user.userProfile = userProfile;
+                                } else {
+                                  user.userProfile!.instagram = e[1];
+                                }
+                                updateProfile({
+                                  "userProfile": user.userProfile!.toJson(),
+                                  "id": user.id
+                                });
+                              });
+                            });
+                          },
+                        ),
+                        IconButton(
+                          icon: FaIcon(FontAwesomeIcons.linkedinIn),
+                          color: Colors.teal[800],
+                          iconSize: 30,
+                          onPressed: () {
+                            controller.text = user.userProfile?.linkedIn ?? "";
+                            showPopUp("linkedIn", user.id, (e) {
+                              setState(() {
+                                if (user.userProfile == null) {
+                                  var userProfile = UserProfile();
+                                  userProfile.linkedIn = e[1];
+                                  user.userProfile = userProfile;
+                                } else {
+                                  user.userProfile!.linkedIn = e[1];
+                                }
+                                updateProfile({
+                                  "userProfile": user.userProfile!.toJson(),
+                                  "id": user.id
+                                });
+                              });
+                            });
+                          },
+                        ),
+                      ],
+                    ),
                     SizedBox(
-                      height: 20,
+                      height: 2.h,
                     ),
                     Container(
                       alignment: Alignment.topLeft,
@@ -356,6 +376,7 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                             color: Colors.teal[800],
                             iconSize: 16,
                             onPressed: () {
+                              controller.text = user.userProfile?.bio ?? "";
                               showPopUp("Bio", user.id, (e) {
                                 setState(() {
                                   if (user.userProfile == null) {
@@ -442,31 +463,33 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                           ),
                           width: MediaQuery.of(context).size.width * 0.9,
                           child: Column(
-                              children: List.generate(
-                            3,
-                            (index) => Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 10),
-                              child: Row(
-                                children: [
-                                  Text("17:30",
+                            children: List.generate(
+                              3,
+                              (index) => Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 10),
+                                child: Row(
+                                  children: [
+                                    Text("17:30",
+                                        style: h2.copyWith(
+                                          color: Color(0xff6E664E),
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 14,
+                                        )),
+                                    SizedBox(
+                                      width: 20,
+                                    ),
+                                    Text(
+                                      "e-Habits Book Club",
                                       style: h2.copyWith(
-                                        color: Color(0xff6E664E),
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 14,
-                                      )),
-                                  SizedBox(
-                                    width: 20,
-                                  ),
-                                  Text(
-                                    "e-Habits Book Club",
-                                    style: h2.copyWith(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ],
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
-                          )),
+                          ),
                         ),
                       ],
                     ),
@@ -542,39 +565,45 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
     );
   }
 
-  Future displayTextInputDialog(BuildContext context, String field) async {
+  Future displayTextInputDialog(BuildContext context, String field,
+      {String? value}) async {
     String value = "";
 
     return showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text('Enter your $field'),
-            content: TextField(
-              onChanged: (v) {
-                value = v;
-              },
-              decoration: InputDecoration(hintText: " "),
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Enter your $field'),
+          content: TextField(
+            controller: controller,
+            onChanged: (v) {
+              value = v;
+            },
+            decoration: InputDecoration(
+              hintText: value,
+              helperText: value,
             ),
-            actions: <Widget>[
-              TextButton(
-                child: Text('CANCEL'),
-                onPressed: () {
-                  Navigator.of(context).pop([false]);
-                },
-              ),
-              TextButton(
-                child: Text('UPDATE'),
-                onPressed: () {
-                  Navigator.of(context).pop([true, value]);
-                  // setState(() {
-                  //   codeDialog = enteredChannelName;
-                  //   Navigator.pop(context);
-                  // });
-                },
-              ),
-            ],
-          );
-        });
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('CANCEL'),
+              onPressed: () {
+                Navigator.of(context).pop([false]);
+              },
+            ),
+            TextButton(
+              child: Text('UPDATE'),
+              onPressed: () {
+                Navigator.of(context).pop([true, value]);
+                // setState(() {
+                //   codeDialog = enteredChannelName;
+                //   Navigator.pop(context);
+                // });
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }
