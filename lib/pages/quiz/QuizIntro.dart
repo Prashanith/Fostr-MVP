@@ -5,6 +5,7 @@ import 'package:fostr/router/routes.dart';
 import 'package:fostr/utils/theme.dart';
 import 'package:fostr/widgets/Buttons.dart';
 import 'package:fostr/widgets/QuizPage/QuizInfoTile.dart';
+import 'package:sizer/sizer.dart';
 
 class QuizIntro extends StatefulWidget {
   const QuizIntro({Key? key}) : super(key: key);
@@ -147,4 +148,3 @@ class _QuizIntroState extends State<QuizIntro> with FostrTheme {
     );
   }
 }
-

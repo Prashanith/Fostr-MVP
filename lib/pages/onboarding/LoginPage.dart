@@ -169,32 +169,39 @@ class _LoginPageState extends State<LoginPage> with FostrTheme {
                     padding: const EdgeInsets.only(bottom: 60),
                     child: Column(
                       children: [
-                        SigninWithGoogle(
-                          text: "Login With Google",
-                          onTap: () async {
-                            try {
-                              var user =
-                                  await auth.signInWithGoogle(auth.userType!);
-                              if (user != null &&
-                                  user.createdOn == user.lastLogin) {
-                                FostrRouter.goto(context, Routes.addDetails);
-                              } else {
-                                if (auth.userType == UserType.USER) {
-                                  FostrRouter.removeUntillAndGoto(context,
-                                      Routes.ongoingRoom, (route) => false);
-                                } else if (auth.userType ==
-                                    UserType.CLUBOWNER) {
-                                  Navigator.of(context).pushAndRemoveUntil(
-                                      CupertinoPageRoute(
-                                          builder: (_) => Dashboard()),
-                                      (route) => false);
-                                }
-                              }
-                            } catch (e) {
-                              handleError(e);
-                            }
-                          },
-                        ),
+                        (idController.text.isEmpty)
+                            ? SigninWithGoogle(
+                                text: "Login With Google",
+                                onTap: () async {
+                                  try {
+                                    var user = await auth
+                                        .signInWithGoogle(auth.userType!);
+                                    if (user != null &&
+                                        user.createdOn == user.lastLogin) {
+                                      FostrRouter.goto(
+                                          context, Routes.addDetails);
+                                    } else {
+                                      if (auth.userType == UserType.USER) {
+                                        FostrRouter.removeUntillAndGoto(
+                                            context,
+                                            Routes.ongoingRoom,
+                                            (route) => false);
+                                      } else if (auth.userType ==
+                                          UserType.CLUBOWNER) {
+                                        Navigator.of(context)
+                                            .pushAndRemoveUntil(
+                                                CupertinoPageRoute(
+                                                    builder: (_) =>
+                                                        Dashboard()),
+                                                (route) => false);
+                                      }
+                                    }
+                                  } catch (e) {
+                                    handleError(e);
+                                  }
+                                },
+                              )
+                            : SizedBox.shrink(),
                         SizedBox(
                           height: 20,
                         ),

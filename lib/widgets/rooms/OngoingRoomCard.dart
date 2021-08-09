@@ -5,6 +5,7 @@ import 'package:fostr/models/RoomModel.dart';
 import 'package:fostr/utils/theme.dart';
 
 import '../user/BookmarkContainer.dart';
+
 class OngoingRoomCard extends StatelessWidget with FostrTheme {
   final Room room;
 
@@ -19,7 +20,7 @@ class OngoingRoomCard extends StatelessWidget with FostrTheme {
           child: Container(
             padding: const EdgeInsets.all(15),
             width: double.infinity,
-            height: MediaQuery.of(context).size.height*0.2,
+            height: MediaQuery.of(context).size.height * 0.2,
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
@@ -99,14 +100,20 @@ class OngoingRoomCard extends StatelessWidget with FostrTheme {
                 ),
                 Text(
                   room.agenda.toString(),
-                  style: TextStyle(fontSize: 12, color: Colors.white, overflow: TextOverflow.ellipsis),
+                  style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.white,
+                      overflow: TextOverflow.ellipsis),
                 ),
                 SizedBox(
                   height: 5,
                 ),
                 Text(
                   "Happening at: " + room.dateTime.toString(),
-                  style: TextStyle(fontSize: 15, color: Colors.white, overflow: TextOverflow.ellipsis),
+                  style: TextStyle(
+                      fontSize: 15,
+                      color: Colors.white,
+                      overflow: TextOverflow.ellipsis),
                 )
               ],
             ),

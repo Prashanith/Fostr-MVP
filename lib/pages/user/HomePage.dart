@@ -1,4 +1,3 @@
-
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -21,8 +20,9 @@ import 'package:line_icons/line_icons.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-
 import 'SearchPage.dart';
+
+
 
 class OngoingRoom extends StatefulWidget {
   const OngoingRoom({Key? key}) : super(key: key);
@@ -107,7 +107,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> with FostrTheme {
-  String now = DateFormat('yyyy-MM-dd').format(DateTime.now()) + " " + DateFormat.Hm().format(DateTime.now());
+  String now = DateFormat('yyyy-MM-dd').format(DateTime.now()) +
+      " " +
+      DateFormat.Hm().format(DateTime.now());
   TextEditingController _textFieldController = TextEditingController();
   RefreshController _refreshController = RefreshController(
     initialRefresh: false,
@@ -199,37 +201,52 @@ class _HomePageState extends State<HomePage> with FostrTheme {
                         children: [
                           StreamBuilder<QuerySnapshot>(
                             stream: roomCollection.snapshots(),
-                            builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                            builder: (BuildContext context,
+                                AsyncSnapshot<QuerySnapshot> snapshot) {
                               // Handling errors from firebase
                               if (snapshot.hasError)
-                                return Center(child: Text('Error: ${snapshot.error}'));
+                                return Center(
+                                    child: Text('Error: ${snapshot.error}'));
 
-                              if (snapshot.hasData && snapshot.data!.docs.length == 0)
-                                return Center(child: Text('No Ongoing Rooms Yet'));
+                              if (snapshot.hasData &&
+                                  snapshot.data!.docs.length == 0)
+                                return Center(
+                                    child: Text('No Ongoing Rooms Yet'));
 
                               return snapshot.hasData
-                                ? SizedBox(
-                                  height: MediaQuery.of(context).size.height,
-                                  child: SmartRefresher(
-                                      enablePullDown: true,
-                                      controller: _refreshController,
-                                      onRefresh: _onRefresh,
-                                      onLoading: _onLoading,
-                                      child: ListView(
-                                        physics: BouncingScrollPhysics(),
-                                        children: snapshot.data!.docs.map((DocumentSnapshot document) {
-                                          return GestureDetector(
-                                            onTap: () async {
-                                              Navigator.push(context, CupertinoPageRoute(builder: (BuildContext context) => ThemePage(room: Room.fromJson(document))));
-                                            },
-                                            child: OngoingRoomCard(room: Room.fromJson(document))
-                                          );
-                                        }).toList(),
+                                  ? SizedBox(
+                                      height:
+                                          MediaQuery.of(context).size.height,
+                                      child: SmartRefresher(
+                                        enablePullDown: true,
+                                        controller: _refreshController,
+                                        onRefresh: _onRefresh,
+                                        onLoading: _onLoading,
+                                        child: ListView(
+                                          physics: BouncingScrollPhysics(),
+                                          children: snapshot.data!.docs
+                                              .map((DocumentSnapshot document) {
+                                            return GestureDetector(
+                                                onTap: () async {
+                                                  Navigator.push(
+                                                      context,
+                                                      CupertinoPageRoute(
+                                                          builder: (BuildContext
+                                                                  context) =>
+                                                              ThemePage(
+                                                                  room: Room
+                                                                      .fromJson(
+                                                                          document))));
+                                                },
+                                                child: OngoingRoomCard(
+                                                    room: Room.fromJson(
+                                                        document)));
+                                          }).toList(),
+                                        ),
                                       ),
-                                    ),
-                                )
-                                // Display if still loading data
-                                : Center(child: CircularProgressIndicator());
+                                    )
+                                  // Display if still loading data
+                                  : Center(child: CircularProgressIndicator());
                             },
                           ),
                         ],

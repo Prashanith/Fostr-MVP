@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fostr/utils/theme.dart';
+import 'package:sizer/sizer.dart';
 
 class PrimaryButton extends StatefulWidget {
   final String text;
@@ -35,7 +36,7 @@ class _PrimaryButtonState extends State<PrimaryButton> with FostrTheme {
         transform: Transform.scale(scale: scale).transform,
         duration: Duration(milliseconds: 200),
         alignment: Alignment.center,
-        width: (widget.width) ?? 330,
+        width: (widget.width) ?? 90.w,
         height: 70,
         decoration: BoxDecoration(
           borderRadius: buttonBorderRadius,

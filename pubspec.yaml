@@ -51,6 +51,7 @@ dependencies:
   provider: ^5.0.0
   pull_to_refresh: ^2.0.0
   shared_preferences: ^2.0.6
+  sizer: ^2.0.13
   syncfusion_flutter_charts: ^19.2.51
 
 dev_dependencies:
