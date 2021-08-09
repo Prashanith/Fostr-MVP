@@ -216,6 +216,7 @@ class _HomePageState extends State<HomePage> with FostrTheme {
                                       onRefresh: _onRefresh,
                                       onLoading: _onLoading,
                                       child: ListView(
+                                        physics: BouncingScrollPhysics(),
                                         children: snapshot.data!.docs.map((DocumentSnapshot document) {
                                           return GestureDetector(
                                             onTap: () async {

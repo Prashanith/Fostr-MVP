@@ -179,7 +179,16 @@ class _LoginPageState extends State<LoginPage> with FostrTheme {
                                   user.createdOn == user.lastLogin) {
                                 FostrRouter.goto(context, Routes.addDetails);
                               } else {
-                                print("done");
+                                if (auth.userType == UserType.USER) {
+                                  FostrRouter.removeUntillAndGoto(context,
+                                      Routes.ongoingRoom, (route) => false);
+                                } else if (auth.userType ==
+                                    UserType.CLUBOWNER) {
+                                  Navigator.of(context).pushAndRemoveUntil(
+                                      CupertinoPageRoute(
+                                          builder: (_) => Dashboard()),
+                                      (route) => false);
+                                }
                               }
                             } catch (e) {
                               handleError(e);
@@ -202,12 +211,8 @@ class _LoginPageState extends State<LoginPage> with FostrTheme {
                                     auth.userType!,
                                   );
                                   if (auth.userType == UserType.USER) {
-                                    FostrRouter.removeUntillAndGoto(
-                                        context,
-                                        Routes.ongoingRoom,
-                                        (route) =>
-                                            route.settings.name ==
-                                            Routes.entry);
+                                    FostrRouter.removeUntillAndGoto(context,
+                                        Routes.ongoingRoom, (route) => false);
                                   } else if (auth.userType ==
                                       UserType.CLUBOWNER) {
                                     Navigator.of(context).pushAndRemoveUntil(

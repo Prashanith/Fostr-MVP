@@ -1,6 +1,10 @@
 import 'dart:async';
 
+import 'package:country_code_picker/country_code_picker.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fostr/core/constants.dart';
+import 'package:fostr/pages/clubOwner/dashboard.dart';
 import 'package:fostr/widgets/Layout.dart';
 import 'package:fostr/providers/AuthProvider.dart';
 import 'package:fostr/router/router.dart';
@@ -24,7 +28,9 @@ class _SignupPageState extends State<SignupPage> with FostrTheme {
   final signupForm = GlobalKey<FormState>();
 
   bool isEmail = false;
+  bool isNumber = false;
   bool isError = false;
+  String countryCode = "+91";
   String error = "";
 
   TextEditingController _controller = TextEditingController();
@@ -33,11 +39,18 @@ class _SignupPageState extends State<SignupPage> with FostrTheme {
   void handlePasswordField() {
     if (Validator.isEmail(_controller.text)) {
       setState(() {
+        isNumber = false;
         isEmail = true;
+      });
+    } else if (Validator.isPhone(_controller.text)) {
+      setState(() {
+        isEmail = false;
+        isNumber = true;
       });
     } else {
       setState(() {
         isEmail = false;
+        isNumber = false;
       });
     }
   }
@@ -113,6 +126,32 @@ class _SignupPageState extends State<SignupPage> with FostrTheme {
                             isPassword: true,
                           )
                         : Container(),
+                    (isNumber)
+                        ? Opacity(
+                            opacity: 0.6,
+                            child: Container(
+                              height: 60,
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                color: Color.fromRGBO(102, 163, 153, 1),
+                                borderRadius: BorderRadius.circular(15),
+                                boxShadow: boxShadow,
+                              ),
+                              child: CountryCodePicker(
+                                dialogSize: Size(350, 300),
+                                onChanged: (e) {
+                                  setState(() {
+                                    countryCode = e.dialCode.toString();
+                                  });
+                                },
+                                initialSelection: 'IN',
+                                textStyle: actionTextStyle,
+                                // showCountryOnly: true,
+                                alignLeft: true,
+                              ),
+                            ),
+                          )
+                        : Container(),
                   ],
                 ),
               ),
@@ -121,7 +160,30 @@ class _SignupPageState extends State<SignupPage> with FostrTheme {
                 padding: const EdgeInsets.only(bottom: 60),
                 child: Column(
                   children: [
-                    SigninWithGoogle(text: "Signup With Google", onTap: () {}),
+                    SigninWithGoogle(
+                        text: "Signup With Google",
+                        onTap: () async {
+                          try {
+                            var user =
+                                await auth.signInWithGoogle(auth.userType!);
+                            if (user != null &&
+                                user.createdOn == user.lastLogin) {
+                              FostrRouter.goto(context, Routes.addDetails);
+                            } else {
+                              if (auth.userType == UserType.USER) {
+                                FostrRouter.removeUntillAndGoto(context,
+                                    Routes.ongoingRoom, (route) => false);
+                              } else if (auth.userType == UserType.CLUBOWNER) {
+                                Navigator.of(context).pushAndRemoveUntil(
+                                    CupertinoPageRoute(
+                                        builder: (_) => Dashboard()),
+                                    (route) => false);
+                              }
+                            }
+                          } catch (e) {
+                            handleError(e);
+                          }
+                        }),
                     SizedBox(
                       height: 20,
                     ),
@@ -142,7 +204,10 @@ class _SignupPageState extends State<SignupPage> with FostrTheme {
                           } else if (Validator.isPhone(_controller.text)) {
                             if (!auth.isLoading) {
                               auth
-                                  .signInWithPhone(context, _controller.text)
+                                  .signInWithPhone(
+                                      context,
+                                      countryCode.trim() +
+                                          _controller.text.trim())
                                   .then((value) {
                                 FostrRouter.goto(
                                     context, Routes.otpVerification);
