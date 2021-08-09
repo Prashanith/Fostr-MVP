@@ -5,12 +5,7 @@ import 'package:fostr/models/RoomModel.dart';
 import 'package:fostr/utils/theme.dart';
 import 'package:intl/intl.dart';
 
-<<<<<<< HEAD
-import '../user/BookmarkContainer.dart';
-
-=======
 import 'BookmarkContainer.dart';
->>>>>>> e9f9c71770a5e337eb592a447eeb9632a6b14155
 class OngoingRoomCard extends StatelessWidget with FostrTheme {
   final Room room;
 

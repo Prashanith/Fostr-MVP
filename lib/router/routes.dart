@@ -21,11 +21,8 @@ class Routes {
   //user
   static const ongoingRoom = "/ongoingRoom";
 
-<<<<<<< HEAD
   //follow following page
   static const followFollowing = "/followFollowing";
-=======
   //room
   static const roomDetails = "/roomDetails";
->>>>>>> e9f9c71770a5e337eb592a447eeb9632a6b14155
 }
