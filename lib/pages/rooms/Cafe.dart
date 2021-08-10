@@ -6,10 +6,11 @@ import 'package:fostr/core/constants.dart';
 import 'package:fostr/core/data.dart';
 import 'package:fostr/core/settings.dart';
 import 'package:fostr/models/RoomModel.dart';
-import 'package:fostr/models/UserModel/Old.dart';
+import 'package:fostr/models/UserModel/RoomUser.dart';
 import 'package:fostr/providers/AuthProvider.dart';
 import 'package:fostr/utils/theme.dart';
-import 'package:fostr/widgets/UserProfile.dart';
+import 'package:fostr/widgets/rooms/DragProfile.dart';
+import 'package:fostr/widgets/rooms/Profile.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
@@ -57,6 +58,35 @@ class _CafeState extends State<Cafe> with FostrTheme {
         speakersCount = result.data()!['speakersCount'];
       });
     });
+  }
+
+  removeUser() async {
+    if (widget.role == ClientRole.Broadcaster) {
+      // update the list of speakers
+      await roomCollection.doc(widget.room.title).update({
+        'speakersCount': speakersCount - 1,
+      });
+      await roomCollection
+          .doc(widget.room.title)
+          .collection("speakers")
+          .doc(profileData['username'])
+          .delete();
+    } else {
+      // update the list of participants
+      await roomCollection.doc(widget.room.title).update({
+        'participantsCount': participantsCount - 1,
+      });
+      await roomCollection
+          .doc(widget.room.title)
+          .collection("participants")
+          .doc(profileData['username'])
+          .delete();
+    }
+
+    if ((participantsCount == 0 && speakersCount == 1) ||
+        (participantsCount == 1 && speakersCount == 0)) {
+      await roomCollection.doc(widget.room.title).delete();
+    }
   }
 
   /// Create Agora SDK instance and initialize
@@ -152,10 +182,15 @@ class _CafeState extends State<Cafe> with FostrTheme {
                     // SizedBox(
                     //   height: 30,
                     // ),
-                    Text(
-                      "Hello, ${user.name}",
-                      style: h1.apply(color: Colors.white),
-                    ),
+                    (user.name == "")
+                      ? Text(
+                        "Hello, User",
+                        style: h1.apply(color: Colors.white),
+                      )
+                      : Text(
+                        "Hello, ${user.name}",
+                        style: h1.apply(color: Colors.white),
+                      ),
                   ],
                 ),
               ),
@@ -218,29 +253,51 @@ class _CafeState extends State<Cafe> with FostrTheme {
         children: [
           // list of speakers
           StreamBuilder(
-              stream: roomCollection
-                  .doc(widget.room.title)
-                  .collection('speakers')
-                  .snapshots(),
-              builder: (BuildContext context,
-                  AsyncSnapshot<QuerySnapshot> snapshot) {
+              stream: roomCollection.doc(widget.room.title).collection('speakers').snapshots(),
+              builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.hasData) {
                   List<QueryDocumentSnapshot<Object?>> map = snapshot.data!.docs;
-                  return GridView.builder(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3),
-                    itemCount: map.length,
-                    padding: EdgeInsets.all(2.0),
-                    itemBuilder: (BuildContext context, int index) {
-                      return Container(
-                        color: Colors.red,
-                        child: UserProfile(
-                            user: OldUser.fromJson(map[index]),
-                            size: 50,
-                            isMute: false,
-                            isSpeaker: true),
-                      );
-                    },
+                  // return GridView.builder(
+                  //   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  //       crossAxisCount: 3),
+                  //   itemCount: map.length,
+                  //   padding: EdgeInsets.all(2.0),
+                  //   itemBuilder: (BuildContext context, int index) {
+                  //     return Container(
+                  //       color: Colors.red,
+                  //       child: Profile(
+                  //           user: RoomUser.fromJson(map[index]),
+                  //           size: 50,
+                  //           isMute: false,
+                  //           isSpeaker: true),
+                  //     );
+                  //   },
+                  // );
+                  return Stack(
+                    children: [     
+                      DragProfile(offset: Offset(MediaQuery.of(context).size.width*0.002, MediaQuery.of(context).size.height*0.32), user: RoomUser.fromJson(map[0]), isSpeaker: true),
+                      map.length >= 2
+                        ? DragProfile(offset: Offset(MediaQuery.of(context).size.width*0.22, MediaQuery.of(context).size.height*0.3), user: RoomUser.fromJson(map[1]), isSpeaker: true)
+                        : Container(),
+                      map.length >= 3
+                        ? DragProfile(offset: Offset(MediaQuery.of(context).size.width*0.05, MediaQuery.of(context).size.height*0.4), user: RoomUser.fromJson(map[2]), isSpeaker: true)
+                        : Container(),
+                      map.length >= 4
+                        ? DragProfile(offset: Offset(MediaQuery.of(context).size.width*0.5, MediaQuery.of(context).size.height*0.43), user: RoomUser.fromJson(map[3]), isSpeaker: true)
+                        : Container(),
+                      map.length >= 5
+                        ? DragProfile(offset: Offset(MediaQuery.of(context).size.width*0.7, MediaQuery.of(context).size.height*0.3), user: RoomUser.fromJson(map[4]), isSpeaker: true)
+                        : Container(),
+                      map.length >= 6
+                        ? DragProfile(offset: Offset(MediaQuery.of(context).size.width*0.7, MediaQuery.of(context).size.height*0.4), user: RoomUser.fromJson(map[5]), isSpeaker: true)
+                        : Container(),
+                      map.length >= 7
+                        ? DragProfile(offset: Offset(MediaQuery.of(context).size.width*0.57, MediaQuery.of(context).size.height*0.27), user: RoomUser.fromJson(map[6]), isSpeaker: true)
+                        : Container(),
+                      map.length == 8
+                        ? DragProfile(offset: Offset(210, 215), user: RoomUser.fromJson(map[7]), isSpeaker: true)
+                        : Container(),
+                    ],
                   );
                 } else {
                   return CircularProgressIndicator();
@@ -310,6 +367,7 @@ class _CafeState extends State<Cafe> with FostrTheme {
         children: [
           ElevatedButton(
             onPressed: () {
+              removeUser();
               Navigator.pop(context);
             },
             style: ButtonStyle(

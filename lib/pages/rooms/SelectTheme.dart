@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:fostr/core/data.dart';
 import 'package:fostr/core/settings.dart';
 import 'package:fostr/models/RoomModel.dart';
+import 'package:fostr/models/UserModel/User.dart';
 import 'package:fostr/pages/rooms/Cafe.dart';
 import 'package:fostr/pages/rooms/Library.dart';
 import 'package:fostr/pages/rooms/Minimal.dart';
-import 'package:fostr/pages/rooms/Minimalist.dart';
+import 'package:fostr/providers/AuthProvider.dart';
 import 'package:fostr/utils/theme.dart';
+import 'package:provider/provider.dart';
 
 class SelectTheme extends StatefulWidget {
   final Room room;
@@ -34,6 +36,8 @@ class _SelectThemeState extends State<SelectTheme> {
 
   @override
   Widget build(BuildContext context) {
+    final auth = Provider.of<AuthProvider>(context);
+    final user = auth.user!;
     return Material(
       color: gradientBottom,
       child: Container(
@@ -276,7 +280,7 @@ class _SelectThemeState extends State<SelectTheme> {
                     : ElevatedButton(
                         child: Text('Join Room'),
                         onPressed: () {
-                          updateRoom();
+                          updateRoom(user);
                         },
                         style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all(Color(0xff94B5AC)),
@@ -314,7 +318,7 @@ class _SelectThemeState extends State<SelectTheme> {
       });
   }
 
-  updateRoom() async {
+  updateRoom(User user) async {
     setState(() {
       isLoading = true;
     });
@@ -324,20 +328,20 @@ class _SelectThemeState extends State<SelectTheme> {
       await roomCollection.doc(widget.room.title).update({
         'speakersCount': speakersCount + 1,
       });
-      await roomCollection.doc(widget.room.title).collection("speakers").doc(profileData['username']).set({
-        'username': profileData['username'],
-        'name': profileData['name'],
-        'profileImage': profileData['profileImage'],
+      await roomCollection.doc(widget.room.title).collection("speakers").doc(user.userName).set({
+        'username': user.userName,
+        'name': user.name,
+        'profileImage': user.userProfile!.profileImage ?? "image",
       });
     } else {
       // update the list of participants
       await roomCollection.doc(widget.room.title).update({
         'participantsCount': participantsCount + 1,
       });
-      await roomCollection.doc(widget.room.title).collection("participants").doc(profileData['username']).set({
-        'username': profileData['username'],
-        'name': profileData['name'],
-        'profileImage': profileData['profileImage'],
+      await roomCollection.doc(widget.room.title).collection("participants").doc(user.userName).set({
+        'username': user.userName,
+        'name': user.name,
+        'profileImage': user.userProfile!.profileImage ?? "image",
       });
     }
 
@@ -363,6 +367,13 @@ class _SelectThemeState extends State<SelectTheme> {
     } else if(roomTheme == "Library") {
       Navigator.pushReplacement(context, CupertinoPageRoute(
         builder: (context) => Library(
+          room: widget.room,
+          role: role,
+        ))
+      );
+    } else if(roomTheme == "Amphitheatre") {
+      Navigator.pushReplacement(context, CupertinoPageRoute(
+        builder: (context) => Minimal(
           room: widget.room,
           role: role,
         ))

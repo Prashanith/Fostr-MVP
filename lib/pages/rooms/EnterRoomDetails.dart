@@ -297,7 +297,7 @@ class _EnterRoomDetailsState extends State<EnterRoomDetails> with FostrTheme {
                   : ElevatedButton(
                     child: Text('Schedule Room'),
                     onPressed: () {
-                      _createChannel(context);
+                      _createChannel(context, user);
                     },
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all(Color(0xff94B5AC)),
@@ -317,7 +317,7 @@ class _EnterRoomDetailsState extends State<EnterRoomDetails> with FostrTheme {
     );
   }
 
-  _createChannel(context) async {
+  _createChannel(context, User user) async {
     setState(() {
       scheduling = true;
     });
@@ -330,13 +330,13 @@ class _EnterRoomDetailsState extends State<EnterRoomDetails> with FostrTheme {
         .doc(eventNameTextEditingController.text)
         .set({
       'participantsCount': 0,
-      'speakersCount': 1,
+      'speakersCount': 0,
       'title': '${eventNameTextEditingController.text}',
       'agenda': '${agendaTextEditingController.text}',
       'image': imageUrl,
       'dateTime': '$now',
       // 'dateTime': dateTextEditingController.text + " " + timeTextEditingController.text,
-      'roomCreator': profileData['username'],
+      'roomCreator': user.userName,
       'token': roomToken.toString(),
     });
     await roomCollection
@@ -345,11 +345,11 @@ class _EnterRoomDetailsState extends State<EnterRoomDetails> with FostrTheme {
         //     timeTextEditingController.text)
         .doc(eventNameTextEditingController.text)
         .collection("speakers")
-        .doc(profileData['username'])
+        .doc(user.userName)
         .set({
-      'username': profileData['username'],
-      'name': profileData['name'],
-      'profileImage': profileData['profileImage'],
+      'username': user.userName,
+      'name': user.name,
+      'profileImage': user.userProfile!.profileImage ?? "image",
     }).then((value) => Navigator.push(context, MaterialPageRoute(builder: (context) => OngoingRoom())));
   }
 }

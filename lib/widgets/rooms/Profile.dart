@@ -1,16 +1,18 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fostr/core/constants.dart';
-import 'package:fostr/models/UserModel/User.dart';
+import 'package:fostr/models/UserModel/RoomUser.dart';
+import 'package:fostr/pages/user/profile.dart';
 
 import '../RoundedImage.dart';
 
-class UserProfile extends StatelessWidget {
-  final User user;
+class Profile extends StatelessWidget {
+  final RoomUser user;
   final double size;
   final bool isMute;
   final bool isSpeaker;
 
-  const UserProfile(
+  const Profile(
       {Key? key,
       required this.user,
       required this.size,
@@ -25,12 +27,12 @@ class UserProfile extends StatelessWidget {
         Stack(
           children: [
             GestureDetector(
-              onTap: () => Navigator.of(context).pushNamed(
-                '/profile',
-                arguments: user,
+              onTap: () => Navigator.push(
+                context,
+                CupertinoPageRoute(builder: (context) => UserProfilePage())
               ),
               child: RoundedImage(
-                path: IMAGES + "profile.png",
+                url: user.profileImage.toString() == "image" ? null : user.profileImage,
                 width: size,
                 height: size,
               ),
@@ -42,9 +44,9 @@ class UserProfile extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            moderator(isSpeaker),
+            // moderator(isSpeaker),
             Text(
-              user.name.split(' ')[0],
+              user.username,
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.center,
               style: TextStyle(
