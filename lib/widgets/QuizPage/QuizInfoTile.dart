@@ -26,26 +26,22 @@ class QuizInfoTile extends StatelessWidget {
           ),
           child: icon,
         ),
-        title: Flexible(
-          child: Text(
-            title,
-            style: TextStyle(
-              fontSize: 14.sp,
-              fontFamily: "Lato",
-              fontWeight: FontWeight.w700,
-              color: Color.fromRGBO(130, 130, 130, 1),
-            ),
+        title: Text(
+          title,
+          style: TextStyle(
+            fontSize: 14.sp,
+            fontFamily: "Lato",
+            fontWeight: FontWeight.w700,
+            color: Color.fromRGBO(130, 130, 130, 1),
           ),
         ),
-        subtitle: Flexible(
-          child: Text(
-            subTitle,
-            style: TextStyle(
-              fontSize: 11.sp,
-              fontFamily: "Lato",
-              fontWeight: FontWeight.w700,
-              color: Color.fromRGBO(153, 153, 153, 1),
-            ),
+        subtitle: Text(
+          subTitle,
+          style: TextStyle(
+            fontSize: 11.sp,
+            fontFamily: "Lato",
+            fontWeight: FontWeight.w700,
+            color: Color.fromRGBO(153, 153, 153, 1),
           ),
         ),
       ),

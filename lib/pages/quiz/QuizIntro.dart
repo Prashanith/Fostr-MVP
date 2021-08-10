@@ -56,7 +56,7 @@ class _QuizIntroState extends State<QuizIntro> with FostrTheme {
                       child: Text(
                         "Reading Personality Quiz",
                         style: h1.copyWith(
-                          fontSize: 22.sp,
+                          fontSize: 20.sp,
                           color: Colors.white,
                           fontWeight: FontWeight.w700,
                         ),
@@ -88,7 +88,7 @@ class _QuizIntroState extends State<QuizIntro> with FostrTheme {
                           Text(
                             "Tell us about your reading habits, and we’ll tell you which clubs to join!",
                             style: h1.copyWith(
-                              fontSize: 22.sp,
+                              fontSize: 18.sp,
                               fontWeight: FontWeight.w600,
                               color: Color.fromRGBO(51, 51, 51, 1),
                             ),
