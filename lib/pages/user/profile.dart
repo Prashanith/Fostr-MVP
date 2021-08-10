@@ -169,69 +169,79 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                           SizedBox(
                             width: 25,
                           ),
-                          Container(
-                            padding: const EdgeInsets.all(10),
-                            constraints: BoxConstraints(
-                              maxWidth: 200,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Color(0xffEBFFEE),
-                              borderRadius: BorderRadius.circular(13),
-                              boxShadow: boxShadow,
-                            ),
-                            child: DefaultTextStyle.merge(
-                              style: h2.copyWith(fontSize: 14.sp),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: [
-                                  InkWell(
-                                    onTap: () {
-                                      FostrRouter.gotoWithArg(
-                                        context,
-                                        FollowFollowing(
-                                          items: user.followers,
-                                          title: "Followers",
-                                        ),
-                                      );
-                                    },
-                                    child: Column(
-                                      children: [
-                                        Text(
-                                          user.followers?.length.toString() ??
-                                              "0",
-                                        ),
-                                        Text(
-                                          "Followers",
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                  InkWell(
-                                    onTap: () {
-                                      FostrRouter.gotoWithArg(
-                                        context,
-                                        FollowFollowing(
-                                          items: user.followings,
-                                          title: "Followings",
-                                        ),
-                                      );
-                                    },
-                                    child: Column(
-                                      children: [
-                                        Text(
-                                          user.followings?.length.toString() ??
-                                              "0",
-                                        ),
-                                        Text(
-                                          "Followings",
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ],
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              IconButton(
+                                icon: FaIcon(FontAwesomeIcons.twitter),
+                                color: Colors.teal[800],
+                                iconSize: 30,
+                                onPressed: () async {
+                                  controller.text = user.userProfile?.twitter ?? "";
+                                  await showPopUp("Twitter", user.id, (e) {
+                                    setState(() {
+                                      if (user.userProfile == null) {
+                                        var userProfile = UserProfile();
+                                        userProfile.twitter = e[1];
+                                        user.userProfile = userProfile;
+                                      } else {
+                                        user.userProfile!.twitter = e[1];
+                                      }
+                                      updateProfile({
+                                        "userProfile": user.userProfile!.toJson(),
+                                        "id": user.id
+                                      });
+                                    });
+                                  });
+                                },
                               ),
-                            ),
+                              IconButton(
+                                icon: FaIcon(FontAwesomeIcons.instagram),
+                                color: Colors.teal[800],
+                                iconSize: 30,
+                                onPressed: () {
+                                  controller.text = user.userProfile?.instagram ?? "";
+                                  showPopUp("Instagram", user.id, (e) {
+                                    setState(() {
+                                      if (user.userProfile == null) {
+                                        var userProfile = UserProfile();
+                                        userProfile.instagram = e[1];
+                                        user.userProfile = userProfile;
+                                      } else {
+                                        user.userProfile!.instagram = e[1];
+                                      }
+                                      updateProfile({
+                                        "userProfile": user.userProfile!.toJson(),
+                                        "id": user.id
+                                      });
+                                    });
+                                  });
+                                },
+                              ),
+                              IconButton(
+                                icon: FaIcon(FontAwesomeIcons.linkedinIn),
+                                color: Colors.teal[800],
+                                iconSize: 30,
+                                onPressed: () {
+                                  controller.text = user.userProfile?.linkedIn ?? "";
+                                  showPopUp("linkedIn", user.id, (e) {
+                                    setState(() {
+                                      if (user.userProfile == null) {
+                                        var userProfile = UserProfile();
+                                        userProfile.linkedIn = e[1];
+                                        user.userProfile = userProfile;
+                                      } else {
+                                        user.userProfile!.linkedIn = e[1];
+                                      }
+                                      updateProfile({
+                                        "userProfile": user.userProfile!.toJson(),
+                                        "id": user.id
+                                      });
+                                    });
+                                  });
+                                },
+                              ),
+                            ],
                           ),
                         ],
                       ),
@@ -288,79 +298,68 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                         ],
                       ),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        IconButton(
-                          icon: FaIcon(FontAwesomeIcons.twitter),
-                          color: Colors.teal[800],
-                          iconSize: 30,
-                          onPressed: () async {
-                            controller.text = user.userProfile?.twitter ?? "";
-                            await showPopUp("Twitter", user.id, (e) {
-                              setState(() {
-                                if (user.userProfile == null) {
-                                  var userProfile = UserProfile();
-                                  userProfile.twitter = e[1];
-                                  user.userProfile = userProfile;
-                                } else {
-                                  user.userProfile!.twitter = e[1];
-                                }
-                                updateProfile({
-                                  "userProfile": user.userProfile!.toJson(),
-                                  "id": user.id
-                                });
-                              });
-                            });
-                          },
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      constraints: BoxConstraints(
+                        maxWidth: 200,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Color(0xffEBFFEE),
+                        borderRadius: BorderRadius.circular(13),
+                        boxShadow: boxShadow,
+                      ),
+                      child: DefaultTextStyle.merge(
+                        style: h2.copyWith(fontSize: 14.sp),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            InkWell(
+                              onTap: () {
+                                FostrRouter.gotoWithArg(
+                                  context,
+                                  FollowFollowing(
+                                    items: user.followers,
+                                    title: "Followers",
+                                  ),
+                                );
+                              },
+                              child: Column(
+                                children: [
+                                  Text(
+                                    user.followers?.length.toString() ??
+                                        "0",
+                                  ),
+                                  Text(
+                                    "Followers",
+                                  )
+                                ],
+                              ),
+                            ),
+                            InkWell(
+                              onTap: () {
+                                FostrRouter.gotoWithArg(
+                                  context,
+                                  FollowFollowing(
+                                    items: user.followings,
+                                    title: "Followings",
+                                  ),
+                                );
+                              },
+                              child: Column(
+                                children: [
+                                  Text(
+                                    user.followings?.length.toString() ??
+                                        "0",
+                                  ),
+                                  Text(
+                                    "Followings",
+                                  )
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
-                        IconButton(
-                          icon: FaIcon(FontAwesomeIcons.instagram),
-                          color: Colors.teal[800],
-                          iconSize: 30,
-                          onPressed: () {
-                            controller.text = user.userProfile?.instagram ?? "";
-                            showPopUp("Instagram", user.id, (e) {
-                              setState(() {
-                                if (user.userProfile == null) {
-                                  var userProfile = UserProfile();
-                                  userProfile.instagram = e[1];
-                                  user.userProfile = userProfile;
-                                } else {
-                                  user.userProfile!.instagram = e[1];
-                                }
-                                updateProfile({
-                                  "userProfile": user.userProfile!.toJson(),
-                                  "id": user.id
-                                });
-                              });
-                            });
-                          },
-                        ),
-                        IconButton(
-                          icon: FaIcon(FontAwesomeIcons.linkedinIn),
-                          color: Colors.teal[800],
-                          iconSize: 30,
-                          onPressed: () {
-                            controller.text = user.userProfile?.linkedIn ?? "";
-                            showPopUp("linkedIn", user.id, (e) {
-                              setState(() {
-                                if (user.userProfile == null) {
-                                  var userProfile = UserProfile();
-                                  userProfile.linkedIn = e[1];
-                                  user.userProfile = userProfile;
-                                } else {
-                                  user.userProfile!.linkedIn = e[1];
-                                }
-                                updateProfile({
-                                  "userProfile": user.userProfile!.toJson(),
-                                  "id": user.id
-                                });
-                              });
-                            });
-                          },
-                        ),
-                      ],
+                      ),
                     ),
                     SizedBox(
                       height: 2.h,
