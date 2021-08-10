@@ -269,16 +269,14 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                                     },
                                   );
                                 },
-                                child: Flexible(
-                                  child: Text(
-                                    (user.name.isEmpty)
-                                        ? "Enter your name"
-                                        : user.name,
-                                    // overflow: TextOverflow.ellipsis,
-                                    style: h1.copyWith(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 22.sp),
-                                  ),
+                                child: Text(
+                                  (user.name.isEmpty)
+                                      ? "Enter your name"
+                                      : user.name,
+                                  // overflow: TextOverflow.ellipsis,
+                                  style: h1.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 22.sp),
                                 ),
                               ),
                               SizedBox(

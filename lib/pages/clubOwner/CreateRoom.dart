@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fostr/core/constants.dart';
 import 'package:fostr/providers/AuthProvider.dart';
+import 'package:fostr/router/router.dart';
+import 'package:fostr/router/routes.dart';
 import 'package:fostr/utils/theme.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
@@ -65,100 +67,128 @@ class _CreateRoomState extends State<CreateRoom> with FostrTheme {
                     ),
                     color: Colors.white,
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(30),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          height: 2.h,
-                        ),
-                        Column(
+                  child: Stack(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(30),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Container(
-                              alignment: Alignment.center,
-                              height: 80,
-                              width: 40.w,
-                              decoration: BoxDecoration(
-                                boxShadow: boxShadow,
-                                borderRadius: BorderRadius.circular(42),
-                                color: Color(0xff96C5AE),
-                              ),
-                              child: Text(
-                                "3000",
-                                style: h1.copyWith(
-                                  color: Colors.white,
-                                  fontSize: 22.sp,
-                                ),
-                              ),
-                            ),
                             SizedBox(
                               height: 2.h,
                             ),
-                            Text(
-                              "MEMBERS",
-                              style: h1.copyWith(
-                                color: Color(0xff96C5AE),
-                                fontWeight: FontWeight.bold,
-                                fontSize: 24.sp,
+                            Column(
+                              children: [
+                                Container(
+                                  alignment: Alignment.center,
+                                  height: 80,
+                                  width: 40.w,
+                                  decoration: BoxDecoration(
+                                    boxShadow: boxShadow,
+                                    borderRadius: BorderRadius.circular(42),
+                                    color: Color(0xff96C5AE),
+                                  ),
+                                  child: Text(
+                                    "3000",
+                                    style: h1.copyWith(
+                                      color: Colors.white,
+                                      fontSize: 22.sp,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 2.h,
+                                ),
+                                Text(
+                                  "MEMBERS",
+                                  style: h1.copyWith(
+                                    color: Color(0xff96C5AE),
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 24.sp,
+                                  ),
+                                )
+                              ],
+                            ),
+                            Container(
+                              height: 40.h,
+                              width: 90.w,
+                              constraints: BoxConstraints(
+                                maxWidth: 370,
+                                maxHeight: 340,
+                              ),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(34),
+                                boxShadow: [
+                                  BoxShadow(
+                                    offset: Offset(8, 0),
+                                    blurRadius: 16,
+                                    color: Colors.black.withOpacity(0.25),
+                                  )
+                                ],
+                                gradient: LinearGradient(colors: [
+                                  Color(0xff97C6AF),
+                                  Color(0xffC9DED0),
+                                ]),
+                              ),
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 10.0),
+                                    child: Text(
+                                      "TOP ROOMS",
+                                      style: h2.copyWith(
+                                          fontSize: 18.sp, color: Colors.white),
+                                    ),
+                                  ),
+                                  RoomLine(
+                                    width: 200,
+                                    bookName: "e-Habits Book Club",
+                                  ),
+                                  RoomLine(
+                                    width: 150,
+                                    bookName: "Science Reads",
+                                  ),
+                                  RoomLine(
+                                    width: 100,
+                                    bookName: "Sita",
+                                  ),
+                                ],
                               ),
                             )
                           ],
                         ),
-                        Container(
-                          height: 40.h,
-                          width: 90.w,
-                          constraints: BoxConstraints(
-                            maxWidth: 370,
-                            maxHeight: 340,
-                          ),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(34),
-                            boxShadow: [
-                              BoxShadow(
-                                offset: Offset(8, 0),
-                                blurRadius: 16,
-                                color: Colors.black.withOpacity(0.25),
-                              )
-                            ],
-                            gradient: LinearGradient(colors: [
-                              Color(0xff97C6AF),
-                              Color(0xffC9DED0),
-                            ]),
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(top: 10.0),
-                                child: Text(
-                                  "TOP ROOMS",
-                                  style: h2.copyWith(
-                                      fontSize: 18.sp, color: Colors.white),
-                                ),
-                              ),
-                              RoomLine(
-                                width: 200,
-                                bookName: "e-Habits Book Club",
-                              ),
-                              RoomLine(
-                                width: 150,
-                                bookName: "Science Reads",
-                              ),
-                              RoomLine(
-                                width: 100,
-                                bookName: "Sita",
-                              ),
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
+                      ),
+                      Align(
+                          alignment: Alignment.bottomCenter,
+                          child: startRoomButton()),
+                    ],
                   ),
                 ),
               ),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget startRoomButton() {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 20),
+      child: ElevatedButton(
+        child: Text('Schedule Room'),
+        onPressed: () {
+          FostrRouter.goto(context, Routes.roomDetails);
+        },
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all(Color(0xff94B5AC)),
+          shape: MaterialStateProperty.all<OutlinedBorder>(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30),
+            ),
           ),
         ),
       ),

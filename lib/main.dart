@@ -16,7 +16,7 @@ void main() async {
   setupLocators();
   runApp(
     DevicePreview(
-      enabled: true,
+      enabled: false,
       builder: (context) => MyApp(),
     ),
   );
@@ -30,11 +30,10 @@ class MyApp extends StatelessWidget with FostrTheme {
         builder: (context, orientation, deviceType) => MaterialApp(
           locale: DevicePreview.locale(context),
           builder: DevicePreview.appBuilder,
-          // initialRoute: "/",
-          // onGenerateRoute: (settings) =>
-          //     FostrRouter.generateRoute(context, settings),
+          initialRoute: "/",
+          onGenerateRoute: (settings) =>
+              FostrRouter.generateRoute(context, settings),
           title: "FOSTR",
-          home: Dashboard(),
         ),
       ),
     );
