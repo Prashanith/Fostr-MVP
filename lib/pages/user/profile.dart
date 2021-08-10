@@ -169,118 +169,123 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                           SizedBox(
                             width: 25,
                           ),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                InkWell(
-                                  onTap: () async {
-                                    controller.text = user.name;
-                                    await showPopUp(
-                                      "Name",
-                                      user.id,
-                                      (e) {
-                                        setState(() {
-                                          user.name = e[1];
-                                          updateProfile({
-                                            "name": user.name,
-                                            "id": user.id
-                                          });
-                                        });
-                                      },
-                                    );
-                                  },
-                                  child: Flexible(
-                                    child: Text(
-                                      (user.name.isEmpty)
-                                          ? "Enter your name"
-                                          : user.name,
-                                      // overflow: TextOverflow.ellipsis,
-                                      style: h1.copyWith(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 22.sp),
+                          Container(
+                            padding: const EdgeInsets.all(10),
+                            constraints: BoxConstraints(
+                              maxWidth: 200,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Color(0xffEBFFEE),
+                              borderRadius: BorderRadius.circular(13),
+                              boxShadow: boxShadow,
+                            ),
+                            child: DefaultTextStyle.merge(
+                              style: h2.copyWith(fontSize: 14.sp),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  InkWell(
+                                    onTap: () {
+                                      FostrRouter.gotoWithArg(
+                                        context,
+                                        FollowFollowing(
+                                          items: user.followers,
+                                          title: "Followers",
+                                        ),
+                                      );
+                                    },
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                          user.followers?.length.toString() ??
+                                              "0",
+                                        ),
+                                        Text(
+                                          "Followers",
+                                        )
+                                      ],
                                     ),
                                   ),
-                                ),
-                                SizedBox(
-                                  height: 5,
-                                ),
-                                Text(
-                                  (user.userName.isEmpty)
-                                      ? ""
-                                      : '@' + user.userName,
-                                  style: h1.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14.sp,
+                                  InkWell(
+                                    onTap: () {
+                                      FostrRouter.gotoWithArg(
+                                        context,
+                                        FollowFollowing(
+                                          items: user.followings,
+                                          title: "Followings",
+                                        ),
+                                      );
+                                    },
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                          user.followings?.length.toString() ??
+                                              "0",
+                                        ),
+                                        Text(
+                                          "Followings",
+                                        )
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                         ],
                       ),
                     ),
-                    Container(
-                      margin:  EdgeInsets.symmetric(vertical: 2.h),
-                      padding: const EdgeInsets.all(10),
-                      constraints: BoxConstraints(
-                        maxWidth: 200,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Color(0xffEBFFEE),
-                        borderRadius: BorderRadius.circular(13),
-                        boxShadow: boxShadow,
-                      ),
-                      child: DefaultTextStyle.merge(
-                        style: h2.copyWith(fontSize: 14.sp),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            InkWell(
-                              onTap: () {
-                                FostrRouter.gotoWithArg(
-                                  context,
-                                  FollowFollowing(
-                                    items: user.followers,
-                                    title: "Followers",
+                    Padding(
+                      padding: EdgeInsets.only(bottom: 2.h),
+                      child: Row(
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              InkWell(
+                                onTap: () async {
+                                  controller.text = user.name;
+                                  await showPopUp(
+                                    "Name",
+                                    user.id,
+                                    (e) {
+                                      setState(() {
+                                        user.name = e[1];
+                                        updateProfile(
+                                            {"name": user.name, "id": user.id});
+                                      });
+                                    },
+                                  );
+                                },
+                                child: Flexible(
+                                  child: Text(
+                                    (user.name.isEmpty)
+                                        ? "Enter your name"
+                                        : user.name,
+                                    // overflow: TextOverflow.ellipsis,
+                                    style: h1.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 22.sp),
                                   ),
-                                );
-                              },
-                              child: Column(
-                                children: [
-                                  Text(
-                                    user.followers?.length.toString() ?? "0",
-                                  ),
-                                  Text(
-                                    "Followers",
-                                  )
-                                ],
+                                ),
                               ),
-                            ),
-                            InkWell(
-                              onTap: () {
-                                FostrRouter.gotoWithArg(
-                                  context,
-                                  FollowFollowing(
-                                    items: user.followings,
-                                    title: "Followings",
-                                  ),
-                                );
-                              },
-                              child: Column(
-                                children: [
-                                  Text(
-                                    user.followings?.length.toString() ?? "0",
-                                  ),
-                                  Text(
-                                    "Followings",
-                                  )
-                                ],
+                              SizedBox(
+                                height: 5,
                               ),
-                            ),
-                          ],
-                        ),
+                              Text(
+                                (user.userName.isEmpty)
+                                    ? ""
+                                    : '@' + user.userName,
+                                style: h1.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14.sp,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
                     ),
                     Row(
