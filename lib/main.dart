@@ -15,7 +15,7 @@ void main() async {
   setupLocators();
   runApp(
     DevicePreview(
-      enabled: kDebugMode,
+      enabled: false,
       builder: (context) => MyApp(),
     ),
   );

@@ -237,23 +237,27 @@ class _HomePageState extends State<HomePage> with FostrTheme {
                                           children: snapshot.data!.docs
                                               .map((DocumentSnapshot document) {
                                             return GestureDetector(
-                                                onTap: () async {
-                                                  Navigator.push(
-                                                      context,
-                                                      CupertinoPageRoute(
-                                                          builder: (BuildContext
-                                                                  context) =>
-                                                              ThemePage(
-                                                                  room: Room
-                                                                      .fromJson(
-                                                                          document))));
-                                                },
-                                                child: OngoingRoomCard(
-                                                    room: Room.fromJson(
-                                                        document)));
+                                              onTap: () async {
+                                                Navigator.push(
+                                                  context,
+                                                  CupertinoPageRoute(
+                                                    builder: (BuildContext
+                                                            context) =>
+                                                        ThemePage(
+                                                      room: Room.fromJson(
+                                                          document),
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                              child: OngoingRoomCard(
+                                                room: Room.fromJson(document),
+                                              ),
+                                            );
                                           }).toList(),
                                         ),
-                                      )) // Display if still loading data
+                                      ),
+                                    ) // Display if still loading data
                                   : Center(child: CircularProgressIndicator());
                             },
                           ),

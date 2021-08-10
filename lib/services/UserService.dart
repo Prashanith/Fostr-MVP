@@ -135,4 +135,30 @@ class UserService {
       throw e;
     }
   }
+
+  Future<User> unfollowUser(User currentUser, User userToUnfollow) async {
+    try {
+      User user = currentUser;
+      var followings = currentUser.followings ?? [];
+      if (followings.remove(userToUnfollow.id)) {
+        var json = currentUser.toJson();
+        json['followings'] = followings;
+        user = User.fromJson(json);
+        print(json);
+        await updateUserField(json);
+        print("object");
+      }
+      var followers = userToUnfollow.followers ?? [];
+      if (followers.remove(currentUser.id)) {
+        var json = userToUnfollow.toJson();
+        json['followers'] = followers;
+        await updateUserField(json);
+      }
+
+      return user;
+    } catch (e) {
+      print(e);
+      throw e;
+    }
+  }
 }

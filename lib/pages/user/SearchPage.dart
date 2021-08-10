@@ -24,6 +24,26 @@ class _SearchPageState extends State<SearchPage> with FostrTheme {
   List<Map<String, dynamic>> users = [];
 
   final UserService userService = GetIt.I<UserService>();
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  void searchUsers(String id) async {
+    var res = await userService.searchUser(query);
+    setState(() {
+      clubs = res
+          .where((element) =>
+              element['userType'] == 'CLUBOWNER' && element['id'] != id)
+          .toList();
+      users = res
+          .where(
+              (element) => element['userType'] == 'USER' && element['id'] != id)
+          .toList();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthProvider>(context);
@@ -31,17 +51,18 @@ class _SearchPageState extends State<SearchPage> with FostrTheme {
       body: Layout(
         child: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+            padding: EdgeInsets.symmetric(horizontal: 2.w),
             child: Column(
               children: [
                 Padding(
                   padding: const EdgeInsets.only(top: 30.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Container(
                         margin: const EdgeInsets.only(right: 20),
-                        width: 70.w,
+                        width: 60.w,
                         decoration: BoxDecoration(
                             color: Color(0XFFEBFFEE),
                             borderRadius: BorderRadius.circular(25),
@@ -53,40 +74,30 @@ class _SearchPageState extends State<SearchPage> with FostrTheme {
                               ),
                             ]),
                         child: TextField(
-                          style: h2,
+                          style: h2.copyWith(fontSize: 14.sp),
+                          onEditingComplete: () => searchUsers(auth.user!.id),
+                          onSubmitted: (e) {
+                            print(e);
+                          },
                           onChanged: (value) {
                             setState(() {
                               query = value;
                             });
                           },
                           decoration: InputDecoration(
-                            contentPadding:
-                                const EdgeInsets.symmetric(horizontal: 20),
+                            contentPadding: EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 2.h),
                             hintText: "Search",
-                            hintStyle: h2,
+                            hintStyle: h2.copyWith(fontSize: 14.sp),
                             border: InputBorder.none,
                           ),
                         ),
                       ),
                       InkWell(
-                        onTap: () async {
-                          var res = await userService.searchUser(query);
-                          setState(() {
-                            clubs = res
-                                .where((element) =>
-                                    element['userType'] == 'CLUBOWNER' &&
-                                    element['id'] != auth.user!.id)
-                                .toList();
-                            users = res
-                                .where((element) =>
-                                    element['userType'] == 'USER' &&
-                                    element['id'] != auth.user!.id)
-                                .toList();
-                          });
-                        },
+                        onTap: () => searchUsers(auth.user!.id),
                         child: Container(
-                          height: 43,
-                          width: 43,
+                          height: 8.h,
+                          width: 8.h,
                           decoration: BoxDecoration(
                               color: Color(0xffEBFFEE),
                               shape: BoxShape.circle,
@@ -97,7 +108,10 @@ class _SearchPageState extends State<SearchPage> with FostrTheme {
                                   color: Colors.black.withOpacity(0.25),
                                 )
                               ]),
-                          child: Icon(Icons.search_rounded),
+                          child: Icon(
+                            Icons.search_rounded,
+                            size: 20.sp,
+                          ),
                         ),
                       )
                     ],
@@ -116,7 +130,7 @@ class _SearchPageState extends State<SearchPage> with FostrTheme {
                   children: [
                     Text(
                       "Clubs",
-                      style: h1.copyWith(fontSize: 18),
+                      style: h1.copyWith(fontSize: 16.sp),
                     ),
                     SvgPicture.asset(
                       ICONS + "menu.svg",
@@ -126,6 +140,7 @@ class _SearchPageState extends State<SearchPage> with FostrTheme {
                 ),
                 Expanded(
                   child: ListView.builder(
+                    physics: BouncingScrollPhysics(),
                     itemCount: clubs.length,
                     itemBuilder: (context, idx) {
                       var user = User.fromJson(clubs[idx]);
@@ -148,7 +163,7 @@ class _SearchPageState extends State<SearchPage> with FostrTheme {
                   children: [
                     Text(
                       "Users",
-                      style: h1.copyWith(fontSize: 18),
+                      style: h1.copyWith(fontSize: 16.sp),
                     ),
                     SvgPicture.asset(
                       ICONS + "menu.svg",
@@ -158,6 +173,7 @@ class _SearchPageState extends State<SearchPage> with FostrTheme {
                 ),
                 Expanded(
                   child: ListView.builder(
+                    physics: BouncingScrollPhysics(),
                     itemCount: users.length,
                     itemBuilder: (context, idx) {
                       var user = User.fromJson(users[idx]);
@@ -210,7 +226,8 @@ class _UserCardState extends State<UserCard> with FostrTheme {
     final auth = Provider.of<AuthProvider>(context);
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 20),
-      constraints: BoxConstraints.expand(width: 350, height: 65),
+      width: 60.w,
+      height: 10.h,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(29),
         color: Color(0xffEBFFEE),
@@ -228,8 +245,8 @@ class _UserCardState extends State<UserCard> with FostrTheme {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Container(
-            height: 45,
-            width: 45,
+            height: 9.w,
+            width: 9.w,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               image: DecorationImage(
@@ -250,11 +267,11 @@ class _UserCardState extends State<UserCard> with FostrTheme {
             children: [
               Text(
                 widget.user.name,
-                style: h1.copyWith(fontSize: 16),
+                style: h1.copyWith(fontSize: 14.sp),
               ),
               Text(
-                widget.user.userName,
-                style: h2.copyWith(fontSize: 14),
+                "@" + widget.user.userName,
+                style: h2.copyWith(fontSize: 12.sp),
               )
             ],
           ),
@@ -284,6 +301,7 @@ class _UserCardState extends State<UserCard> with FostrTheme {
               child: Icon(
                 (followed) ? Icons.check : Icons.add,
                 color: h1.color,
+                size: 28.sp,
                 // size: 30,
               ),
             ),

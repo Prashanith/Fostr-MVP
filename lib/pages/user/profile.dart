@@ -133,7 +133,7 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                     Padding(
                       padding: EdgeInsets.only(bottom: 3.h),
                       child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           InkWell(
@@ -169,121 +169,119 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                           SizedBox(
                             width: 25,
                           ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              InkWell(
-                                onTap: () async {
-                                  controller.text = user.name;
-                                  await showPopUp(
-                                    "Name",
-                                    user.id,
-                                    (e) {
-                                      setState(() {
-                                        user.name = e[1];
-                                        updateProfile(
-                                            {"name": user.name, "id": user.id});
-                                      });
-                                    },
-                                  );
-                                },
-                                child: Text(
-                                  (user.name.isEmpty)
-                                      ? "Enter your name"
-                                      : user.name,
-                                  style:
-                                      h1.copyWith(fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                              SizedBox(
-                                height: 5,
-                              ),
-                              Text(
-                                (user.userName.isEmpty)
-                                    ? ""
-                                    : '@' + user.userName,
-                                style: h1.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 12.sp,
-                                ),
-                              ),
-                              SizedBox(
-                                height: 30,
-                              ),
-                              Container(
-                                padding: const EdgeInsets.all(10),
-                                constraints: BoxConstraints(
-                                  maxWidth: 200,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Color(0xffEBFFEE),
-                                  borderRadius: BorderRadius.circular(13),
-                                  boxShadow: boxShadow,
-                                ),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  children: [
-                                    InkWell(
-                                      onTap: () {
-                                        FostrRouter.gotoWithArg(
-                                          context,
-                                          FollowFollowing(
-                                            items: user.followers,
-                                            title: "Followers",
-                                          ),
-                                        );
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                InkWell(
+                                  onTap: () async {
+                                    controller.text = user.name;
+                                    await showPopUp(
+                                      "Name",
+                                      user.id,
+                                      (e) {
+                                        setState(() {
+                                          user.name = e[1];
+                                          updateProfile({
+                                            "name": user.name,
+                                            "id": user.id
+                                          });
+                                        });
                                       },
-                                      child: Column(
-                                        children: [
-                                          Text(
-                                            user.followers?.length.toString() ??
-                                                "0",
-                                            style: h2,
-                                          ),
-                                          Text(
-                                            "Followers",
-                                            style: h2,
-                                          )
-                                        ],
-                                      ),
+                                    );
+                                  },
+                                  child: Flexible(
+                                    child: Text(
+                                      (user.name.isEmpty)
+                                          ? "Enter your name"
+                                          : user.name,
+                                      // overflow: TextOverflow.ellipsis,
+                                      style: h1.copyWith(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 22.sp),
                                     ),
-                                    InkWell(
-                                      onTap: () {
-                                        FostrRouter.gotoWithArg(
-                                          context,
-                                          FollowFollowing(
-                                            items: user.followings,
-                                            title: "Followings",
-                                          ),
-                                        );
-                                      },
-                                      child: Column(
-                                        children: [
-                                          Text(
-                                            user.followings?.length
-                                                    .toString() ??
-                                                "0",
-                                            style: h2,
-                                          ),
-                                          Text(
-                                            "Followings",
-                                            style: h2,
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ],
+                                  ),
                                 ),
-                              )
-                            ],
+                                SizedBox(
+                                  height: 5,
+                                ),
+                                Text(
+                                  (user.userName.isEmpty)
+                                      ? ""
+                                      : '@' + user.userName,
+                                  style: h1.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14.sp,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),
                     ),
-                    SizedBox(
-                      height: 10,
+                    Container(
+                      margin:  EdgeInsets.symmetric(vertical: 2.h),
+                      padding: const EdgeInsets.all(10),
+                      constraints: BoxConstraints(
+                        maxWidth: 200,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Color(0xffEBFFEE),
+                        borderRadius: BorderRadius.circular(13),
+                        boxShadow: boxShadow,
+                      ),
+                      child: DefaultTextStyle.merge(
+                        style: h2.copyWith(fontSize: 14.sp),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            InkWell(
+                              onTap: () {
+                                FostrRouter.gotoWithArg(
+                                  context,
+                                  FollowFollowing(
+                                    items: user.followers,
+                                    title: "Followers",
+                                  ),
+                                );
+                              },
+                              child: Column(
+                                children: [
+                                  Text(
+                                    user.followers?.length.toString() ?? "0",
+                                  ),
+                                  Text(
+                                    "Followers",
+                                  )
+                                ],
+                              ),
+                            ),
+                            InkWell(
+                              onTap: () {
+                                FostrRouter.gotoWithArg(
+                                  context,
+                                  FollowFollowing(
+                                    items: user.followings,
+                                    title: "Followings",
+                                  ),
+                                );
+                              },
+                              child: Column(
+                                children: [
+                                  Text(
+                                    user.followings?.length.toString() ?? "0",
+                                  ),
+                                  Text(
+                                    "Followings",
+                                  )
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,

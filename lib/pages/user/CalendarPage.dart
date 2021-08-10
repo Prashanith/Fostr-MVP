@@ -32,7 +32,7 @@ class _CalendarPageState extends State<CalendarPage> with FostrTheme {
             Container(
               margin: EdgeInsets.symmetric(vertical: 2.h, horizontal: 20),
               height: 35.h,
-              width: double.infinity,
+              width: 80.w,
               decoration: BoxDecoration(
                 boxShadow: boxShadow,
                 color: Color(0xffEBFFEE),
@@ -42,11 +42,14 @@ class _CalendarPageState extends State<CalendarPage> with FostrTheme {
                 data: ThemeData(
                   colorScheme: ColorScheme.light(primary: h2.color!),
                 ),
-                child: CalendarDatePicker(
-                  firstDate: DateTime(2000),
-                  initialDate: DateTime.now(),
-                  lastDate: DateTime(2030),
-                  onDateChanged: (DateTime value) {},
+                child: DefaultTextStyle.merge(
+                  style: h1.copyWith(fontSize: 18.sp),
+                  child: CalendarDatePicker(
+                    firstDate: DateTime(2000),
+                    initialDate: DateTime.now(),
+                    lastDate: DateTime(2030),
+                    onDateChanged: (DateTime value) {},
+                  ),
                 ),
               ),
             ),

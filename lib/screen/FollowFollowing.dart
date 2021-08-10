@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:fostr/core/constants.dart';
 import 'package:fostr/models/UserModel/User.dart';
+import 'package:fostr/providers/AuthProvider.dart';
 import 'package:fostr/services/UserService.dart';
 import 'package:fostr/utils/theme.dart';
 import 'package:fostr/widgets/Layout.dart';
 import 'package:get_it/get_it.dart';
+import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
 class FollowFollowing extends StatelessWidget with FostrTheme {
@@ -95,6 +97,7 @@ class _UserCardState extends State<UserCard> with FostrTheme {
 
   @override
   Widget build(BuildContext context) {
+    final auth = Provider.of<AuthProvider>(context);
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 20),
       height: 65,
@@ -159,11 +162,21 @@ class _UserCardState extends State<UserCard> with FostrTheme {
             onTap: () async {
               try {
                 if (!followed) {
-                  // await userService.followUser(auth.user!, widget.user);
+                  var newUser = await userService.followUser(auth.user!, user);
                   setState(() {
                     followed = true;
                   });
+                  auth.refreshUser(newUser);
                   ScaffoldMessenger.of(context).showSnackBar(followedSnackBar);
+                } else {
+                  var newUser =
+                      await userService.unfollowUser(auth.user!, user);
+                  setState(() {
+                    followed = false;
+                  });
+                  auth.refreshUser(newUser);
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(unfollowedSnackBar);
                 }
               } catch (e) {
                 print(e);

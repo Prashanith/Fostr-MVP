@@ -113,9 +113,9 @@ class _AddDetailsState extends State<AddDetails> with FostrTheme {
                           print("done");
                           if (user.lastLogin == user.createdOn &&
                               user.userType == UserType.USER) {
-                            FostrRouter.removeUntillAndGoto(context,
-                                Routes.quizPage, (route) => route.isFirst);
-                          } else if (auth.userType == UserType.CLUBOWNER) {
+                            FostrRouter.removeUntillAndGoto(
+                                context, Routes.quizPage, (route) => false);
+                          } else if (auth.userType == UserType.CLUBOWNER ) {
                             Navigator.of(context).pushAndRemoveUntil(
                                 CupertinoPageRoute(builder: (_) => Dashboard()),
                                 (route) => false);

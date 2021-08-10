@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:fostr/router/router.dart';
 import 'package:fostr/router/routes.dart';
 import 'package:fostr/utils/theme.dart';
 import 'package:fostr/widgets/Buttons.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'dart:math' show Random;
 
 import 'package:sizer/sizer.dart';
 
@@ -99,7 +102,7 @@ class _AnalyzingPageState extends State<AnalyzingPage> with FostrTheme {
                               },
                               dataSource: [
                                 {"x": 00, "y": 100},
-                                {"x": 00, "y": 500},
+                                {"x": 00, "y": 250 + Random().nextInt(250)},
                               ],
                               xValueMapper: (data, _) => data["x"],
                               yValueMapper: (data, _) => data["y"],

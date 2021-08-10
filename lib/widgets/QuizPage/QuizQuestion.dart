@@ -13,10 +13,18 @@ class QuizQuestion extends StatefulWidget {
 }
 
 class _QuizQuestionState extends State<QuizQuestion> with FostrTheme {
+  List<bool> ans = [];
+
+  @override
+  void initState() {
+    super.initState();
+    ans = List.filled(widget.question.options.length, false);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding:  EdgeInsets.only(top: 3.h),
+      padding: EdgeInsets.only(top: 3.h),
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -35,10 +43,8 @@ class _QuizQuestionState extends State<QuizQuestion> with FostrTheme {
               children: List.generate(
                 widget.question.options.length,
                 (index) {
-                  return buildOption(
-                    String.fromCharCode(65 + index),
-                    widget.question.options[index][0],
-                  );
+                  return buildOption(String.fromCharCode(65 + index),
+                      widget.question.options[index][0], index);
                 },
               ),
             )
@@ -48,41 +54,50 @@ class _QuizQuestionState extends State<QuizQuestion> with FostrTheme {
     );
   }
 
-  Widget buildOption(String id, String option) {
+  Widget buildOption(String id, String option, int index) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 1.h),
-      child: Row(
-        children: [
-          Container(
-            alignment: Alignment.center,
-            height: 8.h,
-            width: 8.w,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: Color(0xffd4d4d4),
-            ),
-            child: Flexible(
-              child: Text(
-                id,
-                style: actionTextStyle.copyWith(
-                  fontSize: 16.sp,
+      child: InkWell(
+        onTap: () {
+          var newAns = List.filled(widget.question.options.length, false);
+          newAns[index] = true;
+          setState(() {
+            ans = newAns;
+          });
+        },
+        child: Row(
+          children: [
+            Container(
+              alignment: Alignment.center,
+              height: 8.h,
+              width: 8.w,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: (ans[index]) ? Color(0xff639C8F) : Color(0xffd4d4d4),
+              ),
+              child: Flexible(
+                child: Text(
+                  id,
+                  style: actionTextStyle.copyWith(
+                    fontSize: 16.sp,
+                  ),
                 ),
               ),
             ),
-          ),
-          SizedBox(
-            width: 20,
-          ),
-          Flexible(
-            child: Text(
-              option,
-              style: actionTextStyle.copyWith(
-                fontSize: 16.sp,
-                color: Color(0xff333333),
+            SizedBox(
+              width: 20,
+            ),
+            Flexible(
+              child: Text(
+                option,
+                style: actionTextStyle.copyWith(
+                  fontSize: 16.sp,
+                  color: Color(0xff333333),
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
