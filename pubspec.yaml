@@ -32,6 +32,7 @@ dependencies:
   country_code_picker: ^2.0.2
   cupertino_icons: ^1.0.2
   date_time_picker: ^2.1.0
+  device_preview: ^0.7.4
   file_picker: ^3.0.4
   firebase: ^9.0.1
   firebase_auth: ^3.0.1
