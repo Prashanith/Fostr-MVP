@@ -108,9 +108,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> with FostrTheme {
-  String now = DateFormat('yyyy-MM-dd').format(DateTime.now()) +
-      " " +
-      DateFormat.Hm().format(DateTime.now());
+  String now = DateFormat('yyyy-MM-dd').format(DateTime.now()) + " " + DateFormat.Hm().format(DateTime.now());
   TextEditingController _textFieldController = TextEditingController();
   RefreshController _refreshController = RefreshController(
     initialRefresh: false,
@@ -176,14 +174,14 @@ class _HomePageState extends State<HomePage> with FostrTheme {
                       //   height: 20,
                       // ),
                       (user.name == "")
-                          ? Text(
-                              "Hello, User",
-                              style: h1.apply(color: Colors.white),
-                            )
-                          : Text(
-                              "Hello, ${user.name}",
-                              style: h1.apply(color: Colors.white),
-                            ),
+                        ? Text(
+                          "Hello, User",
+                          style: h1.apply(color: Colors.white),
+                        )
+                        : Text(
+                          "Hello, ${user.name}",
+                          style: h1.apply(color: Colors.white),
+                        ),
                     ],
                   ),
                 ),
@@ -201,64 +199,43 @@ class _HomePageState extends State<HomePage> with FostrTheme {
                       color: Colors.white,
                     ),
                     child: Padding(
-                      padding:
-                          const EdgeInsets.only(top: 5, left: 10, right: 10),
+                      padding: const EdgeInsets.only(top: 5, left: 10, right: 10),
                       child: ListView(
                         physics: BouncingScrollPhysics(),
                         children: [
                           StreamBuilder<QuerySnapshot>(
                             stream: roomCollection.snapshots(),
-                            builder: (BuildContext context,
-                                AsyncSnapshot<QuerySnapshot> snapshot) {
+                            builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
                               // Handling errors from firebase
                               if (snapshot.hasError)
-                                return Center(
-                                    child: Text('Error: ${snapshot.error}'));
+                                return Center(child: Text('Error: ${snapshot.error}'));
 
-                              if (snapshot.hasData &&
-                                  snapshot.data!.docs.length == 0)
-                                return Center(
-                                    child: Text('No Ongoing Rooms Yet'));
+                              if (snapshot.hasData && snapshot.data!.docs.length == 0)
+                                return Center(child: Text('No Ongoing Rooms Yet'));
 
                               return snapshot.hasData
-                                  ? SizedBox(
-                                      height: MediaQuery.of(context)
-                                              .size
-                                              .height -
-                                          MediaQuery.of(context).size.height *
-                                              0.24,
-                                      child: SmartRefresher(
-                                        enablePullDown: true,
-                                        controller: _refreshController,
-                                        onRefresh: _onRefresh,
-                                        onLoading: _onLoading,
-                                        child: ListView(
-                                          physics: BouncingScrollPhysics(),
-                                          children: snapshot.data!.docs
-                                              .map((DocumentSnapshot document) {
-                                            return GestureDetector(
-                                              onTap: () async {
-                                                Navigator.push(
-                                                  context,
-                                                  CupertinoPageRoute(
-                                                    builder: (BuildContext
-                                                            context) =>
-                                                        ThemePage(
-                                                      room: Room.fromJson(
-                                                          document),
-                                                    ),
-                                                  ),
-                                                );
-                                              },
-                                              child: OngoingRoomCard(
-                                                room: Room.fromJson(document),
-                                              ),
-                                            );
-                                          }).toList(),
-                                        ),
+                                ? SizedBox(
+                                  height: MediaQuery.of(context).size.height - MediaQuery.of(context).size.height*0.24,
+                                  child: SmartRefresher(
+                                      enablePullDown: true,
+                                      controller: _refreshController,
+                                      onRefresh: _onRefresh,
+                                      onLoading: _onLoading,
+                                      child: ListView(
+                                        physics: BouncingScrollPhysics(),
+                                        children: snapshot.data!.docs.map((DocumentSnapshot document) {
+                                          return GestureDetector(
+                                            onTap: () async {
+                                              Navigator.push(context, CupertinoPageRoute(builder: (BuildContext context) => ThemePage(room: Room.fromJson(document))));
+                                            },
+                                            child: OngoingRoomCard(room: Room.fromJson(document))
+                                          );
+                                        }).toList(),
                                       ),
-                                    ) // Display if still loading data
-                                  : Center(child: CircularProgressIndicator());
+                                    ),
+                                )
+                                // Display if still loading data
+                                : Center(child: CircularProgressIndicator());
                             },
                           ),
                         ],
@@ -282,7 +259,6 @@ class _HomePageState extends State<HomePage> with FostrTheme {
         child: Text('Start Room'),
         onPressed: () {
           FostrRouter.goto(context, Routes.roomDetails);
-          // _displayTextInputDialog(context);
         },
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all(Color(0xff94B5AC)),
@@ -290,89 +266,6 @@ class _HomePageState extends State<HomePage> with FostrTheme {
             RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(30),
             ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Future<void> _displayTextInputDialog(BuildContext context) async {
-    return showDialog(
-        barrierDismissible: false,
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text('Enter your room name'),
-            content: TextField(
-              onChanged: (value) {
-                setState(() {
-                  channelName = value;
-                });
-              },
-              onSubmitted: (value) {
-                setState(() {
-                  channelName = value;
-                });
-              },
-              controller: _textFieldController,
-              decoration: InputDecoration(hintText: "Room name"),
-            ),
-            actions: <Widget>[
-              OutlinedButton(
-                child: Text('CANCEL', style: TextStyle(color: Colors.red)),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-              FlatButton(
-                color: Colors.green,
-                textColor: Colors.white,
-                child: Text('OK'),
-                onPressed: () async {
-                  await _createChannel(context);
-                  Navigator.pop(context);
-                },
-              ),
-            ],
-          );
-        });
-  }
-
-  Future<void> _createChannel(context) async {
-    var roomToken = await getToken(channelName);
-    // Add new data to Firestore collection
-    await roomCollection.doc(channelName).set({
-      'participantsCount': 0,
-      'speakersCount': 1,
-      'title': '$channelName',
-      'roomCreator': profileData['username'],
-      'token': roomToken.toString(),
-      'agenda': '',
-      'dateTime': '$now',
-      'image': ''
-    });
-    await roomCollection
-        .doc(channelName)
-        .collection("speakers")
-        .doc(profileData['username'])
-        .set({
-      'username': profileData['username'],
-      'name': profileData['name'],
-      'profileImage': profileData['profileImage'],
-    }).then(
-      (value) => Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => Minimal(
-            room: Room(
-              title: '$channelName',
-              participantsCount: 1,
-              roomCreator: profileData['username'],
-              speakersCount: 1,
-              token: roomToken.toString(),
-            ),
-            // Pass user role
-            role: ClientRole.Broadcaster,
           ),
         ),
       ),

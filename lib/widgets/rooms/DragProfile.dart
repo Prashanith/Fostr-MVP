@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:fostr/models/UserModel/User.dart';
+import 'package:fostr/models/UserModel/RoomUser.dart';
+import 'package:fostr/widgets/rooms/Profile.dart';
 
 class DragProfile extends StatefulWidget {
   final Offset offset;
   final bool isSpeaker;
-  final User? user;
-  DragProfile({required this.offset, required this.isSpeaker, this.user});
+  final RoomUser user;
+  // Color? color;
+  DragProfile({required this.offset, required this.isSpeaker, required this.user,
+  //  this.color
+  });
 
   @override
   DragProfileState createState() => DragProfileState();
@@ -17,9 +21,9 @@ class DragProfileState extends State<DragProfile> {
   @override
   void initState() {
     super.initState();
-    setState(() {
+    // setState(() {
       position = widget.offset;
-    });
+    // });
   }
 
   @override
@@ -37,14 +41,16 @@ class DragProfileState extends State<DragProfile> {
           onPanEnd: (details) {
             print(position);
           },
-          child: Container(
-            height: 50,
-            width: 50,
-            decoration: BoxDecoration(
-              color: Colors.red,
-              shape: BoxShape.circle,
-            ),
-          ),
+          // child: Container(
+          //   height: 40,
+          //   width: 40,
+          //   decoration: BoxDecoration(
+          //     color: widget.color,
+          //     // color: Colors.red,
+          //     shape: BoxShape.circle,
+          //   ),
+          // ),
+          child: Profile(user: widget.user, size: 50, isMute: false, isSpeaker: widget.isSpeaker),
         ));
   }
 }

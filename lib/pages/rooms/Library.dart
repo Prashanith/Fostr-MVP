@@ -6,10 +6,11 @@ import 'package:fostr/core/constants.dart';
 import 'package:fostr/core/data.dart';
 import 'package:fostr/core/settings.dart';
 import 'package:fostr/models/RoomModel.dart';
-import 'package:fostr/models/UserModel/Old.dart';
+import 'package:fostr/models/UserModel/RoomUser.dart';
 import 'package:fostr/providers/AuthProvider.dart';
 import 'package:fostr/utils/theme.dart';
-import 'package:fostr/widgets/UserProfile.dart';
+import 'package:fostr/widgets/rooms/DragProfile.dart';
+import 'package:fostr/widgets/rooms/Profile.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
@@ -59,6 +60,35 @@ class _LibraryState extends State<Library> with FostrTheme {
     });
   }
   
+  removeUser() async {
+    if (widget.role == ClientRole.Broadcaster) {
+      // update the list of speakers
+      await roomCollection.doc(widget.room.title).update({
+        'speakersCount': speakersCount - 1,
+      });
+      await roomCollection
+          .doc(widget.room.title)
+          .collection("speakers")
+          .doc(profileData['username'])
+          .delete();
+    } else {
+      // update the list of participants
+      await roomCollection.doc(widget.room.title).update({
+        'participantsCount': participantsCount - 1,
+      });
+      await roomCollection
+          .doc(widget.room.title)
+          .collection("participants")
+          .doc(profileData['username'])
+          .delete();
+    }
+
+    if ((participantsCount == 0 && speakersCount == 1) ||
+        (participantsCount == 1 && speakersCount == 0)) {
+      await roomCollection.doc(widget.room.title).delete();
+    }
+  }
+
   /// Create Agora SDK instance and initialize
   Future<void> initialize() async {
     await _initAgoraRtcEngine();
@@ -152,10 +182,15 @@ class _LibraryState extends State<Library> with FostrTheme {
                     // SizedBox(
                     //   height: 30,
                     // ),
-                    Text(
-                      "Hello, ${user.name}",
-                      style: h1.apply(color: Colors.white),
-                    ),
+                    (user.name == "")
+                      ? Text(
+                        "Hello, User",
+                        style: h1.apply(color: Colors.white),
+                      )
+                      : Text(
+                        "Hello, ${user.name}",
+                        style: h1.apply(color: Colors.white),
+                      ),
                   ],
                 ),
               ),
@@ -218,10 +253,7 @@ class _LibraryState extends State<Library> with FostrTheme {
         children: [
           // list of speakers
           StreamBuilder(
-              stream: roomCollection
-                  .doc(widget.room.title)
-                  .collection('speakers')
-                  .snapshots(),
+              stream: roomCollection.doc(widget.room.title).collection('speakers').snapshots(),
               builder: (BuildContext context,
                   AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.hasData) {
@@ -234,8 +266,8 @@ class _LibraryState extends State<Library> with FostrTheme {
                     itemBuilder: (BuildContext context, int index) {
                       return Container(
                         color: Colors.red,
-                        child: UserProfile(
-                            user: OldUser.fromJson(map[index]),
+                        child: Profile(
+                            user: RoomUser.fromJson(map[index]),
                             size: 50,
                             isMute: false,
                             isSpeaker: true),
@@ -310,6 +342,7 @@ class _LibraryState extends State<Library> with FostrTheme {
         children: [
           ElevatedButton(
             onPressed: () {
+              removeUser();
               Navigator.pop(context);
             },
             style: ButtonStyle(
