@@ -15,6 +15,7 @@ import 'package:fostr/widgets/InputField.dart';
 import 'package:fostr/widgets/Loader.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
+import 'package:sizer/sizer.dart';
 
 class AddDetails extends StatefulWidget {
   const AddDetails({Key? key}) : super(key: key);
@@ -47,22 +48,25 @@ class _AddDetailsState extends State<AddDetails> with FostrTheme {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SizedBox(
-                  height: 140,
+                  height: 14.h,
                 ),
                 Container(
                   alignment: Alignment.center,
                   width: double.infinity,
-                  child: Text("Details", style: h1),
+                  child: Text("Details",
+                      style: h1.copyWith(
+                        fontSize: 24.sp,
+                      )),
                 ),
                 SizedBox(
                   height: 10,
                 ),
                 Text(
                   "Please enter your details",
-                  style: h2,
+                  style: h2.copyWith(fontSize: 14.sp),
                 ),
                 SizedBox(
-                  height: 90,
+                  height: 9.h,
                 ),
                 Form(
                   key: nameForm,

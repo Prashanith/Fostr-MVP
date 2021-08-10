@@ -5,6 +5,8 @@ import 'package:fostr/utils/theme.dart';
 import 'package:fostr/widgets/Buttons.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
+import 'package:sizer/sizer.dart';
+
 class AnalyzingPage extends StatefulWidget {
   const AnalyzingPage({Key? key}) : super(key: key);
 
@@ -32,7 +34,7 @@ class _AnalyzingPageState extends State<AnalyzingPage> with FostrTheme {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: paddingH + const EdgeInsets.only(top: 20),
+                padding: EdgeInsets.fromLTRB(4.w, 2.w, 4.w, 0),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -43,14 +45,16 @@ class _AnalyzingPageState extends State<AnalyzingPage> with FostrTheme {
                       child: Icon(
                         Icons.arrow_back,
                         color: Colors.white,
+                        size: 18.sp,
                       ),
                     ),
                     SizedBox(
-                      width: 20,
+                      width: 2.w,
                     ),
                     Text(
                       "Reading Personality Quiz",
                       style: h1.copyWith(
+                        fontSize: 20.sp,
                         color: Colors.white,
                         fontWeight: FontWeight.w700,
                       ),
@@ -59,7 +63,7 @@ class _AnalyzingPageState extends State<AnalyzingPage> with FostrTheme {
                 ),
               ),
               SizedBox(
-                height: 40,
+                height: 4.h,
               ),
               Expanded(
                 child: Container(
@@ -78,7 +82,7 @@ class _AnalyzingPageState extends State<AnalyzingPage> with FostrTheme {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         SizedBox(
-                          height: 100,
+                          height: 2.h,
                         ),
                         SfCircularChart(
                           series: [
@@ -99,23 +103,24 @@ class _AnalyzingPageState extends State<AnalyzingPage> with FostrTheme {
                               ],
                               xValueMapper: (data, _) => data["x"],
                               yValueMapper: (data, _) => data["y"],
-                              radius: "150",
-                              innerRadius: "100",
+                              radius: "130",
+                              innerRadius: "90",
                             ),
                           ],
                         ),
                         SizedBox(
-                          height: 50,
+                          height: 2.h,
                         ),
                         Text(
                           "Analysing Personality",
-                          style: h1.copyWith(fontSize: 26),
+                          style: h1.copyWith(fontSize: 22.sp),
                         ),
                         Spacer(),
                         PrimaryButton(
                           text: "Go next",
                           onTap: () {
-                            FostrRouter.replaceGoto(context, Routes.bookClubSuggetion);
+                            FostrRouter.replaceGoto(
+                                context, Routes.bookClubSuggetion);
                           },
                         )
                       ],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fostr/utils/theme.dart';
+import 'package:sizer/sizer.dart';
 
 class SigninWithGoogle extends StatefulWidget {
   final String text;
@@ -28,12 +29,16 @@ class _SigninWithGoogleState extends State<SigninWithGoogle> with FostrTheme {
       },
       onTap: widget.onTap,
       child: AnimatedContainer(
+        constraints: BoxConstraints(
+          maxHeight: 90,
+          maxWidth: 500,
+        ),
         transformAlignment: Alignment.center,
         transform: Transform.scale(scale: scale).transform,
         duration: Duration(milliseconds: 200),
         alignment: Alignment.center,
-        width: 330,
-        height: 70,
+        width: 90.w,
+        height: 10.h,
         decoration: BoxDecoration(
           borderRadius: buttonBorderRadius,
           color: Colors.white,
@@ -41,14 +46,12 @@ class _SigninWithGoogleState extends State<SigninWithGoogle> with FostrTheme {
         ),
         child: Text(
           widget.text,
-          style: TextStyle(
+          style: actionTextStyle.copyWith(
             color: Colors.black,
-            fontFamily: actionTextStyle.fontFamily,
-            fontSize: actionTextStyle.fontSize,
+            fontSize: 13.sp,
           ),
         ),
       ),
     );
-    ;
   }
 }

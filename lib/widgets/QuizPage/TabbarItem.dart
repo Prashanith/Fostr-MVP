@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:sizer/sizer.dart';
 class TabbarItem extends StatelessWidget {
   final int index;
   final int currentIndex;
@@ -10,9 +10,10 @@ class TabbarItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: const EdgeInsets.only(bottom: 10),
       alignment: Alignment.center,
-      height: 36,
-      width: 36,
+      height: 7.h,
+      width: 7.w,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         color: (index == currentIndex + 1)
@@ -22,7 +23,7 @@ class TabbarItem extends StatelessWidget {
       child: Text(
         index.toString(),
         style: TextStyle(
-          fontSize: 16,
+          fontSize: 14.sp,
           fontFamily: 'Lato',
           fontWeight: FontWeight.w500,
         ),

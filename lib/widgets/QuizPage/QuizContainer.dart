@@ -23,8 +23,10 @@ class _QuizContainerState extends State<QuizContainer> with FostrTheme {
       },
       child: Container(
         padding: const EdgeInsets.all(20),
-        width: 90.w,
-        height: 105,
+        width: 80.w,
+        constraints: BoxConstraints(
+          maxHeight: 105,
+        ),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(20),

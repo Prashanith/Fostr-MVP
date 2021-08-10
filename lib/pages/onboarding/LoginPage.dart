@@ -16,6 +16,7 @@ import 'package:fostr/widgets/InputField.dart';
 import 'package:fostr/widgets/Loader.dart';
 import 'package:fostr/widgets/SigninWithGoogle.dart';
 import 'package:provider/provider.dart';
+import 'package:sizer/sizer.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -85,22 +86,29 @@ class _LoginPageState extends State<LoginPage> with FostrTheme {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   SizedBox(
-                    height: 140,
+                    height: 14.h,
                   ),
                   Container(
                     alignment: Alignment.center,
                     width: double.infinity,
-                    child: Text("Welcome Back!", style: h1),
+                    child: Text(
+                      "Welcome Back!",
+                      style: h1.copyWith(
+                        fontSize: 22.sp,
+                      ),
+                    ),
                   ),
                   SizedBox(
-                    height: 10,
+                    height: 1.h,
                   ),
                   Text(
                     "Please Login into your account ",
-                    style: h2,
+                    style: h2.copyWith(
+                      fontSize: 16.sp,
+                    ),
                   ),
                   SizedBox(
-                    height: 90,
+                    height: 9.h,
                   ),
                   Form(
                     key: loginForm,
@@ -122,7 +130,7 @@ class _LoginPageState extends State<LoginPage> with FostrTheme {
                           hintText: "Email or Mobile Number",
                         ),
                         SizedBox(
-                          height: 20,
+                          height: 2.h,
                         ),
                         (isEmail)
                             ? InputField(
@@ -259,7 +267,7 @@ class _LoginPageState extends State<LoginPage> with FostrTheme {
                               style: TextStyle(
                                 fontFamily: "Lato",
                                 color: Colors.white,
-                                fontSize: 16,
+                                fontSize: 13.sp,
                               ),
                             ),
                             GestureDetector(
@@ -271,7 +279,7 @@ class _LoginPageState extends State<LoginPage> with FostrTheme {
                                 style: TextStyle(
                                   fontFamily: "Lato",
                                   color: Color(0xff476747),
-                                  fontSize: 16,
+                                  fontSize: 13.sp,
                                 ),
                               ),
                             ),

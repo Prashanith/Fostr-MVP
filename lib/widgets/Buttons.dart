@@ -32,19 +32,25 @@ class _PrimaryButtonState extends State<PrimaryButton> with FostrTheme {
       },
       onTap: widget.onTap,
       child: AnimatedContainer(
+        constraints: BoxConstraints(
+          maxHeight: 90,
+          maxWidth: 500,
+        ),
         transformAlignment: Alignment.center,
         transform: Transform.scale(scale: scale).transform,
         duration: Duration(milliseconds: 200),
         alignment: Alignment.center,
         width: (widget.width) ?? 90.w,
-        height: 70,
+        height: 10.h,
         decoration: BoxDecoration(
           borderRadius: buttonBorderRadius,
           gradient: primaryButton,
         ),
         child: Text(
           widget.text,
-          style: actionTextStyle,
+          style: actionTextStyle.copyWith(
+            fontSize: 13.sp,
+          ),
         ),
       ),
     );

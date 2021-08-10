@@ -5,6 +5,7 @@ import 'package:fostr/router/routes.dart';
 import 'package:fostr/utils/theme.dart';
 import 'package:fostr/widgets/QuizPage/QuizQuestion.dart';
 import 'package:fostr/widgets/QuizPage/TabbarItem.dart';
+import 'package:sizer/sizer.dart';
 
 class Quiz extends StatefulWidget {
   const Quiz({Key? key}) : super(key: key);
@@ -54,7 +55,7 @@ class _QuizState extends State<Quiz>
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: paddingH + const EdgeInsets.only(top: 20),
+                padding: EdgeInsets.only(top: 2.h, left: 4.w, right: 4.w),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -65,23 +66,27 @@ class _QuizState extends State<Quiz>
                       child: Icon(
                         Icons.arrow_back,
                         color: Colors.white,
+                        size: 20.sp,
                       ),
                     ),
                     SizedBox(
-                      width: 20,
+                      width: 2.w,
                     ),
-                    Text(
-                      "Reading Personality Quiz",
-                      style: h1.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w700,
+                    Flexible(
+                      child: Text(
+                        "Reading Personality Quiz",
+                        style: h1.copyWith(
+                          fontSize: 22.sp,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ),
                   ],
                 ),
               ),
               SizedBox(
-                height: 40,
+                height: 4.h,
               ),
               Expanded(
                 child: Container(
@@ -94,12 +99,14 @@ class _QuizState extends State<Quiz>
                     color: Colors.white,
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.all(30),
+                    padding: EdgeInsets.fromLTRB(8.w, 4.h, 8.w, 0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
-                          height: 50,
+                          // padding: EdgeInsets.only(left: 10.w),
+                          alignment: Alignment.center,
+                          height: 8.h,
                           child: TabBar(
                             enableFeedback: true,
                             controller: tabController,
@@ -127,55 +134,60 @@ class _QuizState extends State<Quiz>
                             ),
                           ),
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            InkWell(
-                              onTap: () {
-                                if (tabController!.index > 0) {
-                                  tabController!
-                                      .animateTo(tabController!.index - 1);
-                                }
-                              },
-                              child: Container(
-                                padding: const EdgeInsets.only(right: 2),
-                                height: 50,
-                                width: 50,
-                                decoration: BoxDecoration(
-                                  color: Color.fromRGBO(119, 175, 151, 1),
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Icon(
-                                  Icons.arrow_back_ios_new_rounded,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                            InkWell(
-                              onTap: () {
-                                if (tabController!.index < 6) {
-                                  tabController!
-                                      .animateTo(tabController!.index + 1);
-                                } else if (tabController!.index == 6) {
-                                  FostrRouter.replaceGoto(
-                                      context, Routes.analyzingPage);
-                                }
-                              },
-                              child: Container(
-                                padding: const EdgeInsets.only(left: 2),
-                                height: 50,
-                                width: 50,
-                                decoration: BoxDecoration(
-                                  color: Color.fromRGBO(178, 214, 195, 1),
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Icon(
-                                  Icons.arrow_forward_ios_rounded,
-                                  color: Colors.white,
+                        Padding(
+                          padding: EdgeInsets.only(bottom: 2.h),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              InkWell(
+                                onTap: () {
+                                  if (tabController!.index > 0) {
+                                    tabController!
+                                        .animateTo(tabController!.index - 1);
+                                  }
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.only(right: 2),
+                                  height: 9.h,
+                                  width: 9.w,
+                                  decoration: BoxDecoration(
+                                    color: Color.fromRGBO(119, 175, 151, 1),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Icon(
+                                    Icons.arrow_back_ios_new_rounded,
+                                    color: Colors.white,
+                                    size: 18.sp,
+                                  ),
                                 ),
                               ),
-                            )
-                          ],
+                              InkWell(
+                                onTap: () {
+                                  if (tabController!.index < 6) {
+                                    tabController!
+                                        .animateTo(tabController!.index + 1);
+                                  } else if (tabController!.index == 6) {
+                                    FostrRouter.replaceGoto(
+                                        context, Routes.analyzingPage);
+                                  }
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.only(left: 2),
+                                  height: 9.h,
+                                  width: 9.w,
+                                  decoration: BoxDecoration(
+                                    color: Color.fromRGBO(178, 214, 195, 1),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Icon(
+                                    Icons.arrow_forward_ios_rounded,
+                                    color: Colors.white,
+                                    size: 18.sp,
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
                         )
                       ],
                     ),

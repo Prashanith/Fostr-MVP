@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:fostr/core/constants.dart';
 import 'package:fostr/providers/AuthProvider.dart';
 import 'package:fostr/utils/theme.dart';
 import 'package:fostr/widgets/QuizPage/QuizContainer.dart';
 import 'package:provider/provider.dart';
+
+import 'package:sizer/sizer.dart';
 
 class QuizPage extends StatefulWidget {
   const QuizPage({Key? key}) : super(key: key);
@@ -39,13 +39,12 @@ class _QuizPageState extends State<QuizPage> with FostrTheme {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // SvgPicture.asset(ICONS + "menu.svg"),
-                    // SizedBox(
-                    //   height: 30,
-                    // ),
                     Text(
-                      "Hello, ${user.name} James",
-                      style: h1.apply(color: Colors.white),
+                      "Hello, ${user.userName}",
+                      style: h1.copyWith(
+                        color: Colors.white,
+                        fontSize: 22.sp,
+                      ),
                     ),
                   ],
                 ),
@@ -69,7 +68,7 @@ class _QuizPageState extends State<QuizPage> with FostrTheme {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         SizedBox(
-                          height: 70,
+                          height: 7.h,
                         ),
                         QuizContainer(),
                       ],

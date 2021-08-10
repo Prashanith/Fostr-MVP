@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fostr/core/constants.dart';
+
 import 'package:fostr/router/router.dart';
 import 'package:fostr/router/routes.dart';
 import 'package:fostr/utils/theme.dart';
@@ -19,13 +19,14 @@ class _QuizIntroState extends State<QuizIntro> with FostrTheme {
   Widget build(BuildContext context) {
     return Material(
       child: Container(
+        height: 100.h,
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment(-0.6, -1),
             end: Alignment(1, 0.6),
             colors: [
               Color.fromRGBO(148, 181, 172, 1),
-              Color.fromRGBO(229, 229, 229, 1),
+              Color.fromRGBO(255, 255, 255, 1),
             ],
           ),
         ),
@@ -34,7 +35,7 @@ class _QuizIntroState extends State<QuizIntro> with FostrTheme {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: paddingH + const EdgeInsets.only(top: 20),
+                padding: EdgeInsets.only(top: 2.h, left: 4.w, right: 4.w),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -45,23 +46,27 @@ class _QuizIntroState extends State<QuizIntro> with FostrTheme {
                       child: Icon(
                         Icons.arrow_back,
                         color: Colors.white,
+                        size: 28.sp,
                       ),
                     ),
                     SizedBox(
-                      width: 20,
+                      width: 2.h,
                     ),
-                    Text(
-                      "Reading Personality Quiz",
-                      style: h1.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w700,
+                    Flexible(
+                      child: Text(
+                        "Reading Personality Quiz",
+                        style: h1.copyWith(
+                          fontSize: 22.sp,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ),
                   ],
                 ),
               ),
               SizedBox(
-                height: 40,
+                height: 4.h,
               ),
               Expanded(
                 child: Container(
@@ -74,69 +79,77 @@ class _QuizIntroState extends State<QuizIntro> with FostrTheme {
                     color: Colors.white,
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.all(30),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Tell us about your reading habits, and we’ll tell you which clubs to join!",
-                          style: h1.copyWith(
-                            fontWeight: FontWeight.w600,
-                            color: Color.fromRGBO(51, 51, 51, 1),
+                    padding: EdgeInsets.fromLTRB(4.w, 4.h, 4.w, 0),
+                    child: SingleChildScrollView(
+                      physics: BouncingScrollPhysics(),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Tell us about your reading habits, and we’ll tell you which clubs to join!",
+                            style: h1.copyWith(
+                              fontSize: 22.sp,
+                              fontWeight: FontWeight.w600,
+                              color: Color.fromRGBO(51, 51, 51, 1),
+                            ),
                           ),
-                        ),
-                        SizedBox(
-                          height: 33,
-                        ),
-                        Text(
-                          "Brief explanation about this quiz",
-                          style: h2.copyWith(
-                            fontSize: 18,
-                            color: Color(0xff625f5f),
+                          SizedBox(
+                            height: 2.h,
                           ),
-                        ),
-                        SizedBox(
-                          height: 30,
-                        ),
-                        Column(
-                          children: [
-                            QuizInfoTile(
-                              icon: Icon(
-                                Icons.note_add,
-                                color: Colors.white,
-                              ),
-                              title: "7 Questions",
-                              subTitle:
-                                  "Quiz will have 7 questions related to reading",
+                          Text(
+                            "Brief explanation about this quiz",
+                            textAlign: TextAlign.left,
+                            style: h2.copyWith(
+                              fontSize: 14.sp,
+                              color: Color(0xff625f5f),
                             ),
-                            QuizInfoTile(
-                              icon: Icon(
-                                Icons.timer,
-                                color: Colors.white,
+                          ),
+                          SizedBox(
+                            height: 0.h,
+                          ),
+                          Column(
+                            children: [
+                              QuizInfoTile(
+                                icon: Icon(
+                                  Icons.note_add,
+                                  color: Colors.white,
+                                ),
+                                title: "7 Questions",
+                                subTitle:
+                                    "Quiz will have 7 questions related to reading",
                               ),
-                              title: "Win a Medal",
-                              subTitle:
-                                  "Answer all questions to win a medal based on your reading habits",
-                            ),
-                            QuizInfoTile(
-                              icon: Icon(
-                                Icons.star,
-                                color: Colors.white,
+                              QuizInfoTile(
+                                icon: Icon(
+                                  Icons.timer,
+                                  color: Colors.white,
+                                ),
+                                title: "Win a Medal",
+                                subTitle:
+                                    "Answer all questions to win a medal based on your reading habits",
                               ),
-                              title: "Win a Medal",
-                              subTitle:
-                                  "Answer all questions to win a medal based on your reading habits",
-                            ),
-                          ],
-                        ),
-                        Spacer(),
-                        PrimaryButton(
-                          text: "Start Quiz",
-                          onTap: () {
-                            FostrRouter.replaceGoto(context, Routes.quiz);
-                          },
-                        )
-                      ],
+                              QuizInfoTile(
+                                icon: Icon(
+                                  Icons.star,
+                                  color: Colors.white,
+                                ),
+                                title: "Win a Medal",
+                                subTitle:
+                                    "Answer all questions to win a medal based on your reading habits",
+                              ),
+                            ],
+                          ),
+                          // Spacer(),
+                          SizedBox(
+                            height: 3.h,
+                          ),
+                          PrimaryButton(
+                            text: "Start Quiz",
+                            onTap: () {
+                              FostrRouter.replaceGoto(context, Routes.quiz);
+                            },
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 ),

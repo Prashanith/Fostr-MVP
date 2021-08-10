@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fostr/utils/theme.dart';
+import 'package:sizer/sizer.dart';
 
 class InputField extends StatefulWidget {
   final String hintText;
@@ -42,56 +43,69 @@ class _InputFieldState extends State<InputField> with FostrTheme {
       opacity: 0.6,
       child: Stack(
         children: [
-          Container(
-            width: double.infinity,
-            height: 61,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15),
-              boxShadow: boxShadow,
+          Align(
+            alignment: Alignment.center,
+            child: Container(
+              width: 80.w,
+              height: 8.h,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15),
+                boxShadow: boxShadow,
+              ),
             ),
           ),
-          TextFormField(
-            onChanged: (e) {
-              if (widget.onChange != null) {
-                widget.onChange!();
-              }
-            },
-            controller: widget.controller,
-            validator: widget.validator,
-            obscureText: showPassword,
-            keyboardType: widget.keyboardType,
-            cursorColor: textFieldStyle.color,
-            style: textFieldStyle,
-            decoration: InputDecoration(
-              suffixIcon: (widget.isPassword)
-                  ? InkWell(
-                      onTap: () {
-                        setState(() {
-                          showPassword = !showPassword;
-                        });
-                      },
-                      child: (showPassword)
-                          ? Icon(
-                              Icons.visibility_off,
-                              color: Colors.white,
-                            )
-                          : Icon(
-                              Icons.visibility,
-                              color: Colors.white,
-                            ),
-                    )
-                  : null,
-              errorStyle: h2.apply(
-                color: Colors.red,
+          Align(
+            alignment: Alignment.center,
+            child: SizedBox(
+              width: 90.w,
+              child: TextFormField(
+                onChanged: (e) {
+                  if (widget.onChange != null) {
+                    widget.onChange!();
+                  }
+                },
+                controller: widget.controller,
+                validator: widget.validator,
+                obscureText: showPassword,
+                keyboardType: widget.keyboardType,
+                cursorColor: textFieldStyle.color,
+                style: textFieldStyle.copyWith(
+                  fontSize: 14.sp,
+                ),
+                decoration: InputDecoration(
+                  contentPadding:
+                      EdgeInsets.symmetric(vertical: 3.h, horizontal: 20),
+                  suffixIcon: (widget.isPassword)
+                      ? InkWell(
+                          onTap: () {
+                            setState(() {
+                              showPassword = !showPassword;
+                            });
+                          },
+                          child: (showPassword)
+                              ? Icon(
+                                  Icons.visibility_off,
+                                  color: Colors.white,
+                                )
+                              : Icon(
+                                  Icons.visibility,
+                                  color: Colors.white,
+                                ),
+                        )
+                      : null,
+                  errorStyle: h2.copyWith(color: Colors.red, fontSize: 14.sp),
+                  hintText: widget.hintText,
+                  hintStyle: textFieldStyle.copyWith(
+                    fontSize: 14.sp,
+                  ),
+                  fillColor: Color.fromRGBO(102, 163, 153, 1),
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide.none,
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  filled: true,
+                ),
               ),
-              hintText: widget.hintText,
-              hintStyle: textFieldStyle,
-              fillColor: Color.fromRGBO(102, 163, 153, 1),
-              border: OutlineInputBorder(
-                borderSide: BorderSide.none,
-                borderRadius: BorderRadius.circular(15),
-              ),
-              filled: true,
             ),
           ),
         ],

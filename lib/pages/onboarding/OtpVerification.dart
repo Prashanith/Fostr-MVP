@@ -14,10 +14,10 @@ import 'package:fostr/utils/theme.dart';
 import 'package:fostr/widgets/Buttons.dart';
 import 'package:fostr/widgets/InputField.dart';
 import 'package:fostr/widgets/Loader.dart';
-import 'package:fostr/widgets/SigninWithGoogle.dart';
 import 'package:provider/provider.dart';
 
 import '../../widgets/Layout.dart';
+import 'package:sizer/sizer.dart';
 
 class OtpVerification extends StatefulWidget {
   const OtpVerification({Key? key}) : super(key: key);
@@ -51,14 +51,19 @@ class _OtpVerificationState extends State<OtpVerification> with FostrTheme {
                 Container(
                   alignment: Alignment.center,
                   width: double.infinity,
-                  child: Text("Verification", style: h1),
+                  child: Text("Verification",
+                      style: h1.copyWith(
+                        fontSize: 22.sp,
+                      )),
                 ),
                 SizedBox(
                   height: 10,
                 ),
                 Text(
                   "Please enter the OTP",
-                  style: h2,
+                  style: h2.copyWith(
+                    fontSize: 14.sp,
+                  ),
                 ),
                 SizedBox(
                   height: 90,
@@ -102,11 +107,11 @@ class _OtpVerificationState extends State<OtpVerification> with FostrTheme {
                             if (auth.userType == UserType.USER) {
                               FostrRouter.removeUntillAndGoto(context,
                                   Routes.ongoingRoom, (route) => false);
-                            }else if(auth.userType == UserType.CLUBOWNER){
-                               Navigator.of(context).pushAndRemoveUntil(
-                                        CupertinoPageRoute(
-                                            builder: (_) => Dashboard()),
-                                        (route) => false);
+                            } else if (auth.userType == UserType.CLUBOWNER) {
+                              Navigator.of(context).pushAndRemoveUntil(
+                                  CupertinoPageRoute(
+                                      builder: (_) => Dashboard()),
+                                  (route) => false);
                             }
                           }
                         } catch (e) {

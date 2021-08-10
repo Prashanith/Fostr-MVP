@@ -2,6 +2,7 @@ import 'package:device_preview/device_preview.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:fostr/pages/quiz/BookSuggestionPage.dart';
 import 'package:fostr/providers/IndexProvider.dart';
 import 'package:fostr/router/router.dart';
 import 'package:fostr/services/Locators.dart';
@@ -32,7 +33,6 @@ class MyApp extends StatelessWidget with FostrTheme {
           onGenerateRoute: (settings) =>
               FostrRouter.generateRoute(context, settings),
           title: "FOSTR",
-          // home: CafeRoomScreen()
         ),
       ),
     );

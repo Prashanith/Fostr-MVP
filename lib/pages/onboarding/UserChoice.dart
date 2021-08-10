@@ -7,6 +7,7 @@ import 'package:fostr/router/routes.dart';
 import 'package:fostr/utils/theme.dart';
 import 'package:fostr/widgets/Buttons.dart';
 import 'package:provider/provider.dart';
+import 'package:sizer/sizer.dart';
 
 class UserChoice extends StatefulWidget {
   UserChoice({Key? key}) : super(key: key);
@@ -26,15 +27,15 @@ class _UserChoiceState extends State<UserChoice> with FostrTheme {
         mainAxisSize: MainAxisSize.max,
         children: [
           SizedBox(
-            height: 200,
+            height: 20.h,
             width: double.infinity,
           ),
           Text(
             "Continue",
-            style: h1.apply(fontSizeDelta: 15),
+            style: h1.copyWith(fontSize: 22.sp),
           ),
           SizedBox(
-            height: 140,
+            height: 14.h,
           ),
           PrimaryButton(
               text: "As a User",
@@ -43,7 +44,7 @@ class _UserChoiceState extends State<UserChoice> with FostrTheme {
                 FostrRouter.goto(context, Routes.login);
               }),
           SizedBox(
-            height: 40,
+            height: 5.h,
           ),
           PrimaryButton(
               text: "As a Club Owner",
