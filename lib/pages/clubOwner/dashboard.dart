@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fostr/pages/clubOwner/CreateRoom.dart';
+import 'package:fostr/pages/user/CalendarPage.dart';
 import 'package:fostr/pages/user/SearchPage.dart';
 import 'package:fostr/pages/user/profile.dart';
 
@@ -15,71 +16,74 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> {
   int _selectedIndex = 0;
+  PageController controller = PageController(initialPage: 0);
 
   final List<Widget> _children = [
     CreateRoom(),
     SearchPage(),
-    Container(),
+    CalendarPage(),
     UserProfilePage(),
   ];
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: gradientTop,
-          leading: Icon(Icons.menu, color: Colors.black),
-          elevation: 0,
-          actions: [
-            IconButton(
-                icon: Icon(Icons.settings_outlined, color: Colors.black),
-                onPressed: () {
-                  // Navigator.pushNamed(context, Settings.id);
-                }),
-            IconButton(
-                icon: Icon(Icons.more_vert_outlined, color: Colors.black),
-                onPressed: () {}),
-          ],
-        ),
-        body: _children[_selectedIndex],
-        bottomNavigationBar: Container(
-          decoration: BoxDecoration(color: gradientBottom, boxShadow: [
-            BoxShadow(blurRadius: 20, color: Colors.black.withOpacity(.1))
-          ]),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
-            child: GNav(
-                gap: 8,
-                activeColor: Colors.white,
-                iconSize: 24,
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                duration: Duration(milliseconds: 800),
-                // tabBackgroundColor: Colors.blue[800],
-                tabs: [
-                  GButton(
-                    icon: LineIcons.home,
-                    text: 'Home',
-                  ),
-                  GButton(
-                    icon: LineIcons.search,
-                    text: 'Search',
-                  ),
-                  GButton(
-                    icon: LineIcons.calendar,
-                    text: 'Events',
-                  ),
-                  GButton(
-                    icon: LineIcons.user,
-                    text: 'Profile',
-                  ),
-                ],
-                selectedIndex: _selectedIndex,
-                onTabChange: (index) {
-                  setState(() {
-                    _selectedIndex = index;
-                  });
-                }),
+    return Scaffold(
+      // appBar: AppBar(
+      //   backgroundColor: gradientTop,
+      //   leading: Icon(Icons.menu, color: Colors.black),
+      //   elevation: 0,
+      //   actions: [
+      //     IconButton(
+      //         icon: Icon(Icons.settings_outlined, color: Colors.black),
+      //         onPressed: () {
+      //           // Navigator.pushNamed(context, Settings.id);
+      //         }),
+      //     IconButton(
+      //         icon: Icon(Icons.more_vert_outlined, color: Colors.black),
+      //         onPressed: () {}),
+      //   ],
+      // ),
+      body: PageView(
+        controller: controller,
+        physics: BouncingScrollPhysics(),
+        children: _children,
+      ),
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(color: gradientBottom, boxShadow: [
+          BoxShadow(blurRadius: 20, color: Colors.black.withOpacity(.1))
+        ]),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
+          child: GNav(
+            activeColor: Color(0xff94B5AC),
+            color: Colors.white,
+            iconSize: 24,
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+            duration: Duration(milliseconds: 800),
+            tabBackgroundColor: Colors.white,
+            tabs: [
+              GButton(
+                icon: LineIcons.home,
+              ),
+              GButton(
+                icon: LineIcons.search,
+              ),
+              GButton(
+                icon: LineIcons.calendar,
+              ),
+              GButton(
+                icon: LineIcons.user,
+              ),
+            ],
+            selectedIndex: _selectedIndex,
+            onTabChange: (index) {
+              setState(() {
+                _selectedIndex = index;
+                controller.animateToPage(index,
+                    duration: Duration(milliseconds: 300),
+                    curve: Curves.linear);
+              });
+            },
           ),
         ),
       ),

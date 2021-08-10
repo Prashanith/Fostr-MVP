@@ -55,7 +55,6 @@ class _OngoingRoomState extends State<OngoingRoom> with FostrTheme {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
           child: GNav(
-              gap: 8,
               activeColor: Color(0xff94B5AC),
               color: Colors.white,
               iconSize: 24,
@@ -108,7 +107,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> with FostrTheme {
-  String now = DateFormat('yyyy-MM-dd').format(DateTime.now()) + " " + DateFormat.Hm().format(DateTime.now());
+  String now = DateFormat('yyyy-MM-dd').format(DateTime.now()) +
+      " " +
+      DateFormat.Hm().format(DateTime.now());
   TextEditingController _textFieldController = TextEditingController();
   RefreshController _refreshController = RefreshController(
     initialRefresh: false,
@@ -174,14 +175,14 @@ class _HomePageState extends State<HomePage> with FostrTheme {
                       //   height: 20,
                       // ),
                       (user.name == "")
-                        ? Text(
-                          "Hello, User",
-                          style: h1.apply(color: Colors.white),
-                        )
-                        : Text(
-                          "Hello, ${user.name}",
-                          style: h1.apply(color: Colors.white),
-                        ),
+                          ? Text(
+                              "Hello, User",
+                              style: h1.apply(color: Colors.white),
+                            )
+                          : Text(
+                              "Hello, ${user.name}",
+                              style: h1.apply(color: Colors.white),
+                            ),
                     ],
                   ),
                 ),
@@ -199,43 +200,62 @@ class _HomePageState extends State<HomePage> with FostrTheme {
                       color: Colors.white,
                     ),
                     child: Padding(
-                      padding: const EdgeInsets.only(top: 5, left: 10, right: 10),
+                      padding:
+                          const EdgeInsets.only(top: 5, left: 10, right: 10),
                       child: ListView(
                         physics: BouncingScrollPhysics(),
                         children: [
                           StreamBuilder<QuerySnapshot>(
                             stream: roomCollection.snapshots(),
-                            builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                            builder: (BuildContext context,
+                                AsyncSnapshot<QuerySnapshot> snapshot) {
                               // Handling errors from firebase
                               if (snapshot.hasError)
-                                return Center(child: Text('Error: ${snapshot.error}'));
+                                return Center(
+                                    child: Text('Error: ${snapshot.error}'));
 
-                              if (snapshot.hasData && snapshot.data!.docs.length == 0)
-                                return Center(child: Text('No Ongoing Rooms Yet'));
+                              if (snapshot.hasData &&
+                                  snapshot.data!.docs.length == 0)
+                                return Center(
+                                    child: Text('No Ongoing Rooms Yet'));
 
                               return snapshot.hasData
-                                ? SizedBox(
-                                  height: MediaQuery.of(context).size.height - MediaQuery.of(context).size.height*0.24,
-                                  child: SmartRefresher(
-                                      enablePullDown: true,
-                                      controller: _refreshController,
-                                      onRefresh: _onRefresh,
-                                      onLoading: _onLoading,
-                                      child: ListView(
-                                        physics: BouncingScrollPhysics(),
-                                        children: snapshot.data!.docs.map((DocumentSnapshot document) {
-                                          return GestureDetector(
-                                            onTap: () async {
-                                              Navigator.push(context, CupertinoPageRoute(builder: (BuildContext context) => ThemePage(room: Room.fromJson(document))));
-                                            },
-                                            child: OngoingRoomCard(room: Room.fromJson(document))
-                                          );
-                                        }).toList(),
+                                  ? SizedBox(
+                                      height: MediaQuery.of(context)
+                                              .size
+                                              .height -
+                                          MediaQuery.of(context).size.height *
+                                              0.24,
+                                      child: SmartRefresher(
+                                        enablePullDown: true,
+                                        controller: _refreshController,
+                                        onRefresh: _onRefresh,
+                                        onLoading: _onLoading,
+                                        child: ListView(
+                                          physics: BouncingScrollPhysics(),
+                                          children: snapshot.data!.docs
+                                              .map((DocumentSnapshot document) {
+                                            return GestureDetector(
+                                                onTap: () async {
+                                                  Navigator.push(
+                                                      context,
+                                                      CupertinoPageRoute(
+                                                          builder: (BuildContext
+                                                                  context) =>
+                                                              ThemePage(
+                                                                  room: Room
+                                                                      .fromJson(
+                                                                          document))));
+                                                },
+                                                child: OngoingRoomCard(
+                                                    room: Room.fromJson(
+                                                        document)));
+                                          }).toList(),
+                                        ),
                                       ),
-                                    ),
-                                )
-                                // Display if still loading data
-                                : Center(child: CircularProgressIndicator());
+                                    )
+                                  // Display if still loading data
+                                  : Center(child: CircularProgressIndicator());
                             },
                           ),
                         ],

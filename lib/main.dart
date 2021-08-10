@@ -2,6 +2,7 @@ import 'package:device_preview/device_preview.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:fostr/pages/clubOwner/dashboard.dart';
 import 'package:fostr/pages/quiz/BookSuggestionPage.dart';
 import 'package:fostr/providers/IndexProvider.dart';
 import 'package:fostr/router/router.dart';
@@ -29,10 +30,11 @@ class MyApp extends StatelessWidget with FostrTheme {
         builder: (context, orientation, deviceType) => MaterialApp(
           locale: DevicePreview.locale(context),
           builder: DevicePreview.appBuilder,
-          initialRoute: "/",
-          onGenerateRoute: (settings) =>
-              FostrRouter.generateRoute(context, settings),
+          // initialRoute: "/",
+          // onGenerateRoute: (settings) =>
+          //     FostrRouter.generateRoute(context, settings),
           title: "FOSTR",
+          home: Dashboard(),
         ),
       ),
     );
