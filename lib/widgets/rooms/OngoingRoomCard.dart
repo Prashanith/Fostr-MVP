@@ -20,7 +20,10 @@ class OngoingRoomCard extends StatelessWidget with FostrTheme {
           child: Container(
             padding: const EdgeInsets.all(15),
             width: double.infinity,
-            height: MediaQuery.of(context).size.height * 0.2,
+            // height: MediaQuery.of(context).size.height * 0.25,
+            constraints: BoxConstraints(
+              maxHeight: 150,
+            ),
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topLeft,

@@ -55,7 +55,7 @@ class _OngoingRoomState extends State<OngoingRoom> with FostrTheme {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
           child: GNav(
-              gap: 8,
+              // gap: 8,
               activeColor: Color(0xff94B5AC),
               color: Colors.white,
               iconSize: 24,
@@ -65,19 +65,19 @@ class _OngoingRoomState extends State<OngoingRoom> with FostrTheme {
               tabs: [
                 GButton(
                   icon: LineIcons.home,
-                  text: 'Home',
+                  // text: 'Home',
                 ),
                 GButton(
                   icon: LineIcons.search,
-                  text: 'Search',
+                  // text: 'Search',
                 ),
                 GButton(
                   icon: LineIcons.calendar,
-                  text: 'Events',
+                  // text: 'Events',
                 ),
                 GButton(
                   icon: LineIcons.user,
-                  text: 'Profile',
+                  // text: 'Profile',
                 ),
               ],
               selectedIndex: _selectedIndex,

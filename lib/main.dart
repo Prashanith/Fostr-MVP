@@ -15,7 +15,7 @@ void main() async {
   setupLocators();
   runApp(
     DevicePreview(
-      enabled: false,
+      enabled: true,
       builder: (context) => MyApp(),
     ),
   );
