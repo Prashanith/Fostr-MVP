@@ -205,58 +205,49 @@ class _HomePageState extends State<HomePage> with FostrTheme {
                         children: [
                           StreamBuilder<QuerySnapshot>(
                             stream: roomCollection.snapshots(),
-                            builder: (BuildContext context,
-                                AsyncSnapshot<QuerySnapshot> snapshot) {
-                              // Handling errors from firebase
-                              if (snapshot.hasError)
-                                return Center(
-                                    child: Text('Error: ${snapshot.error}'));
-
-                              if (snapshot.hasData &&
-                                  snapshot.data!.docs.length == 0)
-                                return Center(
-                                    child: Text('No Ongoing Rooms Yet'));
-
-                              return snapshot.hasData
-                                  ? SizedBox(
-                                      height: MediaQuery.of(context)
-                                              .size
-                                              .height -
-                                          MediaQuery.of(context).size.height *
-                                              0.24,
-                                      child: SmartRefresher(
-                                        enablePullDown: true,
-                                        controller: _refreshController,
-                                        onRefresh: _onRefresh,
-                                        onLoading: _onLoading,
-                                        child: ListView(
-                                          physics: BouncingScrollPhysics(),
-                                          children: snapshot.data!.docs
-                                              .map((DocumentSnapshot document) {
-                                            return GestureDetector(
+                              builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                                print(snapshot.data!.docs[0].id);
+                                return StreamBuilder<QuerySnapshot>(
+                                  stream: roomCollection.doc(snapshot.data!.docs[0].id).collection("rooms").snapshots(),
+                                  builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                                    // Handling errors from firebase
+                                    if (snapshot.hasError)
+                                      return Center(child: Text('Error: ${snapshot.error}'));
+                              
+                                    if (snapshot.hasData && snapshot.data!.docs.length == 0)
+                                      return Center(child: Text('No Ongoing Rooms Yet'));
+                              
+                                    return snapshot.hasData
+                                      ? SizedBox(
+                                        height: MediaQuery.of(context).size.height - MediaQuery.of(context).size.height*0.24,
+                                        child: SmartRefresher(
+                                          enablePullDown: true,
+                                          controller: _refreshController,
+                                          onRefresh: _onRefresh,
+                                          onLoading: _onLoading,
+                                          child: ListView(
+                                            physics: BouncingScrollPhysics(),
+                                            children: snapshot.data!.docs.map((DocumentSnapshot document) {
+                                              return GestureDetector(
                                                 onTap: () async {
-                                                  Navigator.push(
-                                                    context,
-                                                    CupertinoPageRoute(
-                                                      builder: (BuildContext
-                                                              context) =>
-                                                          ThemePage(
-                                                        room: Room.fromJson(
-                                                            document),
-                                                      ),
-                                                    ),
-                                                  );
+                                                  Navigator.push(context, CupertinoPageRoute(builder: (BuildContext context) => ThemePage(room: Room.fromJson(document))));
                                                 },
-                                                child: OngoingRoomCard(
-                                                    room: Room.fromJson(
-                                                        document)));
-                                          }).toList(),
+                                                child: OngoingRoomCard(room: Room.fromJson(document))
+                                                // child: Column(
+                                                //   children: [
+                                                //     Text(document.id.toString()),
+                                                //   ],
+                                                // ),
+                                              );
+                                            }).toList(),
+                                          ),
                                         ),
-                                      ),
-                                    )
-                                  // Display if still loading data
-                                  : Center(child: CircularProgressIndicator());
-                            },
+                                      )
+                                      // Display if still loading data
+                                      : Center(child: CircularProgressIndicator());
+                                  },
+                                );
+                            }
                           ),
                         ],
                       ),

@@ -85,7 +85,7 @@ class OngoingRoomCard extends StatelessWidget with FostrTheme {
                   height: 5,
                 ),
                 Text(
-                  "by Book Club Name",
+                  "by " + room.roomCreator.toString(),
                   style: TextStyle(
                     color: Color(0xffffffff),
                     fontSize: 11,
@@ -112,7 +112,7 @@ class OngoingRoomCard extends StatelessWidget with FostrTheme {
                   height: 5,
                 ),
                 Text(
-                  "Happening at: " + DateFormat('dd-MMM-yy (KK:mm) aa').format(DateTime.parse(room.dateTime.toString())),
+                  DateFormat('dd-MMM-yy (KK:mm) aa').format(DateTime.parse(room.dateTime.toString())),
                   style: TextStyle(
                       fontSize: 15,
                       color: Colors.white,
