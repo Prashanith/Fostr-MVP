@@ -306,6 +306,15 @@ class _LibraryState extends State<Library> with FostrTheme {
       alignment: Alignment.bottomCenter,
       child: Row(
         children: [
+          IconButton(
+            onPressed: () {
+              removeUser(user);
+              Navigator.pop(context);
+            },
+            color: Color(0xffE8FCD9),
+            icon: Image.asset(IMAGES + "close.png"),
+            iconSize: 25
+          ),
           Spacer(),
           Visibility(
             visible: widget.role == ClientRole.Broadcaster,
@@ -318,17 +327,8 @@ class _LibraryState extends State<Library> with FostrTheme {
               },
               color: Color(0xffE8FCD9),
               icon: !isMicOn ? Image.asset(IMAGES + "mic.png") : Image.asset(IMAGES + "mic_off.png"),
-              iconSize: 15
+              iconSize: 25
             ),
-          ),
-          IconButton(
-            onPressed: () {
-              removeUser(user);
-              Navigator.pop(context);
-            },
-            color: Color(0xffE8FCD9),
-            icon: Image.asset(IMAGES + "close.png"),
-            iconSize: 15
           ),
         ],
       ),
