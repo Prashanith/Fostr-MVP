@@ -68,7 +68,7 @@ class RoomDetails extends StatelessWidget with FostrTheme {
                     ),
                     color: Colors.white,
                   ),
-                  child: EnterClubRoomDetails(),
+                  child: EnterRoomDetails(),
                 ),
               ),
             ],

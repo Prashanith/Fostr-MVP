@@ -352,9 +352,6 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                             ],
                           ),
                         ),
-                        SizedBox(
-                          height: 15,
-                        ),
                         Container(
                           padding: EdgeInsets.symmetric(horizontal: 20),
                           height: 80,
@@ -398,7 +395,7 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                               child: Row(
                                 children: [
                                   Text(
-                                    'Up Next:',
+                                    'Favourite Books:',
                                     style: TextStyle(
                                         fontWeight: FontWeight.w500,
                                         fontSize: 15,
@@ -408,7 +405,7 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                               ),
                             ),
                             SizedBox(
-                              height: 15,
+                              height: 10,
                             ),
                             Container(
                               padding: const EdgeInsets.all(15),
@@ -421,96 +418,26 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                               width: MediaQuery.of(context).size.width * 0.9,
                               child: Column(
                                 children: List.generate(
-                                  3,
+                                  5,
                                   (index) => Padding(
                                     padding: const EdgeInsets.symmetric(
                                         vertical: 10),
-                                    child: Row(
-                                      children: [
-                                        Text("17:30",
-                                            style: h2.copyWith(
-                                              color: Color(0xff6E664E),
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 14,
-                                            )),
-                                        SizedBox(
-                                          width: 20,
-                                        ),
-                                        Text(
-                                          "e-Habits Book Club",
-                                          style: h2.copyWith(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                      ],
+                                    child: Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        "e-Habits Book Club",
+                                        style: h2.copyWith(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold),
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 15,
-                        ),
-                        Column(
-                          children: [
-                            Container(
-                              alignment: Alignment.topLeft,
-                              child: Text(
-                                'Top Rooms:',
-                                style: TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.teal[900]),
                               ),
                             ),
                             SizedBox(
-                              height: 10,
+                              height: 15,
                             ),
-                            Container(
-                              height: 370,
-                              child: GridView.builder(
-                                physics: NeverScrollableScrollPhysics(),
-                                itemCount: 4,
-                                gridDelegate:
-                                    SliverGridDelegateWithFixedCrossAxisCount(
-                                        crossAxisCount: 2, crossAxisSpacing: 0),
-                                itemBuilder: (context, index) =>
-                                    GestureDetector(
-                                  onTap: () {},
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: Color(0xffE5EEEE),
-                                      borderRadius: BorderRadius.circular(15),
-                                    ),
-                                    //alignment: Alignment.center,
-                                    height: 128,
-                                    width: 153,
-                                    margin: EdgeInsets.all(10.0),
-                                    /*child: Text(
-                                            'Hyperion',
-                                            style: TextStyle(),
-                                          )*/
-                                    child: Stack(
-                                      children: [
-                                        Align(
-                                          alignment: Alignment(1, -1.05),
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(
-                                                right: 10),
-                                            child: Icon(
-                                              Icons.bookmark,
-                                              color: Colors.teal[800],
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            )
                           ],
                         ),
                       ],

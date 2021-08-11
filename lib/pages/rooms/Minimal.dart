@@ -293,7 +293,7 @@ class _MinimalState extends State<Minimal> with FostrTheme {
                 _engine.muteLocalAudioStream(isMicOn);
               },
               color: Color(0xffE8FCD9),
-              icon: isMicOn ? Image.asset(IMAGES + "mic.png") : Image.asset(IMAGES + "mic_off.png"),
+              icon: !isMicOn ? Image.asset(IMAGES + "mic.png") : Image.asset(IMAGES + "mic_off.png"),
               iconSize: 15
             ),
           ),

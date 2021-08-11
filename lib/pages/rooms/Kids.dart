@@ -249,31 +249,31 @@ class _KidsState extends State<Kids> with FostrTheme {
                                         DragProfile(user: User.fromJson(map[0].data()), 
                                           offset: Offset(MediaQuery.of(context).size.width*0.05, MediaQuery.of(context).size.height*0.32), isSpeaker: true),
                                         map.length >= 2
-                                          ? DragProfile(user: User.fromJson(map[0].data()),
+                                          ? DragProfile(user: User.fromJson(map[1].data()),
                                               offset: Offset(MediaQuery.of(context).size.width*0.4, MediaQuery.of(context).size.height*0.31), isSpeaker: true)
                                           : Container(),
                                         map.length >= 3
-                                          ? DragProfile(user: User.fromJson(map[0].data()),
+                                          ? DragProfile(user: User.fromJson(map[2].data()),
                                               offset: Offset(MediaQuery.of(context).size.width*0.12, MediaQuery.of(context).size.height*0.42), isSpeaker: true)
                                           : Container(),
                                         map.length >= 4
-                                          ? DragProfile(user: User.fromJson(map[0].data()),
+                                          ? DragProfile(user: User.fromJson(map[3].data()),
                                               offset: Offset(MediaQuery.of(context).size.width*0.6, MediaQuery.of(context).size.height*0.45), isSpeaker: true)
                                           : Container(),
                                         map.length >= 5
-                                          ? DragProfile(user: User.fromJson(map[0].data()), 
+                                          ? DragProfile(user: User.fromJson(map[4].data()), 
                                               offset: Offset(MediaQuery.of(context).size.width*0.68, MediaQuery.of(context).size.height*0.35), isSpeaker: true)
                                           : Container(),
                                         map.length >= 6
-                                          ? DragProfile(user: User.fromJson(map[0].data()),
+                                          ? DragProfile(user: User.fromJson(map[5].data()),
                                               offset: Offset(MediaQuery.of(context).size.width*0.72, MediaQuery.of(context).size.height*0.43), isSpeaker: true)
                                           : Container(),
                                         map.length >= 7
-                                          ? DragProfile(user: User.fromJson(map[0].data()), 
+                                          ? DragProfile(user: User.fromJson(map[6].data()), 
                                               offset: Offset(MediaQuery.of(context).size.width*0.55, MediaQuery.of(context).size.height*0.335), isSpeaker: true)
                                           : Container(),
                                         map.length == 8
-                                          ? DragProfile(user: User.fromJson(map[0].data()),
+                                          ? DragProfile(user: User.fromJson(map[7].data()),
                                             offset: Offset(MediaQuery.of(context).size.width*0.3, MediaQuery.of(context).size.height*0.45), isSpeaker: true)
                                           : Container(),
                                       ],
@@ -315,7 +315,7 @@ class _KidsState extends State<Kids> with FostrTheme {
                 _engine.muteLocalAudioStream(isMicOn);
               },
               color: Color(0xffE8FCD9),
-              icon: isMicOn ? Image.asset(IMAGES + "mic.png") : Image.asset(IMAGES + "mic_off.png"),
+              icon: !isMicOn ? Image.asset(IMAGES + "mic.png") : Image.asset(IMAGES + "mic_off.png"),
               iconSize: 15
             ),
           ),

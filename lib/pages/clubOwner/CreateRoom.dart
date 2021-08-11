@@ -58,13 +58,15 @@ class _CreateRoomState extends State<CreateRoom> with FostrTheme {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      "Hello, ${user.userName}",
-                      style: h1.copyWith(
-                        color: Colors.white,
-                        fontSize: 22.sp,
-                      ),
-                    ),
+                    (user.name == "")
+                      ? Text(
+                          "Hello, ${user.userName}",
+                          style: h1.apply(color: Colors.white),
+                        )
+                      : Text(
+                          "Hello, ${user.name}",
+                          style: h1.apply(color: Colors.white),
+                        ),
                   ],
                 ),
               ),
