@@ -255,7 +255,7 @@ class _UserCardState extends State<UserCard> with FostrTheme {
                   image: (widget.user.userProfile != null)
                       ? (widget.user.userProfile?.profileImage != null)
                           ? Image.network(
-                              widget.user.userProfile!.profileImage!,
+                              widget.user.userProfile!.profileImage,
                               height: 30,
                               width: 25,
                             ).image

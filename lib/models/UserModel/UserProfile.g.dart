@@ -8,16 +8,15 @@ part of 'UserProfile.dart';
 
 UserProfile _$UserProfileFromJson(Map<String, dynamic> json) {
   return UserProfile(
-    bio: json['bio'] as String,
-    facebook: json['facebook'] as String,
-    google: json['google'] as String,
-    instagram: json['instagram'] as String,
-    linkedIn: json['linkedIn'] as String,
-    phoneNumber: json['phoneNumber'] as String,
-    profileImage: json['profileImage'] as String,
-    twitter: json['twitter'] as String,
-  )..topBooks =
-      (json['topBooks'] as List<dynamic>).map((e) => e as String).toList();
+    bio: json['bio'] as String?,
+    facebook: json['facebook'] as String?,
+    google: json['google'] as String?,
+    instagram: json['instagram'] as String?,
+    linkedIn: json['linkedIn'] as String?,
+    phoneNumber: json['phoneNumber'] as String?,
+    profileImage: json['profileImage'] as String?,
+    twitter: json['twitter'] as String?,
+  );
 }
 
 Map<String, dynamic> _$UserProfileToJson(UserProfile instance) =>
@@ -30,5 +29,4 @@ Map<String, dynamic> _$UserProfileToJson(UserProfile instance) =>
       'twitter': instance.twitter,
       'profileImage': instance.profileImage,
       'phoneNumber': instance.phoneNumber,
-      'topBooks': instance.topBooks,
     };

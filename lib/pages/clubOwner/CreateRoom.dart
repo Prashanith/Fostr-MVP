@@ -8,7 +8,9 @@ import 'package:fostr/models/UserModel/User.dart';
 import 'package:fostr/providers/AuthProvider.dart';
 import 'package:fostr/router/router.dart';
 import 'package:fostr/router/routes.dart';
+import 'package:fostr/services/UserService.dart';
 import 'package:fostr/utils/theme.dart';
+import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
@@ -20,19 +22,8 @@ class CreateRoom extends StatefulWidget {
 }
 
 class _CreateRoomState extends State<CreateRoom> with FostrTheme {
+  final userService = GetIt.I<UserService>();
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   getRooms(user);
-  // }
-
-  // getRooms(User user) async {
-  //   await roomCollection
-  //     .doc(user.id)
-  //     .collection("rooms")
-  //     .snapshots();
-  // }
   @override
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthProvider>(context);
@@ -59,158 +50,181 @@ class _CreateRoomState extends State<CreateRoom> with FostrTheme {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     (user.name == "")
-                      ? Text(
-                          "Hello, ${user.userName}",
-                          style: h1.apply(color: Colors.white),
-                        )
-                      : Text(
-                          "Hello, ${user.name}",
-                          style: h1.apply(color: Colors.white),
-                        ),
+                        ? Text(
+                            "Hello, ${user.userName}",
+                            style: h1.apply(color: Colors.white),
+                          )
+                        : Text(
+                            "Hello, ${user.name}",
+                            style: h1.apply(color: Colors.white),
+                          ),
                   ],
                 ),
               ),
               SizedBox(
                 height: 40,
               ),
-              Expanded(
-                child: Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: Image.asset(IMAGES + "background.png").image,
-                      fit: BoxFit.cover,
-                    ),
-                    borderRadius: BorderRadiusDirectional.only(
-                      topStart: Radius.circular(32),
-                      topEnd: Radius.circular(32),
-                    ),
-                    color: Colors.white,
-                  ),
-                  child: Stack(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(30),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                              height: 2.h,
-                            ),
-                            Column(
-                              children: [
-                                Container(
-                                  alignment: Alignment.center,
-                                  height: 80,
-                                  width: 40.w,
-                                  decoration: BoxDecoration(
-                                    boxShadow: boxShadow,
-                                    borderRadius: BorderRadius.circular(42),
-                                    color: Color(0xff96C5AE),
-                                  ),
-                                  child: Text(
-                                    user.followers?.length.toString() ?? "0",
-                                    style: h1.copyWith(
-                                      color: Colors.white,
-                                      fontSize: 22.sp,
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 2.h,
-                                ),
-                                Text(
-                                  "MEMBERS",
-                                  style: h1.copyWith(
-                                    color: Color(0xff96C5AE),
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 24.sp,
-                                  ),
-                                )
-                              ],
-                            ),
-                            Container(
-                              height: 40.h,
-                              width: 90.w,
-                              constraints: BoxConstraints(
-                                maxWidth: 370,
-                                maxHeight: 340,
-                              ),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(34),
-                                boxShadow: [
-                                  BoxShadow(
-                                    offset: Offset(8, 0),
-                                    blurRadius: 16,
-                                    color: Colors.black.withOpacity(0.25),
-                                  )
-                                ],
-                                gradient: LinearGradient(colors: [
-                                  Color(0xff97C6AF),
-                                  Color(0xffC9DED0),
-                                ]),
-                              ),
-                              child: Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 10.0),
-                                    child: Text(
-                                      "TOP ROOMS",
-                                      style: h2.copyWith(
-                                          fontSize: 18.sp, color: Colors.white),
-                                    ),
-                                  ),
-                                  StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                                    stream: roomCollection
-                                      .doc(user.id)
-                                      .collection('rooms')
-                                      .snapshots(),
-                                    builder: (BuildContext context, snapshot) {
-                                      if (snapshot.hasData) {
-                                        final roomName = snapshot.data!.docs;
-                                        return Column(
-                                          children: List.generate(
-                                            min(roomName.length, 3),
-                                            (index) {
-                                              return Padding(
-                                                padding: const EdgeInsets.only(top: 10),
-                                                child: RoomLine(
-                                                  width: index == 0 ? 200 : index == 1 ? 150 : 100,
-                                                  bookName: roomName[index].id.toString(),
-                                                ),
-                                              );
-                                            },
-                                          ).toList(),
-                                        );
-                                      }
-                                      return Container();
-                                    }
-                                  )
-                                  // RoomLine(
-                                  //   width: 200,
-                                  //   bookName: roomCollection.doc(user.id).collection("rooms").doc().get().toString()
-                                  // ),
-                                  // RoomLine(
-                                  //   width: 150,
-                                  //   bookName: "Science Reads",
-                                  // ),
-                                  // RoomLine(
-                                  //   width: 100,
-                                  //   bookName: "Sita",
-                                  // ),
-                                ],
-                              ),
-                            )
-                          ],
-                        ),
+              RefreshIndicator(
+                onRefresh: () async {
+                  try {
+                    var user = await userService.getUserById(auth.user!.id);
+                    if (user != null) {
+                      auth.refreshUser(user);
+                    }
+                  } catch (e) {}
+                },
+                child: Expanded(
+                  child: Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: Image.asset(IMAGES + "background.png").image,
+                        fit: BoxFit.cover,
                       ),
-                      Align(
+                      borderRadius: BorderRadiusDirectional.only(
+                        topStart: Radius.circular(32),
+                        topEnd: Radius.circular(32),
+                      ),
+                      color: Colors.white,
+                    ),
+                    child: Stack(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(30),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              SizedBox(
+                                height: 2.h,
+                              ),
+                              Column(
+                                children: [
+                                  Container(
+                                    alignment: Alignment.center,
+                                    height: 80,
+                                    width: 40.w,
+                                    decoration: BoxDecoration(
+                                      boxShadow: boxShadow,
+                                      borderRadius: BorderRadius.circular(42),
+                                      color: Color(0xff96C5AE),
+                                    ),
+                                    child: Text(
+                                      user.followers?.length.toString() ?? "0",
+                                      style: h1.copyWith(
+                                        color: Colors.white,
+                                        fontSize: 22.sp,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 2.h,
+                                  ),
+                                  Text(
+                                    "MEMBERS",
+                                    style: h1.copyWith(
+                                      color: Color(0xff96C5AE),
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 24.sp,
+                                    ),
+                                  )
+                                ],
+                              ),
+                              Container(
+                                height: 40.h,
+                                width: 90.w,
+                                constraints: BoxConstraints(
+                                  maxWidth: 370,
+                                  maxHeight: 340,
+                                ),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(34),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      offset: Offset(8, 0),
+                                      blurRadius: 16,
+                                      color: Colors.black.withOpacity(0.25),
+                                    )
+                                  ],
+                                  gradient: LinearGradient(colors: [
+                                    Color(0xff97C6AF),
+                                    Color(0xffC9DED0),
+                                  ]),
+                                ),
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 10.0),
+                                      child: Text(
+                                        "TOP ROOMS",
+                                        style: h2.copyWith(
+                                            fontSize: 18.sp,
+                                            color: Colors.white),
+                                      ),
+                                    ),
+                                    StreamBuilder<
+                                            QuerySnapshot<
+                                                Map<String, dynamic>>>(
+                                        stream: roomCollection
+                                            .doc(user.id)
+                                            .collection('rooms')
+                                            .snapshots(),
+                                        builder:
+                                            (BuildContext context, snapshot) {
+                                          if (snapshot.hasData) {
+                                            final roomName =
+                                                snapshot.data!.docs;
+                                            return Column(
+                                              children: List.generate(
+                                                min(roomName.length, 3),
+                                                (index) {
+                                                  return Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            top: 10),
+                                                    child: RoomLine(
+                                                      width: index == 0
+                                                          ? 200
+                                                          : index == 1
+                                                              ? 150
+                                                              : 100,
+                                                      bookName: roomName[index]
+                                                          .id
+                                                          .toString(),
+                                                    ),
+                                                  );
+                                                },
+                                              ).toList(),
+                                            );
+                                          }
+                                          return Container();
+                                        })
+                                    // RoomLine(
+                                    //   width: 200,
+                                    //   bookName: roomCollection.doc(user.id).collection("rooms").doc().get().toString()
+                                    // ),
+                                    // RoomLine(
+                                    //   width: 150,
+                                    //   bookName: "Science Reads",
+                                    // ),
+                                    // RoomLine(
+                                    //   width: 100,
+                                    //   bookName: "Sita",
+                                    // ),
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                        Align(
                           alignment: Alignment.bottomCenter,
-                          child: startRoomButton()),
-                    ],
+                          child: startRoomButton(),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),

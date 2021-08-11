@@ -158,10 +158,9 @@ class _UserCardState extends State<UserCard> with FostrTheme {
               image: DecorationImage(
                   fit: BoxFit.cover,
                   image: (user.userProfile != null)
-                      ? (user.userProfile?.profileImage != null ||
-                              user.userProfile!.profileImage.isNotEmpty)
+                      ? (user.userProfile?.profileImage != null)
                           ? Image.network(
-                              user.userProfile!.profileImage,
+                              user.userProfile!.profileImage!,
                               height: 30,
                               width: 25,
                             ).image
@@ -192,53 +191,53 @@ class _UserCardState extends State<UserCard> with FostrTheme {
           ),
           Spacer(),
           (!widget.isFollower)
-              ? InkWell(
-                  onTap: () async {
-                    try {
-                      if (!widget.isFollower) {
-                        if (!followed) {
-                          var newUser =
-                              await userService.followUser(auth.user!, user);
-                          setState(() {
-                            followed = true;
-                          });
-                          auth.refreshUser(newUser);
-                          ScaffoldMessenger.of(context)
-                              .showSnackBar(followedSnackBar);
-                        } else {
-                          var newUser =
-                              await userService.unfollowUser(auth.user!, user);
-                          setState(() {
-                            followed = false;
-                          });
-                          auth.refreshUser(newUser);
-                          ScaffoldMessenger.of(context)
-                              .showSnackBar(unfollowedSnackBar);
-                        }
-                      }
-                    } catch (e) {
-                      print(e);
+            ? InkWell(
+              onTap: () async {
+                try {
+                  if (!widget.isFollower) {
+                    if (!followed) {
+                      var newUser =
+                          await userService.followUser(auth.user!, user);
+                      setState(() {
+                        followed = true;
+                      });
+                      auth.refreshUser(newUser);
+                      ScaffoldMessenger.of(context)
+                          .showSnackBar(followedSnackBar);
+                    } else {
+                      var newUser =
+                          await userService.unfollowUser(auth.user!, user);
+                      setState(() {
+                        followed = false;
+                      });
+                      auth.refreshUser(newUser);
+                      ScaffoldMessenger.of(context)
+                          .showSnackBar(unfollowedSnackBar);
                     }
-                  },
-                  child: Container(
-                    margin: const EdgeInsets.all(10),
-                    padding: const EdgeInsets.all(10),
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: h2.color,
-                    ),
-                    child: Text(
-                      (widget.isFollower)
-                          ? ""
-                          : (followed)
-                              ? "Unfollow"
-                              : "Follow",
-                      style: h2.copyWith(color: Colors.white),
-                    ),
-                  ),
-                )
-              : Container()
+                  }
+                } catch (e) {
+                  print(e);
+                }
+              },
+              child: Container(
+                margin: const EdgeInsets.all(10),
+                padding: const EdgeInsets.all(10),
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: h2.color,
+                ),
+                child: Text(
+                  (widget.isFollower)
+                      ? ""
+                      : (followed)
+                          ? "Unfollow"
+                          : "Follow",
+                  style: h2.copyWith(color: Colors.white),
+                ),
+              ),
+            )
+            : Container()
         ],
       ),
     );
