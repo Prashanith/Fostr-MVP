@@ -356,16 +356,17 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                           padding: EdgeInsets.symmetric(horizontal: 20),
                           height: 80,
                           decoration: ShapeDecoration(
-                            gradient: LinearGradient(
-                              colors: [
-                                const Color(0xFF80CBC4),
-                                const Color(0xFFB2DFDB),
-                              ],
-                              begin: Alignment.bottomCenter,
-                              end: Alignment.center,
-                              stops: [0.0, 0.5],
-                              tileMode: TileMode.clamp,
-                            ),
+                            // gradient: LinearGradient(
+                            //   colors: [
+                            //     const Color(0xFF80CBC4),
+                            //     const Color(0xFFB2DFDB),
+                            //   ],
+                            //   begin: Alignment.bottomCenter,
+                            //   end: Alignment.center,
+                            //   stops: [0.0, 0.5],
+                            //   tileMode: TileMode.clamp,
+                            // ),
+                            color: Color(0xFFE6FAED),
                             shadows: [
                               BoxShadow(
                                 offset: Offset(-5, -4),
