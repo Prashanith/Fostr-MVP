@@ -191,7 +191,7 @@ class _SelectThemeState extends State<SelectTheme> {
                   Text('You can join room either as: ',
                     style: TextStyle(
                       fontSize: 16,
-                      color: Color(0xB2476747),
+                      color: Colors.teal.shade800,
                       fontFamily: "Lato",
                     )
                   ),

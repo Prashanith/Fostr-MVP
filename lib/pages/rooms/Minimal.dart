@@ -189,23 +189,9 @@ class _MinimalState extends State<Minimal> with FostrTheme {
             children: [
               Padding(
                 padding: paddingH + const EdgeInsets.only(top: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // SvgPicture.asset(ICONS + "menu.svg"),
-                    // SizedBox(
-                    //   height: 30,
-                    // ),
-                    (user.name == "")
-                        ? Text(
-                            "Hello, User",
-                            style: h1.apply(color: Colors.white),
-                          )
-                        : Text(
-                            "Hello, ${user.name}",
-                            style: h1.apply(color: Colors.white),
-                          ),
-                  ],
+                child: Text(
+                  widget.room.title ?? "Hallway",
+                  style: h1.apply(color: Colors.white),
                 ),
               ),
               SizedBox(
@@ -224,17 +210,6 @@ class _MinimalState extends State<Minimal> with FostrTheme {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 15, horizontal: 30),
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            "${widget.room.title}",
-                            style: h1,
-                          ),
-                        ),
-                      ),
                       Expanded(
                         child: Container(
                           padding: const EdgeInsets.only(
