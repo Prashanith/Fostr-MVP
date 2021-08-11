@@ -190,14 +190,9 @@ class _CafeState extends State<Cafe> with FostrTheme {
             children: [
               Padding(
                 padding: paddingH + const EdgeInsets.only(top: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      widget.room.title ?? "",
-                      style: h1.apply(color: Colors.white),
-                    ),
-                  ],
+                child: Text(
+                  widget.room.title ?? "Hallway",
+                  style: h1.apply(color: Colors.white),
                 ),
               ),
               SizedBox(
