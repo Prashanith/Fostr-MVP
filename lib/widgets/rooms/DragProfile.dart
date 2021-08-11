@@ -50,7 +50,7 @@ class DragProfileState extends State<DragProfile> {
           //     shape: BoxShape.circle,
           //   ),
           // ),
-          child: Profile(user: widget.user, size: 50, isMute: false, isSpeaker: widget.isSpeaker),
+          child: Profile(user: widget.user, size: 40, isMute: false, isSpeaker: widget.isSpeaker),
         ));
   }
 }

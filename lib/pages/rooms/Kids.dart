@@ -15,16 +15,16 @@ import 'package:fostr/widgets/rooms/Profile.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-class Cafe extends StatefulWidget {
+class Kids extends StatefulWidget {
   final Room room;
   final ClientRole role;
-  const Cafe({Key? key, required this.room, required this.role}) : super(key: key);
+  const Kids({Key? key, required this.room, required this.role}) : super(key: key);
 
   @override
-  State<Cafe> createState() => _CafeState();
+  State<Kids> createState() => _KidsState();
 }
 
-class _CafeState extends State<Cafe> with FostrTheme {
+class _KidsState extends State<Kids> with FostrTheme {
   int speakersCount = 0, participantsCount = 0;
   RefreshController _refreshController = RefreshController(
     initialRefresh: false,
@@ -54,7 +54,7 @@ class _CafeState extends State<Cafe> with FostrTheme {
     // get the details of room
     roomCollection
       .doc(widget.room.id)
-      .collection("rooms")
+      .collection('rooms')
       .doc(widget.room.title)
       .snapshots()
       .listen((result) {
@@ -65,7 +65,7 @@ class _CafeState extends State<Cafe> with FostrTheme {
         });
       });
   }
-
+  
   removeUser(User user) async {
     if (widget.role == ClientRole.Broadcaster) {
       // update the list of speakers
@@ -99,6 +99,11 @@ class _CafeState extends State<Cafe> with FostrTheme {
         .collection("participants")
         .doc(user.userName)
         .delete();
+    }
+
+    if ((participantsCount == 0 && speakersCount == 1) ||
+        (participantsCount == 1 && speakersCount == 0)) {
+      await roomCollection.doc(widget.room.title).delete();
     }
   }
 
@@ -242,7 +247,7 @@ class _CafeState extends State<Cafe> with FostrTheme {
                           ),
                           decoration: BoxDecoration(
                             image: new DecorationImage(
-                              image: new AssetImage(IMAGES + "cafe-main.png"),
+                              image: new AssetImage(IMAGES + "kids-main.png"),
                               fit: BoxFit.fill,
                             ),
                             borderRadius: BorderRadius.only(
@@ -254,53 +259,119 @@ class _CafeState extends State<Cafe> with FostrTheme {
                             children: [
                               // list of speakers
                               StreamBuilder(
-                                stream: roomCollection
-                                  .doc(widget.room.id)
-                                  .collection("rooms")
-                                  .doc(widget.room.title)
-                                  .collection('speakers').snapshots(),
-                                builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                                  if (snapshot.hasData) {
-                                    List<QueryDocumentSnapshot<Object?>> map = snapshot.data!.docs;
-                                    return Stack(
-                                      children: [
-                                        // DragProfile(offset: Offset(MediaQuery.of(context).size.width*0.002, MediaQuery.of(context).size.height*0.32), user: RoomUser.fromJson(map[0]), isSpeaker: true),
-                                        // map.length >= 2
-                                        //   ? DragProfile(offset: Offset(MediaQuery.of(context).size.width*0.22, MediaQuery.of(context).size.height*0.3), user: RoomUser.fromJson(map[1]), isSpeaker: true)
-                                        //   : Container(),
-                                        // map.length >= 3
-                                        //   ? DragProfile(offset: Offset(MediaQuery.of(context).size.width*0.05, MediaQuery.of(context).size.height*0.4), user: RoomUser.fromJson(map[2]), isSpeaker: true)
-                                        //   : Container(),
-                                        // map.length >= 4
-                                        //   ? DragProfile(offset: Offset(MediaQuery.of(context).size.width*0.5, MediaQuery.of(context).size.height*0.43), user: RoomUser.fromJson(map[3]), isSpeaker: true)
-                                        //   : Container(),
-                                        // map.length >= 5
-                                        //   ? DragProfile(offset: Offset(MediaQuery.of(context).size.width*0.7, MediaQuery.of(context).size.height*0.3), user: RoomUser.fromJson(map[4]), isSpeaker: true)
-                                        //   : Container(),
-                                        // map.length >= 6
-                                        //   ? DragProfile(offset: Offset(MediaQuery.of(context).size.width*0.7, MediaQuery.of(context).size.height*0.4), user: RoomUser.fromJson(map[5]), isSpeaker: true)
-                                        //   : Container(),
-                                        // map.length >= 7
-                                        //   ? DragProfile(offset: Offset(MediaQuery.of(context).size.width*0.57, MediaQuery.of(context).size.height*0.27), user: RoomUser.fromJson(map[6]), isSpeaker: true)
-                                        //   : Container(),
-                                        // map.length == 8
-                                        //   ? DragProfile(offset: Offset(210, 215), user: RoomUser.fromJson(map[7]), isSpeaker: true)
-                                        //   : Container(),
-                                        DragProfile(offset: Offset(MediaQuery.of(context).size.width*0.005, MediaQuery.of(context).size.height*0.32), user: RoomUser.fromJson(map[0]), isSpeaker: true),
-                                        DragProfile(offset: Offset(MediaQuery.of(context).size.width*0.22, MediaQuery.of(context).size.height*0.3), user: RoomUser.fromJson(map[0]), isSpeaker: true),
-                                        DragProfile(offset: Offset(MediaQuery.of(context).size.width*0.08, MediaQuery.of(context).size.height*0.4), user: RoomUser.fromJson(map[0]), isSpeaker: true),
-                                        DragProfile(offset: Offset(MediaQuery.of(context).size.width*0.5, MediaQuery.of(context).size.height*0.43), user: RoomUser.fromJson(map[0]), isSpeaker: true),
-                                        DragProfile(offset: Offset(MediaQuery.of(context).size.width*0.7, MediaQuery.of(context).size.height*0.3), user: RoomUser.fromJson(map[0]), isSpeaker: true),
-                                        DragProfile(offset: Offset(MediaQuery.of(context).size.width*0.7, MediaQuery.of(context).size.height*0.4), user: RoomUser.fromJson(map[0]), isSpeaker: true),
-                                        DragProfile(offset: Offset(MediaQuery.of(context).size.width*0.57, MediaQuery.of(context).size.height*0.27), user: RoomUser.fromJson(map[0]), isSpeaker: true),
-                                        DragProfile(offset: Offset(210, 215), user: RoomUser.fromJson(map[0]), isSpeaker: true),
-                                      ],
-                                    );
-                                  } else {
-                                    return CircularProgressIndicator();
-                                  }
-                                }
-                              ),
+                                  stream: roomCollection.doc(widget.room.title).collection('speakers').snapshots(),
+                                  builder: (BuildContext context,
+                                      AsyncSnapshot<QuerySnapshot> snapshot) {
+                                    if (snapshot.hasData) {
+                                      List<QueryDocumentSnapshot<Object?>> map = snapshot.data!.docs;
+                                      
+                                      return Stack(
+                                        children: [
+                                          DragProfile(user: RoomUser.fromJson(map[6]), 
+                                            offset: Offset(MediaQuery.of(context).size.width*0.05, MediaQuery.of(context).size.height*0.32), isSpeaker: true),
+                                          map.length >= 2
+                                            ? DragProfile(user: RoomUser.fromJson(map[6]), 
+                                                offset: Offset(MediaQuery.of(context).size.width*0.4, MediaQuery.of(context).size.height*0.31), isSpeaker: true)
+                                            : Container(),
+                                          map.length >= 3
+                                            ? DragProfile(user: RoomUser.fromJson(map[6]), 
+                                                offset: Offset(MediaQuery.of(context).size.width*0.12, MediaQuery.of(context).size.height*0.42), isSpeaker: true)
+                                            : Container(),
+                                          map.length >= 4
+                                            ? DragProfile(user: RoomUser.fromJson(map[6]), 
+                                                offset: Offset(MediaQuery.of(context).size.width*0.6, MediaQuery.of(context).size.height*0.45), isSpeaker: true)
+                                            : Container(),
+                                          map.length >= 5
+                                            ? DragProfile(user: RoomUser.fromJson(map[6]), 
+                                                offset: Offset(MediaQuery.of(context).size.width*0.68, MediaQuery.of(context).size.height*0.35), isSpeaker: true)
+                                            : Container(),
+                                          map.length >= 6
+                                            ? DragProfile(user: RoomUser.fromJson(map[6]), 
+                                                offset: Offset(MediaQuery.of(context).size.width*0.72, MediaQuery.of(context).size.height*0.43), isSpeaker: true)
+                                            : Container(),
+                                          map.length >= 7
+                                            ? DragProfile(user: RoomUser.fromJson(map[6]), 
+                                                offset: Offset(MediaQuery.of(context).size.width*0.55, MediaQuery.of(context).size.height*0.335), isSpeaker: true)
+                                            : Container(),
+                                          map.length == 8
+                                            ? DragProfile(user: RoomUser.fromJson(map[6]), 
+                                              offset: Offset(MediaQuery.of(context).size.width*0.3, MediaQuery.of(context).size.height*0.45), isSpeaker: true)
+                                            : Container(),
+                                        ],
+                                      );
+                                      
+                                      // return GridView.builder(
+                                      //   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                      //       crossAxisCount: 3),
+                                      //   itemCount: map.length,
+                                      //   padding: EdgeInsets.all(2.0),
+                                      //   itemBuilder: (BuildContext context, int index) {
+                                      //     return Container(
+                                      //       color: Colors.red,
+                                      //       child: Profile(
+                                      //           user: RoomUser.fromJson(map[index]),
+                                      //           size: 50,
+                                      //           isMute: false,
+                                      //           isSpeaker: true),
+                                      //     );
+                                      //   },
+                                      // );
+                                    
+                                    } else {
+                                      return CircularProgressIndicator();
+                                    }
+                                  }),
+
+                              // // list of participants
+                              // StreamBuilder(
+                              //   stream: roomCollection.doc(widget.room.dateTime).collection('participants').snapshots(),
+                              //   builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                              //     if (snapshot.hasData) {
+                              //       List<QueryDocumentSnapshot<Object>> map = snapshot.data.docs;
+                              //       return GridView.builder(
+                              //         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
+                              //         itemCount: map.length,
+                              //         padding: EdgeInsets.all(2.0),
+                              //         itemBuilder: (BuildContext context, int index) {
+                              //           return UserProfile(user: UserModel.fromJson(map[index]), size: 50, isMute: false, isSpeaker: false);
+                              //         },
+                              //       );
+                              //     } else {
+                              //       return CircularProgressIndicator();
+                              //     }
+                              //   }
+                              // ),
+
+                              // StreamBuilder<QuerySnapshot>(
+                              //   stream: roomCollection.doc(widget.room.dateTime).collection('speakers').snapshots(),
+                              //   builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                              //     if (snapshot.hasError) return Text('Error: ${snapshot.error}');
+                              //     return snapshot.hasData
+                              //       ? SmartRefresher(
+                              //       enablePullDown: true,
+                              //       controller: _refreshController,
+                              //       onRefresh: _onRefresh,
+                              //       onLoading: _onLoading,
+                              //       child: ListView(
+                              //         // children: [
+                              //         //   title(widget.room.dateTime),
+                              //         //   SizedBox(height: 30),
+                              //         //   speakers(
+                              //         //     widget.room.users.sublist(0, widget.room.participantsCount),
+                              //         //   ),
+                              //         //   others(
+                              //         //     widget.room.users.sublist(widget.room.participantsCount),
+                              //         //   ),
+                              //         // ],
+                              //         children: snapshot.data.docs.map((DocumentSnapshot document) {
+                              //           return UserProfile(user: UserModel.fromJson(document), size: 50, isMute: false, isSpeaker: true);
+                              //         }).toList(),
+                              //       ),
+                              //     )
+                              //     : CircularProgressIndicator();
+                              //   }
+                              // ),
+
                               bottom(context, user),
                             ],
                           ),

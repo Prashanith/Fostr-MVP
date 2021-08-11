@@ -181,7 +181,7 @@ class _CreateRoomState extends State<CreateRoom> with FostrTheme {
       child: ElevatedButton(
         child: Text('Schedule Room'),
         onPressed: () {
-          FostrRouter.goto(context, Routes.roomDetails);
+          FostrRouter.goto(context, Routes.clubRoomDetails);
         },
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all(Color(0xff94B5AC)),

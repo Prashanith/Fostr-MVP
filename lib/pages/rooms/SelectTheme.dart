@@ -1,11 +1,13 @@
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fostr/core/constants.dart';
 import 'package:fostr/core/data.dart';
 import 'package:fostr/core/settings.dart';
 import 'package:fostr/models/RoomModel.dart';
 import 'package:fostr/models/UserModel/User.dart';
 import 'package:fostr/pages/rooms/Cafe.dart';
+import 'package:fostr/pages/rooms/Kids.dart';
 import 'package:fostr/pages/rooms/Library.dart';
 import 'package:fostr/pages/rooms/Minimal.dart';
 import 'package:fostr/providers/AuthProvider.dart';
@@ -67,7 +69,7 @@ class _SelectThemeState extends State<SelectTheme> {
                       child: Container(
                           decoration: BoxDecoration(
                             image: new DecorationImage(
-                              image: new AssetImage("assets/images/minimalist.png"),
+                              image: new AssetImage(IMAGES + "minimalist.png"),
                               fit: BoxFit.fill, 
                             ),
                             borderRadius: BorderRadius.circular(35),
@@ -93,7 +95,7 @@ class _SelectThemeState extends State<SelectTheme> {
                       child: Container(
                           decoration: BoxDecoration(
                             image: new DecorationImage(
-                              image: new AssetImage("assets/images/cafe.png"),
+                              image: new AssetImage(IMAGES + "cafe.png"),
                               fit: BoxFit.fill, 
                             ),
                               borderRadius: BorderRadius.circular(35),
@@ -123,7 +125,7 @@ class _SelectThemeState extends State<SelectTheme> {
                       child: Container(
                           decoration: BoxDecoration(
                             image: new DecorationImage(
-                              image: new AssetImage("assets/images/library.png"),
+                              image: new AssetImage(IMAGES + "library.png"),
                               fit: BoxFit.fill, 
                             ),
                               borderRadius: BorderRadius.circular(35),
@@ -148,7 +150,7 @@ class _SelectThemeState extends State<SelectTheme> {
                       child: Container(
                         decoration: BoxDecoration(
                           image: new DecorationImage(
-                              image: new AssetImage("assets/images/Kids.png"),
+                              image: new AssetImage(IMAGES + "kids.png"),
                               fit: BoxFit.fill, 
                             ),
                             borderRadius: BorderRadius.circular(35),
@@ -175,7 +177,7 @@ class _SelectThemeState extends State<SelectTheme> {
               decoration: BoxDecoration(
                 color: Colors.white,
                 image: new DecorationImage(
-                  image: new AssetImage("assets/images/" + img),
+                  image: new AssetImage(IMAGES + img),
                   fit: BoxFit.cover, 
                 ),
                 borderRadius: BorderRadius.only(
@@ -410,7 +412,7 @@ class _SelectThemeState extends State<SelectTheme> {
       );
     } else if(roomTheme == "Kids") {
       Navigator.pushReplacement(context, CupertinoPageRoute(
-        builder: (context) => Minimal(
+        builder: (context) => Kids(
           room: widget.room,
           role: role,
         ))

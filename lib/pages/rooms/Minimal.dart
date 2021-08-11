@@ -241,7 +241,7 @@ class _MinimalState extends State<Minimal> with FostrTheme {
                           ),
                           decoration: BoxDecoration(
                             image: new DecorationImage(
-                              image: new AssetImage("assets/images/minimalist-main.png"),
+                              image: new AssetImage(IMAGES + "minimalist-main.png"),
                               fit: BoxFit.fill,
                             ),
                             borderRadius: BorderRadius.only(
@@ -253,81 +253,31 @@ class _MinimalState extends State<Minimal> with FostrTheme {
                             children: [
                               // list of speakers
                               StreamBuilder(
-                                  stream: roomCollection.doc(widget.room.title).collection('speakers').snapshots(),
-                                  builder: (BuildContext context,AsyncSnapshot<QuerySnapshot> snapshot) {
-                                    if (snapshot.hasData) {
-                                      List<QueryDocumentSnapshot<Object?>> map = snapshot.data!.docs;
-                                      return Padding(
-                                        padding: const EdgeInsets.only(top: 25),
-                                        child: GridView.builder(
-                                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                              crossAxisCount: 3),
-                                          itemCount: map.length,
-                                          padding: EdgeInsets.all(2.0),
-                                          itemBuilder: (BuildContext context, int index) {
-                                            return Profile(
-                                                user: RoomUser.fromJson(map[index]),
-                                                size: 50,
-                                                isMute: false,
-                                                isSpeaker: false,);
-                                          },
-                                        ),
-                                      );
-                                    } else {
-                                      return CircularProgressIndicator();
-                                    }
-                                  }),
-
-                              // // list of participants
-                              // StreamBuilder(
-                              //   stream: roomCollection.doc(widget.room.dateTime).collection('participants').snapshots(),
-                              //   builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                              //     if (snapshot.hasData) {
-                              //       List<QueryDocumentSnapshot<Object>> map = snapshot.data.docs;
-                              //       return GridView.builder(
-                              //         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
-                              //         itemCount: map.length,
-                              //         padding: EdgeInsets.all(2.0),
-                              //         itemBuilder: (BuildContext context, int index) {
-                              //           return UserProfile(user: UserModel.fromJson(map[index]), size: 50, isMute: false, isSpeaker: false);
-                              //         },
-                              //       );
-                              //     } else {
-                              //       return CircularProgressIndicator();
-                              //     }
-                              //   }
-                              // ),
-
-                              // StreamBuilder<QuerySnapshot>(
-                              //   stream: roomCollection.doc(widget.room.dateTime).collection('speakers').snapshots(),
-                              //   builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                              //     if (snapshot.hasError) return Text('Error: ${snapshot.error}');
-                              //     return snapshot.hasData
-                              //       ? SmartRefresher(
-                              //       enablePullDown: true,
-                              //       controller: _refreshController,
-                              //       onRefresh: _onRefresh,
-                              //       onLoading: _onLoading,
-                              //       child: ListView(
-                              //         // children: [
-                              //         //   title(widget.room.dateTime),
-                              //         //   SizedBox(height: 30),
-                              //         //   speakers(
-                              //         //     widget.room.users.sublist(0, widget.room.participantsCount),
-                              //         //   ),
-                              //         //   others(
-                              //         //     widget.room.users.sublist(widget.room.participantsCount),
-                              //         //   ),
-                              //         // ],
-                              //         children: snapshot.data.docs.map((DocumentSnapshot document) {
-                              //           return UserProfile(user: UserModel.fromJson(document), size: 50, isMute: false, isSpeaker: true);
-                              //         }).toList(),
-                              //       ),
-                              //     )
-                              //     : CircularProgressIndicator();
-                              //   }
-                              // ),
-
+                                stream: roomCollection.doc(widget.room.title).collection('speakers').snapshots(),
+                                builder: (BuildContext context,AsyncSnapshot<QuerySnapshot> snapshot) {
+                                  if (snapshot.hasData) {
+                                    List<QueryDocumentSnapshot<Object?>> map = snapshot.data!.docs;
+                                    return Padding(
+                                      padding: const EdgeInsets.only(top: 25),
+                                      child: GridView.builder(
+                                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                            crossAxisCount: 3),
+                                        itemCount: map.length,
+                                        padding: EdgeInsets.all(2.0),
+                                        itemBuilder: (BuildContext context, int index) {
+                                          return Profile(
+                                              user: RoomUser.fromJson(map[index]),
+                                              size: 50,
+                                              isMute: false,
+                                              isSpeaker: false,);
+                                        },
+                                      ),
+                                    );
+                                  } else {
+                                    return CircularProgressIndicator();
+                                  }
+                                }
+                              ),
                               bottom(context, user),
                             ],
                           ),
@@ -349,28 +299,7 @@ class _MinimalState extends State<Minimal> with FostrTheme {
       alignment: Alignment.bottomCenter,
       child: Row(
         children: [
-          ElevatedButton(
-            onPressed: () {
-              removeUser(user);
-              Navigator.pop(context);
-            },
-            style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(Color(0xffE8FCD9)),
-              shape: MaterialStateProperty.all<OutlinedBorder>(
-                RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
-                ),
-              ),
-            ),
-            child: Text(
-              'Leave room',
-              style: TextStyle(
-                color: Color(0xffDA6864),
-                fontSize: 15,
-                fontWeight: FontWeight.bold),
-            ),
-          ),
-          // Spacer(),
+          Spacer(),
           Visibility(
             visible: widget.role == ClientRole.Broadcaster,
             child: IconButton(
@@ -381,9 +310,7 @@ class _MinimalState extends State<Minimal> with FostrTheme {
                 _engine.muteLocalAudioStream(isMicOn);
               },
               color: Color(0xffE8FCD9),
-              // icon: Icon(isMicOn ? Icons.mic_off : Icons.mic,
-              //   size: 15, color: Colors.black),
-              icon: SvgPicture.asset("assets/images/mic.svg"),
+              icon: isMicOn ? Image.asset(IMAGES + "mic.png") : Image.asset(IMAGES + "mic_off.png"),
               iconSize: 15
             ),
           ),
@@ -393,9 +320,7 @@ class _MinimalState extends State<Minimal> with FostrTheme {
               Navigator.pop(context);
             },
             color: Color(0xffE8FCD9),
-            // icon: Icon(isMicOn ? Icons.mic_off : Icons.mic,
-            //   size: 15, color: Colors.black),
-            icon: SvgPicture.asset("assets/images/close.svg"),
+            icon: Image.asset(IMAGES + "close.png"),
             iconSize: 15
           ),
         ],

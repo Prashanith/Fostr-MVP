@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fostr/core/constants.dart';
 
 /// Global widget that depicts a custom rounded user icon
 /// Use for creating user profile images
@@ -13,7 +14,7 @@ class RoundedImage extends StatelessWidget {
   const RoundedImage({
     Key? key,
     this.url,
-    this.path = "assets/images/profile.png",
+    this.path = IMAGES + "profile.png",
     this.margin,
     this.width = 40,
     this.height = 40,
@@ -30,7 +31,7 @@ class RoundedImage extends StatelessWidget {
         shape: BoxShape.circle,
         image: DecorationImage(
           image: (url == null)
-              ? Image.asset("assets/images/profile.png").image
+              ? Image.asset(IMAGES + "profile.png").image
               : Image.network(url!).image,
           fit: BoxFit.cover,
         ),

@@ -25,4 +25,5 @@ class Routes {
   static const followFollowing = "/followFollowing";
   //room
   static const roomDetails = "/roomDetails";
+  static const clubRoomDetails = "/clubRoomDetails";
 }

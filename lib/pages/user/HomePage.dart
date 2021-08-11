@@ -269,7 +269,7 @@ class _HomePageState extends State<HomePage> with FostrTheme {
       child: ElevatedButton(
         child: Text('Start Room'),
         onPressed: () {
-          FostrRouter.goto(context, Routes.roomDetails);
+          FostrRouter.goto(context, Routes.clubRoomDetails);
         },
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all(Color(0xff94B5AC)),
