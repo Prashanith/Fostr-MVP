@@ -44,8 +44,23 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
   }
 
   Future<void> showPopUp(String field, String uid, Function cb,
-      {String? value}) {
-    return displayTextInputDialog(
+      {String? value, int? maxLine}) {
+    return displayTextInputDialog(context, field, maxLine: maxLine)
+        .then((shouldUpdate) {
+      if (shouldUpdate[0]) {
+        final json = {
+          "id": uid,
+          field.toLowerCase(): shouldUpdate[1],
+        };
+        updateProfile(json);
+        cb(shouldUpdate);
+      }
+    });
+  }
+
+  Future<void> showTextArea(String field, String uid, Function cb,
+      {String? value, int? maxLine}) {
+    return displayTextAreaDialog(
       context,
       field,
     ).then((shouldUpdate) {
@@ -331,7 +346,7 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                                 iconSize: 16,
                                 onPressed: () {
                                   controller.text = user.userProfile?.bio ?? "";
-                                  showPopUp("Bio", user.id, (e) {
+                                  showTextArea("Bio", user.id, (e) {
                                     setState(() {
                                       if (user.userProfile == null) {
                                         var userProfile = UserProfile();
@@ -346,7 +361,7 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                                         "id": user.id
                                       });
                                     });
-                                  });
+                                  }, maxLine: 5);
                                 },
                               ),
                             ],
@@ -454,7 +469,7 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
   }
 
   Future displayTextInputDialog(BuildContext context, String field,
-      {String? value}) async {
+      {String? value, int? maxLine}) async {
     return showDialog(
       context: context,
       barrierDismissible: false,
@@ -474,7 +489,7 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                       const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
                   width: size.width * 0.9,
                   constraints: BoxConstraints(
-                    maxHeight: 200,
+                    maxHeight: 300,
                   ),
                   decoration: BoxDecoration(
                     color: Color(0xffB2D6C3),
@@ -493,6 +508,7 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                       SizedBox(
                         height: 60,
                         child: InputField(
+                          maxLine: maxLine,
                           controller: controller,
                           hintText: value,
                           onChange: (v) {
@@ -539,42 +555,92 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
       },
     );
   }
-}
 
-// AlertDialog(
-//           backgroundColor: Color(0xffB2D6C3),
-//           shape:
-//               RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-//           title: Text(
-//             'Enter your $field',
-//             style: h2.copyWith(fontSize: 17.sp),
-//           ),
-          // content: SizedBox(
-          //   height: 60,
-          //   child: InputField(),
-          // ),
-//           actions: <Widget>[
-//             TextButton(
-//               child: Text(
-//                 'CANCEL',
-//                 style: h2,
-//               ),
-//               onPressed: () {
-                // Navigator.of(context).pop([false]);
-//               },
-//             ),
-//             TextButton(
-//               child: Text(
-//                 'UPDATE',
-//                 style: h2,
-//               ),
-//               onPressed: () {
-                // Navigator.of(context).pop([true, value]);
-//                 // setState(() {
-//                 //   codeDialog = enteredChannelName;
-//                 //   Navigator.pop(context);
-//                 // });
-//               },
-//             ),
-//           ],
-//         );
+  Future displayTextAreaDialog(BuildContext context, String field,
+      {String? value}) async {
+    return showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        final size = MediaQuery.of(context).size;
+        return Container(
+          height: size.height,
+          width: size.width,
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+            child: Align(
+              alignment: Alignment(0, -0.5),
+              child: Material(
+                color: Colors.transparent,
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                  width: size.width * 0.9,
+                  constraints: BoxConstraints(
+                    maxHeight: 380,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Color(0xffB2D6C3),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Enter your $field',
+                        style: h2.copyWith(
+                          fontSize: 17.sp,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 180,
+                        child: InputField(
+                          maxLine: 10,
+                          controller: controller,
+                          hintText: value,
+                          onChange: (v) {
+                            value = v;
+                          },
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop([false]);
+                            },
+                            child: Text(
+                              "CANCEL",
+                              style: h2.copyWith(
+                                fontSize: 16.sp,
+                                // color: Colors.redAccent,
+                              ),
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop([true, value]);
+                            },
+                            child: Text(
+                              "UPDATE",
+                              style: h2.copyWith(
+                                fontSize: 16.sp,
+                                // color: Colors.green,
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+}

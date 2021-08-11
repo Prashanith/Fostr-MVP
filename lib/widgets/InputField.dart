@@ -6,6 +6,7 @@ import 'package:sizer/sizer.dart';
 class InputField extends StatefulWidget {
   final String? hintText;
   final String? helperText;
+  final int? maxLine;
   final bool isPassword;
   final TextEditingController? controller;
   final String? Function(String? value)? validator;
@@ -19,7 +20,8 @@ class InputField extends StatefulWidget {
       this.validator,
       this.controller,
       this.onChange,
-      this.isPassword = false})
+      this.isPassword = false,
+      this.maxLine})
       : super(key: key);
 
   @override
@@ -61,6 +63,7 @@ class _InputFieldState extends State<InputField> with FostrTheme {
             child: SizedBox(
               width: 90.w,
               child: TextFormField(
+                maxLines: widget.maxLine,
                 onChanged: (e) {
                   if (widget.onChange != null) {
                     widget.onChange!(e);

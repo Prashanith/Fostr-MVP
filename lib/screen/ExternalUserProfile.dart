@@ -245,6 +245,58 @@ class _ExternalProfilePageState extends State<ExternalProfilePage>
                                 fontSize: 17, fontWeight: FontWeight.bold),
                           ),
                         ),
+                        Column(
+                          children: [
+                            Container(
+                              alignment: Alignment.topLeft,
+                              child: Row(
+                                children: [
+                                  Text(
+                                    'Favourite Books:',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 15,
+                                        color: Colors.teal[900]),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Container(
+                              padding: const EdgeInsets.all(15),
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadiusDirectional.circular(34),
+                                color: Color(0xFFE6FAED),
+                              ),
+                              width: MediaQuery.of(context).size.width * 0.9,
+                              child: Column(
+                                children: List.generate(
+                                  5,
+                                  (index) => Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 10),
+                                    child: Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        "e-Habits Book Club",
+                                        style: h2.copyWith(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 15,
+                            ),
+                          ],
+                        ),
                       ],
                     ),
                   ),
