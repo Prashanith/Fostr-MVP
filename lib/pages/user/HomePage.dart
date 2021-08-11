@@ -108,7 +108,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> with FostrTheme {
-  String now = DateFormat('yyyy-MM-dd').format(DateTime.now()) + " " + DateFormat.Hm().format(DateTime.now());
+  String now = DateFormat('yyyy-MM-dd').format(DateTime.now()) +
+      " " +
+      DateFormat.Hm().format(DateTime.now());
   TextEditingController _textFieldController = TextEditingController();
   RefreshController _refreshController = RefreshController(
     initialRefresh: false,
@@ -174,14 +176,14 @@ class _HomePageState extends State<HomePage> with FostrTheme {
                       //   height: 20,
                       // ),
                       (user.name == "")
-                        ? Text(
-                          "Hello, User",
-                          style: h1.apply(color: Colors.white),
-                        )
-                        : Text(
-                          "Hello, ${user.name}",
-                          style: h1.apply(color: Colors.white),
-                        ),
+                          ? Text(
+                              "Hello, User",
+                              style: h1.apply(color: Colors.white),
+                            )
+                          : Text(
+                              "Hello, ${user.name}",
+                              style: h1.apply(color: Colors.white),
+                            ),
                     ],
                   ),
                 ),
@@ -199,7 +201,8 @@ class _HomePageState extends State<HomePage> with FostrTheme {
                       color: Colors.white,
                     ),
                     child: Padding(
-                      padding: const EdgeInsets.only(top: 5, left: 10, right: 10),
+                      padding:
+                          const EdgeInsets.only(top: 5, left: 10, right: 10),
                       child: ListView(
                         physics: BouncingScrollPhysics(),
                         children: [
