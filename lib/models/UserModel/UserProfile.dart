@@ -4,24 +4,26 @@ part 'UserProfile.g.dart';
 
 @JsonSerializable()
 class UserProfile {
-  String? bio;
-  String? instagram;
-  String? facebook;
-  String? linkedIn;
-  String? google;
-  String? twitter;
-  String? profileImage;
-  String? phoneNumber;
+  String bio;
+  String instagram;
+  String facebook;
+  String linkedIn;
+  String google;
+  String twitter;
+  String profileImage;
+  String phoneNumber;
+  List<String> topBooks = [];
 
-  UserProfile(
-      {this.bio,
-      this.facebook,
-      this.google,
-      this.instagram,
-      this.linkedIn,
-      this.phoneNumber,
-      this.profileImage,
-      this.twitter});
+  UserProfile({
+    this.bio = "",
+    this.facebook = "",
+    this.google = "",
+    this.instagram = "",
+    this.linkedIn = "",
+    this.phoneNumber = "",
+    this.profileImage = "",
+    this.twitter = "",
+  });
 
   Map<String, dynamic> toJson() => _$UserProfileToJson(this);
 
