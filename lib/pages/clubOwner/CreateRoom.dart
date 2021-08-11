@@ -28,8 +28,17 @@ class _CreateRoomState extends State<CreateRoom> with FostrTheme {
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthProvider>(context);
     final user = auth.user!;
-    return Material(
-      child: Container(
+    return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.refresh),
+        onPressed: () async {
+          var user = await userService.getUserById(auth.user!.id);
+          if (user != null) {
+            auth.refreshUser(user);
+          }
+        },
+      ),
+      body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment(-0.6, -1),
@@ -64,16 +73,16 @@ class _CreateRoomState extends State<CreateRoom> with FostrTheme {
               SizedBox(
                 height: 40,
               ),
-              RefreshIndicator(
-                onRefresh: () async {
-                  try {
-                    var user = await userService.getUserById(auth.user!.id);
-                    if (user != null) {
-                      auth.refreshUser(user);
-                    }
-                  } catch (e) {}
-                },
-                child: Expanded(
+              Expanded(
+                child: RefreshIndicator(
+                  onRefresh: () async {
+                    try {
+                      var user = await userService.getUserById(auth.user!.id);
+                      if (user != null) {
+                        auth.refreshUser(user);
+                      }
+                    } catch (e) {}
+                  },
                   child: Container(
                     width: double.infinity,
                     decoration: BoxDecoration(

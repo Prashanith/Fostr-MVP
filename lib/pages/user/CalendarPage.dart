@@ -143,7 +143,7 @@ class EventCard extends StatelessWidget with FostrTheme {
     final date = room.dateTime?.substring(0, 10) ?? "";
     final time = room.dateTime?.substring(11, 16) ?? "";
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
       constraints: BoxConstraints(
         minHeight: 65,
         maxHeight: 90,
