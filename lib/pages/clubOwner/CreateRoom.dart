@@ -1,5 +1,10 @@
+import 'dart:math';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fostr/core/constants.dart';
+import 'package:fostr/core/data.dart';
+import 'package:fostr/models/UserModel/User.dart';
 import 'package:fostr/providers/AuthProvider.dart';
 import 'package:fostr/router/router.dart';
 import 'package:fostr/router/routes.dart';
@@ -15,6 +20,19 @@ class CreateRoom extends StatefulWidget {
 }
 
 class _CreateRoomState extends State<CreateRoom> with FostrTheme {
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   getRooms(user);
+  // }
+
+  // getRooms(User user) async {
+  //   await roomCollection
+  //     .doc(user.id)
+  //     .collection("rooms")
+  //     .snapshots();
+  // }
   @override
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthProvider>(context);
@@ -90,7 +108,7 @@ class _CreateRoomState extends State<CreateRoom> with FostrTheme {
                                     color: Color(0xff96C5AE),
                                   ),
                                   child: Text(
-                                    "3000",
+                                    user.followers?.length.toString() ?? "0",
                                     style: h1.copyWith(
                                       color: Colors.white,
                                       fontSize: 22.sp,
@@ -143,18 +161,44 @@ class _CreateRoomState extends State<CreateRoom> with FostrTheme {
                                           fontSize: 18.sp, color: Colors.white),
                                     ),
                                   ),
-                                  RoomLine(
-                                    width: 200,
-                                    bookName: "e-Habits Book Club",
-                                  ),
-                                  RoomLine(
-                                    width: 150,
-                                    bookName: "Science Reads",
-                                  ),
-                                  RoomLine(
-                                    width: 100,
-                                    bookName: "Sita",
-                                  ),
+                                  StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                                    stream: roomCollection
+                                      .doc(user.id)
+                                      .collection('rooms')
+                                      .snapshots(),
+                                    builder: (BuildContext context, snapshot) {
+                                      if (snapshot.hasData) {
+                                        final roomName = snapshot.data!.docs;
+                                        return Column(
+                                          children: List.generate(
+                                            min(roomName.length, 3),
+                                            (index) {
+                                              return Padding(
+                                                padding: const EdgeInsets.only(top: 10),
+                                                child: RoomLine(
+                                                  width: index == 0 ? 200 : index == 1 ? 150 : 100,
+                                                  bookName: roomName[index].id.toString(),
+                                                ),
+                                              );
+                                            },
+                                          ).toList(),
+                                        );
+                                      }
+                                      return Container();
+                                    }
+                                  )
+                                  // RoomLine(
+                                  //   width: 200,
+                                  //   bookName: roomCollection.doc(user.id).collection("rooms").doc().get().toString()
+                                  // ),
+                                  // RoomLine(
+                                  //   width: 150,
+                                  //   bookName: "Science Reads",
+                                  // ),
+                                  // RoomLine(
+                                  //   width: 100,
+                                  //   bookName: "Sita",
+                                  // ),
                                 ],
                               ),
                             )
@@ -259,12 +303,10 @@ class RoomBar extends StatelessWidget with FostrTheme {
           fit: BoxFit.cover,
         ),
       ),
-      child: Flexible(
-        child: Text(
-          bookName,
-          style: h1.copyWith(fontSize: 14.sp),
-          overflow: TextOverflow.ellipsis,
-        ),
+      child: Text(
+        bookName,
+        style: h1.copyWith(fontSize: 14.sp),
+        overflow: TextOverflow.ellipsis,
       ),
     );
   }
