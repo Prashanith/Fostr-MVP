@@ -235,46 +235,6 @@ class _CreateRoomState extends State<CreateRoom> with FostrTheme {
   }
 }
 
-class RoomList extends StatelessWidget {
-  const RoomList({
-    Key? key,
-    required this.id,
-  }) : super(key: key);
-
-  final String id;
-
-  @override
-  Widget build(BuildContext context) {
-    return StreamBuilder<
-        QuerySnapshot<Map<String, dynamic>>>(
-      stream: roomCollection
-          .doc(id)
-          .collection('rooms')
-          .snapshots(),
-      builder: (BuildContext context, snapshot) {
-        if (snapshot.hasData) {
-          // final roomList = snapshot.data!.docs;
-          return Column(
-            children: List.generate(
-              // roomList.length,
-              3,
-              (index) {
-                return RoomLine(
-                  width: 200,
-                  bookName: "room.name",
-                );
-              },
-            ).toList(),
-          );
-        }
-        return Center(
-          child: CircularProgressIndicator(),
-        );
-      },
-    );
-  }
-}
-
 class RoomLine extends StatelessWidget with FostrTheme {
   RoomLine({Key? key, required this.width, required this.bookName})
       : super(key: key);
