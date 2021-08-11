@@ -324,32 +324,31 @@ class _EnterRoomDetailsState extends State<EnterRoomDetails> with FostrTheme {
     var roomToken = await getToken(eventNameTextEditingController.text);
     // Add new data to Firestore collection
     await roomCollection
-        // .doc(dateTextEditingController.text +
-        //     " " +
-        //     timeTextEditingController.text)
-        .doc(eventNameTextEditingController.text)
-        .set({
-      'participantsCount': 0,
-      'speakersCount': 0,
-      'title': '${eventNameTextEditingController.text}',
-      'agenda': '${agendaTextEditingController.text}',
-      'image': imageUrl,
-      'dateTime': '$now',
-      // 'dateTime': dateTextEditingController.text + " " + timeTextEditingController.text,
-      'roomCreator': user.userName,
-      'token': roomToken.toString(),
-    });
-    await roomCollection
-        // .doc(dateTextEditingController.text +
-        //     " " +
-        //     timeTextEditingController.text)
-        .doc(eventNameTextEditingController.text)
-        .collection("speakers")
-        .doc(user.userName)
-        .set({
-      'username': user.userName,
-      'name': user.name,
-      'profileImage': user.userProfile!.profileImage ?? "image",
-    }).then((value) => Navigator.push(context, MaterialPageRoute(builder: (context) => OngoingRoom())));
+      .doc(user.id)
+      .collection("rooms")
+      .doc(eventNameTextEditingController.text)
+      .set({
+        'participantsCount': 0,
+        'speakersCount': 0,
+        'title': '${eventNameTextEditingController.text}',
+        'agenda': '${agendaTextEditingController.text}',
+        'image': imageUrl,
+        'dateTime': '$now',
+        // 'dateTime': dateTextEditingController.text + " " + timeTextEditingController.text,
+        'roomCreator': user.userName,
+        'token': roomToken.toString(),
+        'id': user.id
+      // });
+    // await roomCollection
+    //   .doc(user.id)
+    //   .collection("rooms")
+    //   .doc(eventNameTextEditingController.text)
+    //   .collection("speakers")
+    //   .doc(user.userName)
+    //   .set({
+    //     'username': user.userName,
+    //     'name': user.name,
+    //     'profileImage': user.userProfile?.profileImage ?? "image",
+      }).then((value) => Navigator.push(context, MaterialPageRoute(builder: (context) => OngoingRoom())));
   }
 }

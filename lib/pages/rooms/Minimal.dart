@@ -51,36 +51,53 @@ class _MinimalState extends State<Minimal> with FostrTheme {
 
   initRoom() async {
     // get the details of room
-    roomCollection.doc(widget.room.title).snapshots().listen((result) {
-      print(result.data()!['speakersCount']);
-      setState(() {
-        participantsCount = result.data()!['participantsCount'];
-        speakersCount = result.data()!['speakersCount'];
+    roomCollection
+      .doc(widget.room.id)
+      .collection("rooms")
+      .doc(widget.room.title)
+      .snapshots()
+      .listen((result) {
+        print(result.data()?['speakersCount']);
+        setState(() {
+          participantsCount = result.data()?['participantsCount'];
+          speakersCount = result.data()?['speakersCount'];
+        });
       });
-    });
   }
 
   removeUser(User user) async {
     if (widget.role == ClientRole.Broadcaster) {
       // update the list of speakers
-      await roomCollection.doc(widget.room.title).update({
-        'speakersCount': speakersCount - 1,
-      });
       await roomCollection
-          .doc(widget.room.title)
-          .collection("speakers")
-          .doc(profileData['username'])
-          .delete();
+        .doc(widget.room.id)
+        .collection("rooms")
+        .doc(widget.room.title)
+        .update({
+          'speakersCount': speakersCount - 1,
+        });
+      await roomCollection
+        .doc(widget.room.id)
+        .collection('rooms')
+        .doc(widget.room.title)
+        .collection("speakers")
+        .doc(user.userName)
+        .delete();
     } else {
       // update the list of participants
-      await roomCollection.doc(widget.room.title).update({
-        'participantsCount': participantsCount - 1,
-      });
       await roomCollection
-          .doc(widget.room.title)
-          .collection("participants")
-          .doc(user.userName)
-          .delete();
+        .doc(widget.room.id)
+        .collection("rooms")
+        .doc(widget.room.title)
+        .update({
+          'participantsCount': participantsCount - 1,
+        });
+      await roomCollection
+        .doc(widget.room.id)
+        .collection("rooms")
+        .doc(widget.room.title)
+        .collection("participants")
+        .doc(user.userName)
+        .delete();
     }
   }
 
@@ -353,7 +370,7 @@ class _MinimalState extends State<Minimal> with FostrTheme {
                 fontWeight: FontWeight.bold),
             ),
           ),
-          Spacer(),
+          // Spacer(),
           Visibility(
             visible: widget.role == ClientRole.Broadcaster,
             child: IconButton(
@@ -364,9 +381,22 @@ class _MinimalState extends State<Minimal> with FostrTheme {
                 _engine.muteLocalAudioStream(isMicOn);
               },
               color: Color(0xffE8FCD9),
-              icon: Icon(isMicOn ? Icons.mic_off : Icons.mic,
-                size: 15, color: Colors.black),
+              // icon: Icon(isMicOn ? Icons.mic_off : Icons.mic,
+              //   size: 15, color: Colors.black),
+              icon: SvgPicture.asset("assets/images/mic.svg"),
+              iconSize: 15
             ),
+          ),
+          IconButton(
+            onPressed: () {
+              removeUser(user);
+              Navigator.pop(context);
+            },
+            color: Color(0xffE8FCD9),
+            // icon: Icon(isMicOn ? Icons.mic_off : Icons.mic,
+            //   size: 15, color: Colors.black),
+            icon: SvgPicture.asset("assets/images/close.svg"),
+            iconSize: 15
           ),
         ],
       ),

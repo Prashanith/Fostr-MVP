@@ -142,13 +142,13 @@ class _SelectThemeState extends State<SelectTheme> {
                     ),
                     GestureDetector(
                       onTap: () => setState(() {
-                        img = "amphitheatrebg.png";
-                        roomTheme = "Amphitheatre";
+                        img = "Kidsbg.png";
+                        roomTheme = "Kids";
                       }),
                       child: Container(
                         decoration: BoxDecoration(
                           image: new DecorationImage(
-                              image: new AssetImage("assets/images/amphitheatre.png"),
+                              image: new AssetImage("assets/images/Kids.png"),
                               fit: BoxFit.fill, 
                             ),
                             borderRadius: BorderRadius.circular(35),
@@ -160,7 +160,7 @@ class _SelectThemeState extends State<SelectTheme> {
                         margin: EdgeInsets.all(15.0),
                         //color: Colors.black38
                         child: Text(
-                          'Amphitheatre',
+                          'Kids',
                           style: TextStyle(color: Colors.white, fontSize: 20),
                         ),
                       ),
@@ -185,7 +185,15 @@ class _SelectThemeState extends State<SelectTheme> {
               ),
               child: Column(
                 children: [
-                  SizedBox(height: 20,),
+                  SizedBox(height: 5,),
+                  Text('You can join room either as: ',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Color(0xB2476747),
+                      fontFamily: "Lato",
+                    )
+                  ),
+                  SizedBox(height: 5,),
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -215,7 +223,14 @@ class _SelectThemeState extends State<SelectTheme> {
                       ),
                       ),
                       (speakersCount < 8)
-                        ? SizedBox(width: 20)
+                        ? Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: Text("OR", style: TextStyle(
+                              fontSize: 16,
+                              color: Color(0xB2476747),
+                              fontFamily: "Lato",
+                            )),
+                        )
                         : Container(),
                       (speakersCount < 8)
                         ? Expanded(
@@ -304,6 +319,8 @@ class _SelectThemeState extends State<SelectTheme> {
   initRoom() async {
     // get the details of room
     roomCollection
+      .doc(widget.room.id)
+      .collection("rooms")
       .doc(widget.room.title)
       .snapshots()
       .listen((result) {
@@ -325,24 +342,44 @@ class _SelectThemeState extends State<SelectTheme> {
 
     if(userKind == "speaker") {
       // update the list of speakers
-      await roomCollection.doc(widget.room.title).update({
-        'speakersCount': speakersCount + 1,
-      });
-      await roomCollection.doc(widget.room.title).collection("speakers").doc(user.userName).set({
-        'username': user.userName,
-        'name': user.name,
-        'profileImage': user.userProfile!.profileImage ?? "image",
-      });
+      await roomCollection
+        .doc(widget.room.id)
+        .collection("rooms")
+        .doc(widget.room.title)
+        .update({
+          'speakersCount': speakersCount + 1,
+        });
+      await roomCollection
+        .doc(widget.room.id)
+        .collection("rooms")
+        .doc(widget.room.title)
+        .collection("speakers")
+        .doc(user.userName)
+        .set({
+          'username': user.userName,
+          'name': user.name,
+          'profileImage': user.userProfile?.profileImage ?? "image",
+        });
     } else {
       // update the list of participants
-      await roomCollection.doc(widget.room.title).update({
-        'participantsCount': participantsCount + 1,
-      });
-      await roomCollection.doc(widget.room.title).collection("participants").doc(user.userName).set({
-        'username': user.userName,
-        'name': user.name,
-        'profileImage': user.userProfile!.profileImage ?? "image",
-      });
+      await roomCollection
+        .doc(widget.room.id)
+        .collection("rooms")
+        .doc(widget.room.title)
+        .update({
+          'participantsCount': participantsCount + 1,
+        });
+      await roomCollection
+        .doc(widget.room.id)
+        .collection("rooms")
+        .doc(widget.room.title)
+        .collection("participants")
+        .doc(user.userName)
+        .set({
+          'username': user.userName,
+          'name': user.name,
+          'profileImage': user.userProfile?.profileImage ?? "image",
+        });
     }
 
     navigateToRoom();
@@ -371,7 +408,7 @@ class _SelectThemeState extends State<SelectTheme> {
           role: role,
         ))
       );
-    } else if(roomTheme == "Amphitheatre") {
+    } else if(roomTheme == "Kids") {
       Navigator.pushReplacement(context, CupertinoPageRoute(
         builder: (context) => Minimal(
           room: widget.room,

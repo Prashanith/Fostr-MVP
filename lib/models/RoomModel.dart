@@ -1,5 +1,5 @@
 class Room {
-  final String? title, roomCreator, token, agenda, imageUrl, dateTime;
+  final String? title, roomCreator, token, agenda, imageUrl, dateTime, id;
   final int? participantsCount, speakersCount;
 
   Room(
@@ -11,7 +11,8 @@ class Room {
       this.token,
       this.agenda,
       this.imageUrl,
-      this.dateTime});
+      this.dateTime,
+      this.id});
 
   factory Room.fromJson(json) {
     return Room(
@@ -22,7 +23,8 @@ class Room {
       token: json['token'],
       agenda: json['agenda'],
       imageUrl: json['image'],
-      dateTime: json['dateTime']
+      dateTime: json['dateTime'],
+      id: json['id']
     );
   }
 }
