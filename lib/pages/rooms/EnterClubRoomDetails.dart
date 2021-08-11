@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fostr/core/data.dart';
 import 'package:fostr/core/functions.dart';
 import 'package:fostr/models/UserModel/User.dart';
-import 'package:fostr/pages/user/HomePage.dart';
+import 'package:fostr/pages/clubOwner/dashboard.dart';
 import 'package:fostr/providers/AuthProvider.dart';
 import 'package:fostr/services/FilePicker.dart';
 import 'package:fostr/services/StorageService.dart';
@@ -280,6 +280,6 @@ class _EnterClubRoomDetailsState extends State<EnterClubRoomDetails> with FostrT
     //     'username': user.userName,
     //     'name': user.name,
     //     'profileImage': user.userProfile?.profileImage ?? "image",
-      }).then((value) => Navigator.push(context, MaterialPageRoute(builder: (context) => OngoingRoom())));
+      }).then((value) => Navigator.push(context, MaterialPageRoute(builder: (context) => Dashboard())));
   }
 }
