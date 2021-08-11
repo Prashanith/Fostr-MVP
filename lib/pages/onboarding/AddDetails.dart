@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fostr/core/constants.dart';
 import 'package:fostr/models/UserModel/User.dart';
 import 'package:fostr/pages/clubOwner/dashboard.dart';
@@ -30,11 +31,19 @@ class _AddDetailsState extends State<AddDetails> with FostrTheme {
   final nameForm = GlobalKey<FormState>();
   final passwordForm = GlobalKey<FormState>();
 
+  TextEditingController nameController = TextEditingController();
   TextEditingController usernameController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-  TextEditingController confirmPasswordController = TextEditingController();
 
   bool isExists = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+      final auth = Provider.of<AuthProvider>(context, listen: false);
+      nameController.value = TextEditingValue(text: auth.user?.name ?? "");
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -70,24 +79,41 @@ class _AddDetailsState extends State<AddDetails> with FostrTheme {
                 ),
                 Form(
                   key: nameForm,
-                  child: InputField(
-                    onChange: checkUsername,
-                    controller: usernameController,
-                    validator: (value) {
-                      if (value!.isNotEmpty) {
-                        if (!Validator.isUsername(value)) {
-                          return "Username is not valid";
-                        }
-                        if (isExists) {
-                          return "Username already exists";
-                        }
-                      } else {
-                        return "Enter a user name";
-                      }
-                    },
-                    // controller: _controller,
-                    hintText: "Username",
-                    keyboardType: TextInputType.text,
+                  child: Column(
+                    children: [
+                      InputField(
+                        controller: nameController,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return "Enter a name";
+                          }
+                        },
+                        hintText: "Enter your name",
+                        keyboardType: TextInputType.text,
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      InputField(
+                        onChange: (value) => checkUsername(),
+                        controller: usernameController,
+                        validator: (value) {
+                          if (value!.isNotEmpty) {
+                            if (!Validator.isUsername(value)) {
+                              return "Username is not valid";
+                            }
+                            if (isExists) {
+                              return "Username already exists";
+                            }
+                          } else {
+                            return "Enter a user name";
+                          }
+                        },
+                        // controller: _controller,
+                        hintText: "Username",
+                        keyboardType: TextInputType.text,
+                      ),
+                    ],
                   ),
                 ),
                 Spacer(),
@@ -101,7 +127,7 @@ class _AddDetailsState extends State<AddDetails> with FostrTheme {
                         var user = auth.user!;
                         var newUser = User(
                             id: user.id,
-                            name: "",
+                            name: nameController.text,
                             userName:
                                 usernameController.text.trim().toLowerCase(),
                             userType: user.userType,
@@ -110,12 +136,10 @@ class _AddDetailsState extends State<AddDetails> with FostrTheme {
                             invites: user.invites);
 
                         auth.addUserDetails(newUser).then((value) {
-                          print("done");
-                          if (user.lastLogin == user.createdOn &&
-                              user.userType == UserType.USER) {
+                          if (user.userType == UserType.USER) {
                             FostrRouter.removeUntillAndGoto(
-                                context, Routes.quizPage, (route) => false);
-                          } else if (auth.userType == UserType.CLUBOWNER ) {
+                                context, Routes.ongoingRoom, (route) => false);
+                          } else if (auth.userType == UserType.CLUBOWNER) {
                             Navigator.of(context).pushAndRemoveUntil(
                                 CupertinoPageRoute(builder: (_) => Dashboard()),
                                 (route) => false);
@@ -138,7 +162,7 @@ class _AddDetailsState extends State<AddDetails> with FostrTheme {
     );
   }
 
-  Future<void> checkUsername() async {
+  Future<void> checkUsername({String? value}) async {
     setState(() {
       isExists = false;
     });

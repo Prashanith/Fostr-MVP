@@ -1,8 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fostr/core/constants.dart';
 import 'package:fostr/models/UserModel/RoomUser.dart';
-import 'package:fostr/pages/user/profile.dart';
+import 'package:fostr/pages/user/UserProfile.dart';
 
 import '../RoundedImage.dart';
 
@@ -27,12 +26,12 @@ class Profile extends StatelessWidget {
         Stack(
           children: [
             GestureDetector(
-              onTap: () => Navigator.push(
-                context,
-                CupertinoPageRoute(builder: (context) => UserProfilePage())
-              ),
+              onTap: () => Navigator.push(context,
+                  CupertinoPageRoute(builder: (context) => UserProfilePage())),
               child: RoundedImage(
-                url: user.profileImage.toString() == "image" ? null : user.profileImage,
+                url: user.profileImage.toString() == "image"
+                    ? null
+                    : user.profileImage,
                 width: size,
                 height: size,
               ),

@@ -203,26 +203,28 @@ class _SignupPageState extends State<SignupPage> with FostrTheme {
                       onTap: () async {
                         if (signupForm.currentState!.validate()) {
                           if (Validator.isEmail(_controller.text)) {
-                            auth
-                                .signupWithEmailPassword(
-                                    _controller.text.trim(),
-                                    _passwordController.text.trim(),
-                                    auth.userType!)
-                                .catchError(handleError)
-                                .then((value) {
+                            try {
+                              await auth.signupWithEmailPassword(
+                                  _controller.text.trim(),
+                                  _passwordController.text.trim(),
+                                  auth.userType!);
                               FostrRouter.goto(context, Routes.addDetails);
-                            });
+                            } catch (error) {
+                              handleError(error);
+                            }
                           } else if (Validator.isPhone(_controller.text)) {
                             if (!auth.isLoading) {
-                              auth
-                                  .signInWithPhone(
-                                      context,
-                                      countryCode.trim() +
-                                          _controller.text.trim())
-                                  .then((value) {
+                              try {
+                                auth.signInWithPhone(
+                                    context,
+                                    countryCode.trim() +
+                                        _controller.text.trim());
+
                                 FostrRouter.goto(
                                     context, Routes.otpVerification);
-                              }).catchError(handleError);
+                              } catch (e) {
+                                handleError(e);
+                              }
                             }
                           }
                         }

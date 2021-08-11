@@ -2,8 +2,6 @@ import 'package:device_preview/device_preview.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:fostr/pages/clubOwner/dashboard.dart';
-import 'package:fostr/pages/quiz/BookSuggestionPage.dart';
 import 'package:fostr/providers/IndexProvider.dart';
 import 'package:fostr/router/router.dart';
 import 'package:fostr/services/Locators.dart';
@@ -16,7 +14,7 @@ void main() async {
   setupLocators();
   runApp(
     DevicePreview(
-      enabled: false,
+      enabled: kDebugMode,
       builder: (context) => MyApp(),
     ),
   );
@@ -27,14 +25,21 @@ class MyApp extends StatelessWidget with FostrTheme {
   Widget build(BuildContext context) {
     return IndexProvider(
       child: Sizer(
-        builder: (context, orientation, deviceType) => MaterialApp(
-          locale: DevicePreview.locale(context),
-          builder: DevicePreview.appBuilder,
-          initialRoute: "/",
-          onGenerateRoute: (settings) =>
-              FostrRouter.generateRoute(context, settings),
-          title: "FOSTR",
-        ),
+        builder: (context, orientation, deviceType) {
+          return MaterialApp(
+            theme: ThemeData(
+              colorScheme: ColorScheme.light(
+                secondary: Colors.white,
+              ),
+            ),
+            locale: DevicePreview.locale(context),
+            builder: DevicePreview.appBuilder,
+            initialRoute: "/",
+            onGenerateRoute: (settings) =>
+                FostrRouter.generateRoute(context, settings),
+            title: "FOSTR",
+          );
+        },
       ),
     );
   }

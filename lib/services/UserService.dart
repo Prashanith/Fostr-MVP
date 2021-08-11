@@ -144,9 +144,8 @@ class UserService {
         var json = currentUser.toJson();
         json['followings'] = followings;
         user = User.fromJson(json);
-        print(json);
         await updateUserField(json);
-        print("object");
+        print(user.followings);
       }
       var followers = userToUnfollow.followers ?? [];
       if (followers.remove(currentUser.id)) {

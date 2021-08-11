@@ -75,7 +75,10 @@ class _SearchPageState extends State<SearchPage> with FostrTheme {
                             ]),
                         child: TextField(
                           style: h2.copyWith(fontSize: 14.sp),
-                          onEditingComplete: () => searchUsers(auth.user!.id),
+                          onEditingComplete: () {
+                            searchUsers(auth.user!.id);
+                            FocusScope.of(context).unfocus();
+                          },
                           onSubmitted: (e) {
                             print(e);
                           },
@@ -96,8 +99,8 @@ class _SearchPageState extends State<SearchPage> with FostrTheme {
                       InkWell(
                         onTap: () => searchUsers(auth.user!.id),
                         child: Container(
-                          height: 8.h,
-                          width: 8.h,
+                          height: 7.h,
+                          width: 7.h,
                           decoration: BoxDecoration(
                               color: Color(0xffEBFFEE),
                               shape: BoxShape.circle,
@@ -140,7 +143,6 @@ class _SearchPageState extends State<SearchPage> with FostrTheme {
                 ),
                 Expanded(
                   child: ListView.builder(
-                    physics: BouncingScrollPhysics(),
                     itemCount: clubs.length,
                     itemBuilder: (context, idx) {
                       var user = User.fromJson(clubs[idx]);
@@ -173,7 +175,6 @@ class _SearchPageState extends State<SearchPage> with FostrTheme {
                 ),
                 Expanded(
                   child: ListView.builder(
-                    physics: BouncingScrollPhysics(),
                     itemCount: users.length,
                     itemBuilder: (context, idx) {
                       var user = User.fromJson(users[idx]);

@@ -27,7 +27,7 @@ class RoundedImage extends StatelessWidget {
       width: width,
       margin: margin,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(borderRadius),
+        shape: BoxShape.circle,
         image: DecorationImage(
           image: (url == null)
               ? Image.asset("assets/images/profile.png").image

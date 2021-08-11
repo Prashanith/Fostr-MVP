@@ -21,6 +21,14 @@ mixin FostrTheme {
     ],
   );
 
+  final secondaryBackground = LinearGradient(
+      begin: Alignment.topCenter,
+      end: Alignment.bottomCenter,
+      colors: [
+        Color(0xffD8F7E2),
+        Color(0xff8CB7AB),
+      ]);
+
   final primaryButton = const LinearGradient(colors: [
     btnGradientLeft,
     btnGradientRight,

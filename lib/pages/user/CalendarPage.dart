@@ -32,7 +32,7 @@ class _CalendarPageState extends State<CalendarPage> with FostrTheme {
             Container(
               margin: EdgeInsets.symmetric(vertical: 2.h, horizontal: 20),
               height: 35.h,
-              width: 80.w,
+              width: 90.w,
               decoration: BoxDecoration(
                 boxShadow: boxShadow,
                 color: Color(0xffEBFFEE),
@@ -55,7 +55,6 @@ class _CalendarPageState extends State<CalendarPage> with FostrTheme {
             ),
             Expanded(
               child: SingleChildScrollView(
-                physics: BouncingScrollPhysics(),
                 scrollDirection: Axis.vertical,
                 child: Column(
                   children: [

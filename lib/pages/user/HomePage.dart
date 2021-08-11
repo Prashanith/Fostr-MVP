@@ -11,7 +11,7 @@ import 'package:fostr/models/RoomModel.dart';
 import 'package:fostr/pages/rooms/Minimal.dart';
 import 'package:fostr/pages/rooms/ThemePage.dart';
 import 'package:fostr/pages/user/CalendarPage.dart';
-import 'package:fostr/pages/user/profile.dart';
+import 'package:fostr/pages/user/UserProfile.dart';
 import 'package:fostr/providers/AuthProvider.dart';
 import 'package:fostr/router/router.dart';
 import 'package:fostr/router/routes.dart';
@@ -55,29 +55,24 @@ class _OngoingRoomState extends State<OngoingRoom> with FostrTheme {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
           child: GNav(
-              // gap: 8,
               activeColor: Color(0xff94B5AC),
               color: Colors.white,
               iconSize: 24,
               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-              duration: Duration(milliseconds: 800),
+              duration: Duration(milliseconds: 300),
               tabBackgroundColor: Colors.white,
               tabs: [
                 GButton(
                   icon: LineIcons.home,
-                  // text: 'Home',
                 ),
                 GButton(
                   icon: LineIcons.search,
-                  // text: 'Search',
                 ),
                 GButton(
                   icon: LineIcons.calendar,
-                  // text: 'Events',
                 ),
                 GButton(
                   icon: LineIcons.user,
-                  // text: 'Profile',
                 ),
               ],
               selectedIndex: _selectedIndex,
@@ -91,10 +86,13 @@ class _OngoingRoomState extends State<OngoingRoom> with FostrTheme {
               }),
         ),
       ),
-      body: PageView(
-        controller: controller,
-        physics: BouncingScrollPhysics(),
-        children: _children,
+      body: Container(
+        decoration: BoxDecoration(gradient: secondaryBackground),
+        child: PageView(
+          controller: controller,
+          physics: BouncingScrollPhysics(),
+          children: _children,
+        ),
       ),
     );
   }
@@ -111,7 +109,6 @@ class _HomePageState extends State<HomePage> with FostrTheme {
   String now = DateFormat('yyyy-MM-dd').format(DateTime.now()) +
       " " +
       DateFormat.Hm().format(DateTime.now());
-  TextEditingController _textFieldController = TextEditingController();
   RefreshController _refreshController = RefreshController(
     initialRefresh: false,
   );
@@ -239,14 +236,16 @@ class _HomePageState extends State<HomePage> with FostrTheme {
                                             return GestureDetector(
                                                 onTap: () async {
                                                   Navigator.push(
-                                                      context,
-                                                      CupertinoPageRoute(
-                                                          builder: (BuildContext
-                                                                  context) =>
-                                                              ThemePage(
-                                                                  room: Room
-                                                                      .fromJson(
-                                                                          document))));
+                                                    context,
+                                                    CupertinoPageRoute(
+                                                      builder: (BuildContext
+                                                              context) =>
+                                                          ThemePage(
+                                                        room: Room.fromJson(
+                                                            document),
+                                                      ),
+                                                    ),
+                                                  );
                                                 },
                                                 child: OngoingRoomCard(
                                                     room: Room.fromJson(

@@ -122,6 +122,7 @@ class AuthProvider with ChangeNotifier {
       _setFree();
       print("from auth provider");
       print(e);
+      throw e;
     }
   }
 

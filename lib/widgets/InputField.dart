@@ -4,15 +4,17 @@ import 'package:fostr/utils/theme.dart';
 import 'package:sizer/sizer.dart';
 
 class InputField extends StatefulWidget {
-  final String hintText;
+  final String? hintText;
+  final String? helperText;
   final bool isPassword;
   final TextEditingController? controller;
   final String? Function(String? value)? validator;
   final TextInputType keyboardType;
-  final VoidCallback? onChange;
+  final Function(String value)? onChange;
   InputField(
       {Key? key,
       this.hintText = "",
+      this.helperText,
       this.keyboardType = TextInputType.text,
       this.validator,
       this.controller,
@@ -61,7 +63,7 @@ class _InputFieldState extends State<InputField> with FostrTheme {
               child: TextFormField(
                 onChanged: (e) {
                   if (widget.onChange != null) {
-                    widget.onChange!();
+                    widget.onChange!(e);
                   }
                 },
                 controller: widget.controller,
@@ -98,6 +100,7 @@ class _InputFieldState extends State<InputField> with FostrTheme {
                   hintStyle: textFieldStyle.copyWith(
                     fontSize: 14.sp,
                   ),
+                  helperText: widget.helperText,
                   fillColor: Color.fromRGBO(102, 163, 153, 1),
                   border: OutlineInputBorder(
                     borderSide: BorderSide.none,
