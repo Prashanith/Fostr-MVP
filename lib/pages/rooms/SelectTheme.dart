@@ -355,11 +355,7 @@ class _SelectThemeState extends State<SelectTheme> {
         .doc(widget.room.title)
         .collection("speakers")
         .doc(user.userName)
-        .set({
-          'username': user.userName,
-          'name': user.name,
-          'profileImage': user.userProfile?.profileImage ?? "image",
-        });
+        .set(user.toJson());
     } else {
       // update the list of participants
       await roomCollection

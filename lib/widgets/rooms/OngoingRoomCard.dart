@@ -125,7 +125,7 @@ class OngoingRoomCard extends StatelessWidget with FostrTheme {
         Positioned(
           right: 20,
           top: 20,
-          child: BookmarkContainer(imgURL: room.imageUrl.toString()),
+          child: BookmarkContainer(imgURL: room.imageUrl),
         ),
       ],
     );

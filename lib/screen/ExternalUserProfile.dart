@@ -13,14 +13,15 @@ import 'package:provider/provider.dart';
 
 import 'package:sizer/sizer.dart';
 
-class UserProfilePage extends StatefulWidget {
+class ExternalProfilePage extends StatefulWidget {
   final User user;
-  UserProfilePage({Key? key, required this.user}) : super(key: key);
+  ExternalProfilePage({Key? key, required this.user}) : super(key: key);
   @override
-  State<UserProfilePage> createState() => _UserProfilePageState();
+  State<ExternalProfilePage> createState() => _ExternalProfilePageState();
 }
 
-class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
+class _ExternalProfilePageState extends State<ExternalProfilePage>
+    with FostrTheme {
   final UserService userService = GetIt.I<UserService>();
 
   bool isFollowed = false;
@@ -45,6 +46,7 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
           height: 100.h,
           child: SingleChildScrollView(
             child: Container(
+              height: 100.h,
               width: double.infinity,
               decoration: BoxDecoration(gradient: secondaryBackground),
               child: Stack(
@@ -77,6 +79,9 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                                   Icons.arrow_back,
                                   size: 20.sp,
                                 ),
+                              ),
+                              SizedBox(
+                                width: 4.w,
                               ),
                               Text(
                                 widget.user.userName,
@@ -152,10 +157,10 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                           ),
                         ),
                         Container(
+                          alignment: Alignment.center,
                           padding: const EdgeInsets.all(10),
-                          constraints: BoxConstraints(
-                            maxWidth: 90.w,
-                          ),
+                          width: 90.w,
+                          height: 60,
                           decoration: BoxDecoration(
                             color: Color(0xffEBFFEE),
                             borderRadius: BorderRadius.circular(13),
@@ -185,7 +190,10 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                             },
                             child: Text(
                               (!isFollowed) ? "Follow" : "Unfollow",
-                              style: h1.copyWith(fontSize: 18.sp),
+                              style: h1.copyWith(
+                                fontSize: 20.sp,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ),
@@ -193,9 +201,10 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                           height: 2.h,
                         ),
                         Text(
-                          'bio',
+                          'Bio',
+                          textAlign: TextAlign.start,
                           style: TextStyle(
-                            fontSize: 15,
+                            fontSize: 18.sp,
                             fontWeight: FontWeight.w500,
                             color: Colors.teal[900],
                           ),
