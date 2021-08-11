@@ -9,11 +9,40 @@ import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
-class FollowFollowing extends StatelessWidget with FostrTheme {
+class FollowFollowing extends StatefulWidget {
   final List<String>? items;
   final String title;
   FollowFollowing({Key? key, this.items, required this.title})
       : super(key: key);
+
+  @override
+  State<FollowFollowing> createState() => _FollowFollowingState();
+}
+
+class _FollowFollowingState extends State<FollowFollowing> with FostrTheme {
+  final userService = GetIt.I<UserService>();
+  List<String> users = [];
+
+  @override
+  void initState() {
+    super.initState();
+
+    final auth = Provider.of<AuthProvider>(context, listen: false);
+    userService.getUserById(auth.user!.id).then((user) {
+      if (user != null) {
+        setState(() {
+          auth.refreshUser(user);
+          if (widget.title == "Followings") {
+            users = user.followings ?? [];
+          } else if (widget.title == "Followers") {
+            users = user.followers ?? [];
+          }
+        });
+      } else {
+        users = widget.items ?? [];
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,16 +65,17 @@ class FollowFollowing extends StatelessWidget with FostrTheme {
                   boxShadow: boxShadow,
                 ),
                 child: Text(
-                  title,
+                  widget.title,
                   style: h1.copyWith(fontSize: 26.sp),
                 ),
               ),
               Expanded(
                 child: ListView.builder(
-                  itemCount: items?.length ?? 0,
+                  itemCount: users.length,
                   itemBuilder: (context, index) {
                     return UserCard(
-                      id: items![index],
+                      id: users[index],
+                      isFollower: widget.title == "Followers",
                     );
                   },
                 ),
@@ -60,7 +90,9 @@ class FollowFollowing extends StatelessWidget with FostrTheme {
 
 class UserCard extends StatefulWidget {
   final String id;
-  const UserCard({Key? key, required this.id}) : super(key: key);
+  final bool isFollower;
+  const UserCard({Key? key, required this.id, required this.isFollower})
+      : super(key: key);
 
   @override
   State<UserCard> createState() => _UserCardState();
@@ -161,22 +193,26 @@ class _UserCardState extends State<UserCard> with FostrTheme {
           InkWell(
             onTap: () async {
               try {
-                if (!followed) {
-                  var newUser = await userService.followUser(auth.user!, user);
-                  setState(() {
-                    followed = true;
-                  });
-                  auth.refreshUser(newUser);
-                  ScaffoldMessenger.of(context).showSnackBar(followedSnackBar);
-                } else {
-                  var newUser =
-                      await userService.unfollowUser(auth.user!, user);
-                  setState(() {
-                    followed = false;
-                  });
-                  auth.refreshUser(newUser);
-                  ScaffoldMessenger.of(context)
-                      .showSnackBar(unfollowedSnackBar);
+                if (!widget.isFollower) {
+                  if (!followed) {
+                    var newUser =
+                        await userService.followUser(auth.user!, user);
+                    setState(() {
+                      followed = true;
+                    });
+                    auth.refreshUser(newUser);
+                    ScaffoldMessenger.of(context)
+                        .showSnackBar(followedSnackBar);
+                  } else {
+                    var newUser =
+                        await userService.unfollowUser(auth.user!, user);
+                    setState(() {
+                      followed = false;
+                    });
+                    auth.refreshUser(newUser);
+                    ScaffoldMessenger.of(context)
+                        .showSnackBar(unfollowedSnackBar);
+                  }
                 }
               } catch (e) {
                 print(e);
@@ -191,7 +227,11 @@ class _UserCardState extends State<UserCard> with FostrTheme {
                 color: h2.color,
               ),
               child: Text(
-                (followed) ? "Unfollow" : "Follow",
+                (widget.isFollower)
+                    ? ""
+                    : (followed)
+                        ? "Unfollow"
+                        : "Follow",
                 style: h2.copyWith(color: Colors.white),
               ),
             ),

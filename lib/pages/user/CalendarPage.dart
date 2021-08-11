@@ -81,7 +81,7 @@ class _CalendarPageState extends State<CalendarPage> with FostrTheme {
                       },
                     );
                   } else {
-                    return CircularProgressIndicator.adaptive();
+                    return CircularProgressIndicator();
                   }
                 },
               ),
