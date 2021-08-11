@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fostr/core/constants.dart';
@@ -169,11 +171,14 @@ class _CreateRoomState extends State<CreateRoom> with FostrTheme {
                                         final roomName = snapshot.data!.docs;
                                         return Column(
                                           children: List.generate(
-                                            roomName.length,
+                                            min(roomName.length, 3),
                                             (index) {
-                                              return RoomLine(
-                                                width: 200,
-                                                bookName: roomName[index].id.toString(),
+                                              return Padding(
+                                                padding: const EdgeInsets.only(top: 10),
+                                                child: RoomLine(
+                                                  width: index == 0 ? 200 : index == 1 ? 150 : 100,
+                                                  bookName: roomName[index].id.toString(),
+                                                ),
                                               );
                                             },
                                           ).toList(),
