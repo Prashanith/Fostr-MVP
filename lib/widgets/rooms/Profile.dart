@@ -1,12 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fostr/models/UserModel/RoomUser.dart';
+import 'package:fostr/models/UserModel/User.dart';
 import 'package:fostr/pages/user/UserProfile.dart';
+import 'package:fostr/providers/AuthProvider.dart';
+import 'package:fostr/screen/ExternalUserProfile.dart';
+import 'package:provider/provider.dart';
 
 import '../RoundedImage.dart';
 
 class Profile extends StatelessWidget {
-  final RoomUser user;
+  final User user;
   final double size;
   final bool isMute;
   final bool isSpeaker;
@@ -21,17 +24,28 @@ class Profile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final auth = Provider.of<AuthProvider>(context);
     return Column(
       children: [
         Stack(
           children: [
             GestureDetector(
-              onTap: () => Navigator.push(context,
-                  CupertinoPageRoute(builder: (context) => UserProfilePage())),
+              onTap: () => Navigator.push(
+                context,
+                CupertinoPageRoute(
+                  builder: (context) {
+                    if (auth.user!.id == user.id) {
+                      return UserProfilePage();
+                    } else {
+                      return ExternalProfilePage(
+                        user: user,
+                      );
+                    }
+                  },
+                ),
+              ),
               child: RoundedImage(
-                url: user.profileImage.toString() == "image"
-                    ? null
-                    : user.profileImage,
+                url: user.userProfile?.profileImage,
                 width: size,
                 height: size,
               ),
@@ -45,7 +59,7 @@ class Profile extends StatelessWidget {
           children: [
             // moderator(isSpeaker),
             Text(
-              user.username,
+              user.userName,
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.center,
               style: TextStyle(

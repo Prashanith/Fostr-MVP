@@ -17,7 +17,8 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 class Minimal extends StatefulWidget {
   final Room room;
   final ClientRole role;
-  const Minimal({Key? key, required this.room, required this.role}) : super(key: key);
+  const Minimal({Key? key, required this.room, required this.role})
+      : super(key: key);
 
   @override
   State<Minimal> createState() => _MinimalState();
@@ -52,52 +53,52 @@ class _MinimalState extends State<Minimal> with FostrTheme {
   initRoom() async {
     // get the details of room
     roomCollection
-      .doc(widget.room.id)
-      .collection("rooms")
-      .doc(widget.room.title)
-      .snapshots()
-      .listen((result) {
-        print(result.data()?['speakersCount']);
-        setState(() {
-          participantsCount = result.data()?['participantsCount'];
-          speakersCount = result.data()?['speakersCount'];
-        });
+        .doc(widget.room.id)
+        .collection("rooms")
+        .doc(widget.room.title)
+        .snapshots()
+        .listen((result) {
+      print(result.data()?['speakersCount']);
+      setState(() {
+        participantsCount = result.data()?['participantsCount'];
+        speakersCount = result.data()?['speakersCount'];
       });
+    });
   }
 
   removeUser(User user) async {
     if (widget.role == ClientRole.Broadcaster) {
       // update the list of speakers
       await roomCollection
-        .doc(widget.room.id)
-        .collection("rooms")
-        .doc(widget.room.title)
-        .update({
-          'speakersCount': speakersCount - 1,
-        });
+          .doc(widget.room.id)
+          .collection("rooms")
+          .doc(widget.room.title)
+          .update({
+        'speakersCount': speakersCount - 1,
+      });
       await roomCollection
-        .doc(widget.room.id)
-        .collection('rooms')
-        .doc(widget.room.title)
-        .collection("speakers")
-        .doc(user.userName)
-        .delete();
+          .doc(widget.room.id)
+          .collection('rooms')
+          .doc(widget.room.title)
+          .collection("speakers")
+          .doc(user.userName)
+          .delete();
     } else {
       // update the list of participants
       await roomCollection
-        .doc(widget.room.id)
-        .collection("rooms")
-        .doc(widget.room.title)
-        .update({
-          'participantsCount': participantsCount - 1,
-        });
+          .doc(widget.room.id)
+          .collection("rooms")
+          .doc(widget.room.title)
+          .update({
+        'participantsCount': participantsCount - 1,
+      });
       await roomCollection
-        .doc(widget.room.id)
-        .collection("rooms")
-        .doc(widget.room.title)
-        .collection("participants")
-        .doc(user.userName)
-        .delete();
+          .doc(widget.room.id)
+          .collection("rooms")
+          .doc(widget.room.title)
+          .collection("participants")
+          .doc(user.userName)
+          .delete();
     }
   }
 
@@ -116,6 +117,7 @@ class _MinimalState extends State<Minimal> with FostrTheme {
     // await _engine.joinChannel(newToken, channelName, null, 0);
     print("joined");
   }
+
   Future<void> _initAgoraRtcEngine() async {
     _engine = await RtcEngine.create(APP_ID);
     await _engine.enableAudio();
@@ -195,14 +197,14 @@ class _MinimalState extends State<Minimal> with FostrTheme {
                     //   height: 30,
                     // ),
                     (user.name == "")
-                      ? Text(
-                        "Hello, User",
-                        style: h1.apply(color: Colors.white),
-                      )
-                      : Text(
-                        "Hello, ${user.name}",
-                        style: h1.apply(color: Colors.white),
-                      ),
+                        ? Text(
+                            "Hello, User",
+                            style: h1.apply(color: Colors.white),
+                          )
+                        : Text(
+                            "Hello, ${user.name}",
+                            style: h1.apply(color: Colors.white),
+                          ),
                   ],
                 ),
               ),
@@ -223,7 +225,8 @@ class _MinimalState extends State<Minimal> with FostrTheme {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 15, horizontal: 30),
                         child: Align(
                           alignment: Alignment.centerLeft,
                           child: Text(
@@ -249,39 +252,44 @@ class _MinimalState extends State<Minimal> with FostrTheme {
                               topLeft: Radius.circular(30),
                             ),
                           ),
-                          child: Stack(
-                            children: [
-                              // list of speakers
-                              StreamBuilder(
-                                stream: roomCollection.doc(widget.room.title).collection('speakers').snapshots(),
-                                builder: (BuildContext context,AsyncSnapshot<QuerySnapshot> snapshot) {
-                                  if (snapshot.hasData) {
-                                    List<QueryDocumentSnapshot<Object?>> map = snapshot.data!.docs;
-                                    return Padding(
-                                      padding: const EdgeInsets.only(top: 25),
-                                      child: GridView.builder(
-                                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                            crossAxisCount: 3),
-                                        itemCount: map.length,
-                                        padding: EdgeInsets.all(2.0),
-                                        itemBuilder: (BuildContext context, int index) {
-                                          return Profile(
-                                              user: RoomUser.fromJson(map[index]),
-                                              size: 50,
-                                              isMute: false,
-                                              isSpeaker: false,);
-                                        },
-                                      ),
-                                    );
-                                  } else {
-                                    return CircularProgressIndicator();
-                                  }
+                        child: Stack(
+                          children: [
+                            // list of speakers
+                            StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                              stream: roomCollection
+                                .doc(widget.room.id)
+                                .collection("rooms")
+                                .doc(widget.room.title)
+                                .collection('speakers')
+                                .snapshots(),
+                              builder: (BuildContext context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+                                if (snapshot.hasData) {
+                                  List<QueryDocumentSnapshot<Map<String, dynamic>>> map = snapshot.data!.docs;
+                                  return Padding(
+                                    padding: const EdgeInsets.only(top: 25),
+                                    child: GridView.builder(
+                                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
+                                      itemCount: map.length,
+                                      padding: EdgeInsets.all(2.0),
+                                      itemBuilder: (BuildContext context, int index) {
+                                        return Profile(
+                                          user: User.fromJson(map[index].data()),
+                                          size: 50,
+                                          isMute: false,
+                                          isSpeaker: false,
+                                        );
+                                      },
+                                    ),
+                                  );
+                                } else {
+                                  return CircularProgressIndicator();
                                 }
-                              ),
-                              bottom(context, user),
-                            ],
-                          ),
-                        )
+                              }
+                            ),
+                            bottom(context, user),
+                          ],
+                        ),
+                      )
                       )
                     ],
                   ),
@@ -327,5 +335,4 @@ class _MinimalState extends State<Minimal> with FostrTheme {
       ),
     );
   }
-
 }

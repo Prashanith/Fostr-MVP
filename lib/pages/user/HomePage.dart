@@ -168,10 +168,6 @@ class _HomePageState extends State<HomePage> with FostrTheme {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // SvgPicture.asset(ICONS + "menu.svg"),
-                      // SizedBox(
-                      //   height: 20,
-                      // ),
                       (user.name == "")
                           ? Text(
                               "Hello, User",
@@ -200,63 +196,33 @@ class _HomePageState extends State<HomePage> with FostrTheme {
                     child: Padding(
                       padding:
                           const EdgeInsets.only(top: 5, left: 10, right: 10),
-                      child: ListView(
-                        physics: BouncingScrollPhysics(),
-                        children: [
-                          StreamBuilder<QuerySnapshot>(
-                            stream: roomCollection.snapshots(),
-                              builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                                print(snapshot.data!.docs[0].id);
-                                return StreamBuilder<QuerySnapshot>(
-                                  stream: roomCollection.doc(snapshot.data!.docs[0].id).collection("rooms").snapshots(),
-                                  builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                                    // Handling errors from firebase
-                                    if (snapshot.hasError)
-                                      return Center(child: Text('Error: ${snapshot.error}'));
-                              
-                                    if (snapshot.hasData && snapshot.data!.docs.length == 0)
-                                      return Center(child: Text('No Ongoing Rooms Yet'));
-                              
-                                    return snapshot.hasData
-                                      ? SizedBox(
-                                        height: MediaQuery.of(context).size.height - MediaQuery.of(context).size.height*0.24,
-                                        child: SmartRefresher(
-                                          enablePullDown: true,
-                                          controller: _refreshController,
-                                          onRefresh: _onRefresh,
-                                          onLoading: _onLoading,
-                                          child: ListView(
-                                            physics: BouncingScrollPhysics(),
-                                            children: snapshot.data!.docs.map((DocumentSnapshot document) {
-                                              return GestureDetector(
-                                                onTap: () async {
-                                                  Navigator.push(context, CupertinoPageRoute(builder: (BuildContext context) => ThemePage(room: Room.fromJson(document))));
-                                                },
-                                                child: OngoingRoomCard(room: Room.fromJson(document))
-                                                // child: Column(
-                                                //   children: [
-                                                //     Text(document.id.toString()),
-                                                //   ],
-                                                // ),
-                                              );
-                                            }).toList(),
-                                          ),
-                                        ),
-                                      )
-                                      // Display if still loading data
-                                      : Center(child: CircularProgressIndicator());
-                                  },
-                                );
+                      child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                          stream: roomCollection.snapshots(),
+                          builder: (BuildContext context,
+                              AsyncSnapshot<QuerySnapshot> outerData) {
+                            if (outerData.hasData) {
+                              final docs = outerData.data!.docs;
+
+                              return ListView.builder(
+                                itemCount: docs.length,
+                                itemBuilder: (context, index) {
+                                  final id = docs[index].id;
+                                  return RoomList(id: id);
+                                },
+                              );
+                            } else {
+                              return CircularProgressIndicator.adaptive();
                             }
-                          ),
-                        ],
-                      ),
+                          }),
                     ),
                   ),
                 ),
               ],
             ),
-            Align(alignment: Alignment.bottomCenter, child: startRoomButton()),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: startRoomButton(),
+            ),
           ],
         ),
       ),
@@ -280,6 +246,68 @@ class _HomePageState extends State<HomePage> with FostrTheme {
           ),
         ),
       ),
+    );
+  }
+}
+
+class RoomList extends StatelessWidget {
+  const RoomList({
+    Key? key,
+    required this.id,
+  }) : super(key: key);
+
+  final String id;
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<
+        QuerySnapshot<Map<String, dynamic>>>(
+      stream: roomCollection
+          .doc(id)
+          .collection('rooms')
+          .snapshots(),
+      builder: (BuildContext context, snapshot) {
+        if (snapshot.hasData &&
+            snapshot.data!.docs.length == 0)
+          return Center(
+              child:
+                  Text('No Ongoing Rooms Yet'));
+
+        if (snapshot.hasData) {
+          final roomList = snapshot.data!.docs;
+
+          return Column(
+            children: List.generate(
+              roomList.length,
+              (index) {
+                final room =
+                    roomList[index].data();
+                return GestureDetector(
+                  onTap: () async {
+                    Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                        builder: (BuildContext
+                                context) =>
+                            ThemePage(
+                          room:
+                              Room.fromJson(room),
+                        ),
+                      ),
+                    );
+                  },
+                  child: OngoingRoomCard(
+                    room: Room.fromJson(room),
+                  ),
+                );
+              },
+            ).toList(),
+          );
+        }
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      },
     );
   }
 }

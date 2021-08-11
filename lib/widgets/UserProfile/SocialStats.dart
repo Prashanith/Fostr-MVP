@@ -37,6 +37,11 @@ class SocialStats extends StatelessWidget with FostrTheme {
               ],
             ),
           ),
+          Container(
+            height: 40,
+            width: 2,
+            color: Colors.black.withOpacity(0.2),
+          ),
           InkWell(
             onTap: () {
               FostrRouter.gotoWithArg(

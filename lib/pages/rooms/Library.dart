@@ -18,7 +18,8 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 class Library extends StatefulWidget {
   final Room room;
   final ClientRole role;
-  const Library({Key? key, required this.room, required this.role}) : super(key: key);
+  const Library({Key? key, required this.room, required this.role})
+      : super(key: key);
 
   @override
   State<Library> createState() => _LibraryState();
@@ -53,52 +54,52 @@ class _LibraryState extends State<Library> with FostrTheme {
   initRoom() async {
     // get the details of room
     roomCollection
-      .doc(widget.room.id)
-      .collection('rooms')
-      .doc(widget.room.title)
-      .snapshots()
-      .listen((result) {
-        print(result.data()?['speakersCount']);
-        setState(() {
-          participantsCount = result.data()?['participantsCount'];
-          speakersCount = result.data()?['speakersCount'];
-        });
+        .doc(widget.room.id)
+        .collection('rooms')
+        .doc(widget.room.title)
+        .snapshots()
+        .listen((result) {
+      print(result.data()?['speakersCount']);
+      setState(() {
+        participantsCount = result.data()?['participantsCount'];
+        speakersCount = result.data()?['speakersCount'];
       });
+    });
   }
-  
+
   removeUser(User user) async {
     if (widget.role == ClientRole.Broadcaster) {
       // update the list of speakers
       await roomCollection
-        .doc(widget.room.id)
-        .collection("rooms")
-        .doc(widget.room.title)
-        .update({
-          'speakersCount': speakersCount - 1,
-        });
+          .doc(widget.room.id)
+          .collection("rooms")
+          .doc(widget.room.title)
+          .update({
+        'speakersCount': speakersCount - 1,
+      });
       await roomCollection
-        .doc(widget.room.id)
-        .collection("rooms")
-        .doc(widget.room.title)
-        .collection("speakers")
-        .doc(user.userName)
-        .delete();
+          .doc(widget.room.id)
+          .collection("rooms")
+          .doc(widget.room.title)
+          .collection("speakers")
+          .doc(user.userName)
+          .delete();
     } else {
       // update the list of participants
       await roomCollection
-        .doc(widget.room.id)
-        .collection("rooms")
-        .doc(widget.room.title)
-        .update({
-          'participantsCount': participantsCount - 1,
-        });
+          .doc(widget.room.id)
+          .collection("rooms")
+          .doc(widget.room.title)
+          .update({
+        'participantsCount': participantsCount - 1,
+      });
       await roomCollection
-        .doc(widget.room.id)
-        .collection("rooms")
-        .doc(widget.room.title)
-        .collection("participants")
-        .doc(user.userName)
-        .delete();
+          .doc(widget.room.id)
+          .collection("rooms")
+          .doc(widget.room.title)
+          .collection("participants")
+          .doc(user.userName)
+          .delete();
     }
 
     if ((participantsCount == 0 && speakersCount == 1) ||
@@ -122,6 +123,7 @@ class _LibraryState extends State<Library> with FostrTheme {
     // await _engine.joinChannel(newToken, channelName, null, 0);
     print("joined");
   }
+
   Future<void> _initAgoraRtcEngine() async {
     _engine = await RtcEngine.create(APP_ID);
     await _engine.enableAudio();
@@ -201,14 +203,14 @@ class _LibraryState extends State<Library> with FostrTheme {
                     //   height: 30,
                     // ),
                     (user.name == "")
-                      ? Text(
-                        "Hello, User",
-                        style: h1.apply(color: Colors.white),
-                      )
-                      : Text(
-                        "Hello, ${user.name}",
-                        style: h1.apply(color: Colors.white),
-                      ),
+                        ? Text(
+                            "Hello, User",
+                            style: h1.apply(color: Colors.white),
+                          )
+                        : Text(
+                            "Hello, ${user.name}",
+                            style: h1.apply(color: Colors.white),
+                          ),
                   ],
                 ),
               ),
@@ -229,7 +231,8 @@ class _LibraryState extends State<Library> with FostrTheme {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 15, horizontal: 30),
                         child: Align(
                           alignment: Alignment.centerLeft,
                           child: Text(
@@ -239,12 +242,12 @@ class _LibraryState extends State<Library> with FostrTheme {
                         ),
                       ),
                       Expanded(
-                        child: Container(
-                          padding: const EdgeInsets.only(
-                            left: 20,
-                            right: 20,
-                            bottom: 20,
-                          ),
+                          child: Container(
+                        padding: const EdgeInsets.only(
+                          left: 20,
+                          right: 20,
+                          bottom: 20,
+                        ),
                           decoration: BoxDecoration(
                             image: new DecorationImage(
                               image: new AssetImage(IMAGES + "library-main.png"),
@@ -259,41 +262,45 @@ class _LibraryState extends State<Library> with FostrTheme {
                             children: [
                               // list of speakers
                               StreamBuilder(
-                                stream: roomCollection.doc(widget.room.title).collection('speakers').snapshots(),
-                                builder: (BuildContext context,
-                                    AsyncSnapshot<QuerySnapshot> snapshot) {
+                                stream: roomCollection
+                                  .doc(widget.room.id)
+                                  .collection("rooms")
+                                  .doc(widget.room.title)
+                                  .collection('speakers')
+                                  .snapshots(),
+                                builder: (BuildContext context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
                                   if (snapshot.hasData) {
-                                    List<QueryDocumentSnapshot<Object?>> map = snapshot.data!.docs;
+                                    List<QueryDocumentSnapshot<Map<String, dynamic>>> map = snapshot.data!.docs;
                                     return Stack(
                                       children: [
-                                        DragProfile(user: RoomUser.fromJson(map[6]), 
+                                        DragProfile(user: User.fromJson(map[0].data()), 
                                           offset: Offset(MediaQuery.of(context).size.width*0.05, MediaQuery.of(context).size.height*0.32), isSpeaker: true),
                                         map.length >= 2
-                                          ? DragProfile(user: RoomUser.fromJson(map[6]), 
+                                          ? DragProfile(user: User.fromJson(map[0].data()),
                                               offset: Offset(MediaQuery.of(context).size.width*0.4, MediaQuery.of(context).size.height*0.31), isSpeaker: true)
                                           : Container(),
                                         map.length >= 3
-                                          ? DragProfile(user: RoomUser.fromJson(map[6]), 
+                                          ? DragProfile(user: User.fromJson(map[0].data()),
                                               offset: Offset(MediaQuery.of(context).size.width*0.12, MediaQuery.of(context).size.height*0.42), isSpeaker: true)
                                           : Container(),
                                         map.length >= 4
-                                          ? DragProfile(user: RoomUser.fromJson(map[6]), 
+                                          ? DragProfile(user: User.fromJson(map[0].data()),
                                               offset: Offset(MediaQuery.of(context).size.width*0.6, MediaQuery.of(context).size.height*0.45), isSpeaker: true)
                                           : Container(),
                                         map.length >= 5
-                                          ? DragProfile(user: RoomUser.fromJson(map[6]), 
+                                          ? DragProfile(user: User.fromJson(map[0].data()), 
                                               offset: Offset(MediaQuery.of(context).size.width*0.68, MediaQuery.of(context).size.height*0.35), isSpeaker: true)
                                           : Container(),
                                         map.length >= 6
-                                          ? DragProfile(user: RoomUser.fromJson(map[6]), 
+                                          ? DragProfile(user: User.fromJson(map[0].data()),
                                               offset: Offset(MediaQuery.of(context).size.width*0.72, MediaQuery.of(context).size.height*0.43), isSpeaker: true)
                                           : Container(),
                                         map.length >= 7
-                                          ? DragProfile(user: RoomUser.fromJson(map[6]), 
+                                          ? DragProfile(user: User.fromJson(map[0].data()), 
                                               offset: Offset(MediaQuery.of(context).size.width*0.55, MediaQuery.of(context).size.height*0.335), isSpeaker: true)
                                           : Container(),
                                         map.length == 8
-                                          ? DragProfile(user: RoomUser.fromJson(map[6]), 
+                                          ? DragProfile(user: User.fromJson(map[0].data()),
                                             offset: Offset(MediaQuery.of(context).size.width*0.3, MediaQuery.of(context).size.height*0.45), isSpeaker: true)
                                           : Container(),
                                       ],
@@ -324,27 +331,6 @@ class _LibraryState extends State<Library> with FostrTheme {
       alignment: Alignment.bottomCenter,
       child: Row(
         children: [
-          ElevatedButton(
-            onPressed: () {
-              removeUser(user);
-              Navigator.pop(context);
-            },
-            style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(Color(0xffE8FCD9)),
-              shape: MaterialStateProperty.all<OutlinedBorder>(
-                RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
-                ),
-              ),
-            ),
-            child: Text(
-              'Leave room',
-              style: TextStyle(
-                color: Color(0xffDA6864),
-                fontSize: 15,
-                fontWeight: FontWeight.bold),
-            ),
-          ),
           Spacer(),
           Visibility(
             visible: widget.role == ClientRole.Broadcaster,
@@ -356,13 +342,21 @@ class _LibraryState extends State<Library> with FostrTheme {
                 _engine.muteLocalAudioStream(isMicOn);
               },
               color: Color(0xffE8FCD9),
-              icon: Icon(isMicOn ? Icons.mic_off : Icons.mic,
-                size: 15, color: Colors.black),
+              icon: isMicOn ? Image.asset(IMAGES + "mic.png") : Image.asset(IMAGES + "mic_off.png"),
+              iconSize: 15
             ),
-          )
+          ),
+          IconButton(
+            onPressed: () {
+              removeUser(user);
+              Navigator.pop(context);
+            },
+            color: Color(0xffE8FCD9),
+            icon: Image.asset(IMAGES + "close.png"),
+            iconSize: 15
+          ),
         ],
       ),
     );
   }
-
 }
