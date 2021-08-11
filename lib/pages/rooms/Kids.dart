@@ -267,36 +267,36 @@ class _KidsState extends State<Kids> with FostrTheme {
                                       
                                       return Stack(
                                         children: [
-                                          DragProfile(user: RoomUser.fromJson(map[6]), 
-                                            offset: Offset(MediaQuery.of(context).size.width*0.05, MediaQuery.of(context).size.height*0.32), isSpeaker: true),
-                                          map.length >= 2
-                                            ? DragProfile(user: RoomUser.fromJson(map[6]), 
-                                                offset: Offset(MediaQuery.of(context).size.width*0.4, MediaQuery.of(context).size.height*0.31), isSpeaker: true)
-                                            : Container(),
-                                          map.length >= 3
-                                            ? DragProfile(user: RoomUser.fromJson(map[6]), 
-                                                offset: Offset(MediaQuery.of(context).size.width*0.12, MediaQuery.of(context).size.height*0.42), isSpeaker: true)
-                                            : Container(),
-                                          map.length >= 4
-                                            ? DragProfile(user: RoomUser.fromJson(map[6]), 
-                                                offset: Offset(MediaQuery.of(context).size.width*0.6, MediaQuery.of(context).size.height*0.45), isSpeaker: true)
-                                            : Container(),
-                                          map.length >= 5
-                                            ? DragProfile(user: RoomUser.fromJson(map[6]), 
-                                                offset: Offset(MediaQuery.of(context).size.width*0.68, MediaQuery.of(context).size.height*0.35), isSpeaker: true)
-                                            : Container(),
-                                          map.length >= 6
-                                            ? DragProfile(user: RoomUser.fromJson(map[6]), 
-                                                offset: Offset(MediaQuery.of(context).size.width*0.72, MediaQuery.of(context).size.height*0.43), isSpeaker: true)
-                                            : Container(),
-                                          map.length >= 7
-                                            ? DragProfile(user: RoomUser.fromJson(map[6]), 
-                                                offset: Offset(MediaQuery.of(context).size.width*0.55, MediaQuery.of(context).size.height*0.335), isSpeaker: true)
-                                            : Container(),
-                                          map.length == 8
-                                            ? DragProfile(user: RoomUser.fromJson(map[6]), 
-                                              offset: Offset(MediaQuery.of(context).size.width*0.3, MediaQuery.of(context).size.height*0.45), isSpeaker: true)
-                                            : Container(),
+                                          // DragProfile(user: RoomUser.fromJson(map[6]), 
+                                          //   offset: Offset(MediaQuery.of(context).size.width*0.05, MediaQuery.of(context).size.height*0.32), isSpeaker: true),
+                                          // map.length >= 2
+                                          //   ? DragProfile(user: RoomUser.fromJson(map[6]), 
+                                          //       offset: Offset(MediaQuery.of(context).size.width*0.4, MediaQuery.of(context).size.height*0.31), isSpeaker: true)
+                                          //   : Container(),
+                                          // map.length >= 3
+                                          //   ? DragProfile(user: RoomUser.fromJson(map[6]), 
+                                          //       offset: Offset(MediaQuery.of(context).size.width*0.12, MediaQuery.of(context).size.height*0.42), isSpeaker: true)
+                                          //   : Container(),
+                                          // map.length >= 4
+                                          //   ? DragProfile(user: RoomUser.fromJson(map[6]), 
+                                          //       offset: Offset(MediaQuery.of(context).size.width*0.6, MediaQuery.of(context).size.height*0.45), isSpeaker: true)
+                                          //   : Container(),
+                                          // map.length >= 5
+                                          //   ? DragProfile(user: RoomUser.fromJson(map[6]), 
+                                          //       offset: Offset(MediaQuery.of(context).size.width*0.68, MediaQuery.of(context).size.height*0.35), isSpeaker: true)
+                                          //   : Container(),
+                                          // map.length >= 6
+                                          //   ? DragProfile(user: RoomUser.fromJson(map[6]), 
+                                          //       offset: Offset(MediaQuery.of(context).size.width*0.72, MediaQuery.of(context).size.height*0.43), isSpeaker: true)
+                                          //   : Container(),
+                                          // map.length >= 7
+                                          //   ? DragProfile(user: RoomUser.fromJson(map[6]), 
+                                          //       offset: Offset(MediaQuery.of(context).size.width*0.55, MediaQuery.of(context).size.height*0.335), isSpeaker: true)
+                                          //   : Container(),
+                                          // map.length == 8
+                                          //   ? DragProfile(user: RoomUser.fromJson(map[6]), 
+                                          //     offset: Offset(MediaQuery.of(context).size.width*0.3, MediaQuery.of(context).size.height*0.45), isSpeaker: true)
+                                          //   : Container(),
                                         ],
                                       );
                                       

@@ -1,6 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:fostr/core/data.dart';
+import 'package:fostr/models/RoomModel.dart';
+import 'package:fostr/providers/AuthProvider.dart';
 import 'package:fostr/utils/theme.dart';
 import 'package:fostr/widgets/Layout.dart';
+import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
 class CalendarPage extends StatefulWidget {
@@ -13,6 +18,8 @@ class CalendarPage extends StatefulWidget {
 class _CalendarPageState extends State<CalendarPage> with FostrTheme {
   @override
   Widget build(BuildContext context) {
+    final auth = Provider.of<AuthProvider>(context);
+
     return Layout(
       child: SafeArea(
         child: Column(
@@ -48,22 +55,35 @@ class _CalendarPageState extends State<CalendarPage> with FostrTheme {
                     firstDate: DateTime(2000),
                     initialDate: DateTime.now(),
                     lastDate: DateTime(2030),
-                    onDateChanged: (DateTime value) {},
+                    onDateChanged: (DateTime value) {
+                      print("object");
+                    },
                   ),
                 ),
               ),
             ),
             Expanded(
-              child: SingleChildScrollView(
-                scrollDirection: Axis.vertical,
-                child: Column(
-                  children: [
-                    EventCard(),
-                    EventCard(),
-                    EventCard(),
-                    EventCard(),
-                  ],
-                ),
+              child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                stream: roomCollection.snapshots(),
+                builder: (BuildContext context,
+                    AsyncSnapshot<QuerySnapshot> outerData) {
+                  if (outerData.hasData) {
+                    final docs = outerData.data!.docs;
+
+                    return ListView.builder(
+                      itemCount: docs.length,
+                      itemBuilder: (context, index) {
+                        final id = docs[index].id;
+                        if (auth.user?.followings != null &&
+                            auth.user!.followings!.contains(id))
+                          return RoomWidget(id: id);
+                        return Container();
+                      },
+                    );
+                  } else {
+                    return CircularProgressIndicator.adaptive();
+                  }
+                },
               ),
             )
           ],
@@ -73,13 +93,55 @@ class _CalendarPageState extends State<CalendarPage> with FostrTheme {
   }
 }
 
-class EventCard extends StatelessWidget with FostrTheme {
-  EventCard({
+class RoomWidget extends StatelessWidget {
+  const RoomWidget({
     Key? key,
+    required this.id,
   }) : super(key: key);
+
+  final String id;
 
   @override
   Widget build(BuildContext context) {
+    return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+      stream: roomCollection.doc(id).collection('rooms').snapshots(),
+      builder: (BuildContext context, snapshot) {
+        if (snapshot.hasData && snapshot.data!.docs.length == 0)
+          return Container();
+
+        if (snapshot.hasData) {
+          final roomList = snapshot.data!.docs;
+
+          return Column(
+            children: List.generate(
+              roomList.length,
+              (index) {
+                final room = Room.fromJson(roomList[index].data());
+                return GestureDetector(
+                    onTap: () async {},
+                    child: EventCard(
+                      room: room,
+                    ));
+              },
+            ).toList(),
+          );
+        }
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      },
+    );
+  }
+}
+
+class EventCard extends StatelessWidget with FostrTheme {
+  final Room room;
+  EventCard({Key? key, required this.room}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final date = room.dateTime?.substring(0, 10) ?? "";
+    final time = room.dateTime?.substring(11, 16) ?? "";
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
       constraints: BoxConstraints(
@@ -99,26 +161,38 @@ class EventCard extends StatelessWidget with FostrTheme {
         ],
       ),
       padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            "10:00 a.m. :",
-            style: h1.copyWith(
-              fontSize: 13.sp,
-            ),
+      child: ListTile(
+        title: Text(
+          room.title ?? "",
+          style: h1.copyWith(
+            fontSize: 13.sp,
+            fontWeight: FontWeight.bold,
           ),
-          Flexible(
-            child: Text(
-              "Robin Sharma Book Reading",
+        ),
+        subtitle: Text(
+          "@${room.roomCreator ?? ' '}",
+          style: h1.copyWith(
+            fontSize: 13.sp,
+          ),
+        ),
+        trailing: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Text(
+              time,
               style: h1.copyWith(
-                fontSize: 13.sp,
-                fontWeight: FontWeight.bold,
+                fontSize: 11.sp,
               ),
             ),
-          ),
-        ],
+            Text(
+              date,
+              style: h1.copyWith(
+                fontSize: 11.sp,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
