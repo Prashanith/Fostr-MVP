@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:fostr/core/constants.dart';
 import 'package:fostr/models/UserModel/User.dart';
 import 'package:fostr/pages/clubOwner/dashboard.dart';
-import 'package:fostr/pages/user/UserProfile.dart';
 import 'package:fostr/providers/AuthProvider.dart';
 import 'package:fostr/router/router.dart';
 import 'package:fostr/router/routes.dart';
@@ -110,7 +109,7 @@ class _OtpVerificationState extends State<OtpVerification> with FostrTheme {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 111),
                   child: PrimaryButton(
-                    text: "Register",
+                    text: "Verify",
                     onTap: () async {
                       if (otpForm.currentState!.validate()) {
                         try {
