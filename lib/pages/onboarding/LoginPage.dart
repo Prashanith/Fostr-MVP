@@ -4,6 +4,7 @@ import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fostr/core/constants.dart';
+import 'package:fostr/models/UserModel/User.dart';
 import 'package:fostr/pages/clubOwner/dashboard.dart';
 import 'package:fostr/widgets/Layout.dart';
 import 'package:fostr/providers/AuthProvider.dart';
@@ -52,6 +53,20 @@ class _LoginPageState extends State<LoginPage> with FostrTheme {
         isEmail = false;
         isNumber = false;
       });
+    }
+  }
+
+  void handleRoute(User? user) {
+    if (user!.name.isEmpty || user.userName.isEmpty) {
+      FostrRouter.goto(context, Routes.addDetails);
+    } else {
+      if (user.userType == UserType.USER) {
+        FostrRouter.removeUntillAndGoto(
+            context, Routes.ongoingRoom, (route) => false);
+      } else if (user.userType == UserType.CLUBOWNER) {
+        Navigator.of(context).pushAndRemoveUntil(
+            CupertinoPageRoute(builder: (_) => Dashboard()), (route) => false);
+      }
     }
   }
 
@@ -134,6 +149,7 @@ class _LoginPageState extends State<LoginPage> with FostrTheme {
                         ),
                         (isEmail)
                             ? InputField(
+                                maxLine: 1,
                                 isPassword: true,
                                 validator: (value) {
                                   if (passwordController.text.length < 6) {
@@ -184,25 +200,8 @@ class _LoginPageState extends State<LoginPage> with FostrTheme {
                                   try {
                                     var user = await auth
                                         .signInWithGoogle(auth.userType!);
-                                    if (user != null &&
-                                        user.createdOn == user.lastLogin) {
-                                      FostrRouter.goto(
-                                          context, Routes.addDetails);
-                                    } else {
-                                      if (auth.userType == UserType.USER) {
-                                        FostrRouter.removeUntillAndGoto(
-                                            context,
-                                            Routes.ongoingRoom,
-                                            (route) => false);
-                                      } else if (auth.userType ==
-                                          UserType.CLUBOWNER) {
-                                        Navigator.of(context)
-                                            .pushAndRemoveUntil(
-                                                CupertinoPageRoute(
-                                                    builder: (_) =>
-                                                        Dashboard()),
-                                                (route) => false);
-                                      }
+                                    if (user != null) {
+                                      handleRoute(user);
                                     }
                                   } catch (e) {
                                     handleError(e);
@@ -220,21 +219,12 @@ class _LoginPageState extends State<LoginPage> with FostrTheme {
                                 !auth.isLoading) {
                               if (Validator.isEmail(idController.text.trim())) {
                                 try {
-                                  await auth.signInWithEmailPassword(
+                                  var user = await auth.signInWithEmailPassword(
                                     idController.text.trim(),
                                     passwordController.text.trim(),
                                     auth.userType!,
                                   );
-                                  if (auth.userType == UserType.USER) {
-                                    FostrRouter.removeUntillAndGoto(context,
-                                        Routes.ongoingRoom, (route) => false);
-                                  } else if (auth.userType ==
-                                      UserType.CLUBOWNER) {
-                                    Navigator.of(context).pushAndRemoveUntil(
-                                        CupertinoPageRoute(
-                                            builder: (_) => Dashboard()),
-                                        (route) => false);
-                                  }
+                                  handleRoute(user);
                                 } catch (e) {
                                   handleError(e);
                                 }

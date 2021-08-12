@@ -166,15 +166,14 @@ class _AddDetailsState extends State<AddDetails> with FostrTheme {
     setState(() {
       isExists = false;
     });
-    if (usernameController.text.isNotEmpty &&
-        nameForm.currentState!.validate()) {
+    if (usernameController.text.isNotEmpty) {
       var isExists =
           await _userService.checkUserName(usernameController.text.trim());
       setState(() {
         this.isExists = isExists;
       });
     }
-    if (!nameForm.currentState!.validate()) {
+    if (nameForm.currentState!.validate()) {
       setState(() {
         isExists = false;
       });

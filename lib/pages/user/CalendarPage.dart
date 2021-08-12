@@ -16,6 +16,8 @@ class CalendarPage extends StatefulWidget {
 }
 
 class _CalendarPageState extends State<CalendarPage> with FostrTheme {
+  DateTime date = DateTime.now();
+
   @override
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthProvider>(context);
@@ -56,7 +58,10 @@ class _CalendarPageState extends State<CalendarPage> with FostrTheme {
                     initialDate: DateTime.now(),
                     lastDate: DateTime(2030),
                     onDateChanged: (DateTime value) {
-                      print("object");
+                      setState(() {
+                        date = value;
+                      });
+                      print(date);
                     },
                   ),
                 ),
