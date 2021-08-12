@@ -21,7 +21,7 @@ class _CalendarPageState extends State<CalendarPage> with FostrTheme {
   @override
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthProvider>(context);
-
+    final user = auth.user;
     return Layout(
       child: SafeArea(
         child: Column(
@@ -61,33 +61,19 @@ class _CalendarPageState extends State<CalendarPage> with FostrTheme {
                       setState(() {
                         date = value;
                       });
-                      print(date);
                     },
                   ),
                 ),
               ),
             ),
             Expanded(
-              child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                stream: roomCollection.snapshots(),
-                builder: (BuildContext context,
-                    AsyncSnapshot<QuerySnapshot> outerData) {
-                  if (outerData.hasData) {
-                    final docs = outerData.data!.docs;
-
-                    return ListView.builder(
-                      itemCount: docs.length,
-                      itemBuilder: (context, index) {
-                        final id = docs[index].id;
-                        if (auth.user?.followings != null &&
-                            auth.user!.followings!.contains(id))
-                          return RoomWidget(id: id);
-                        return Container();
-                      },
-                    );
-                  } else {
-                    return CircularProgressIndicator();
-                  }
+              child: ListView.builder(
+                itemCount: user?.followings?.length ?? 0,
+                itemBuilder: (context, index) {
+                  return RoomWidget(
+                    id: user!.followings![index],
+                    date: date,
+                  );
                 },
               ),
             )
@@ -102,9 +88,11 @@ class RoomWidget extends StatelessWidget {
   const RoomWidget({
     Key? key,
     required this.id,
+    required this.date,
   }) : super(key: key);
 
   final String id;
+  final DateTime date;
 
   @override
   Widget build(BuildContext context) {
@@ -122,11 +110,16 @@ class RoomWidget extends StatelessWidget {
               roomList.length,
               (index) {
                 final room = Room.fromJson(roomList[index].data());
-                return GestureDetector(
+                if (room.dateTime?.substring(0, 10) ==
+                    date.toString().substring(0, 10)) {
+                  return GestureDetector(
                     onTap: () async {},
                     child: EventCard(
                       room: room,
-                    ));
+                    ),
+                  );
+                }
+                return Container();
               },
             ).toList(),
           );
