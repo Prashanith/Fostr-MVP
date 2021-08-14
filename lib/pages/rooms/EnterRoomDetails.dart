@@ -159,34 +159,33 @@ class _EnterRoomDetailsState extends State<EnterRoomDetails> with FostrTheme {
                                       });
                                       try {
                                         final file = await Files.getFile();
-                                        if (file['size'] < 700000) {
-                                          if (file['file'] != null) {
-                                            imageUrl =
-                                                await Storage.saveRoomImage(
-                                                    file,
-                                                    eventNameTextEditingController
-                                                        .text);
-                                            setState(() {
-                                              isLoading = false;
-                                              image = file['file']
-                                                  .toString()
-                                                  .substring(
-                                                      file['file']
-                                                              .toString()
-                                                              .lastIndexOf(
-                                                                  '/') +
-                                                          1,
-                                                      file['file']
-                                                              .toString()
-                                                              .length -
-                                                          1);
-                                            });
-                                          } else {
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(SnackBar(
-                                                    content: Text(
-                                                        "Image must be less than 400KB")));
-                                          }
+
+                                        if (file['file'] != null &&
+                                            file['size'] < 700000) {
+                                          imageUrl =
+                                              await Storage.saveRoomImage(
+                                                  file,
+                                                  eventNameTextEditingController
+                                                      .text);
+                                          setState(() {
+                                            isLoading = false;
+                                            image = file['file']
+                                                .toString()
+                                                .substring(
+                                                    file['file']
+                                                            .toString()
+                                                            .lastIndexOf('/') +
+                                                        1,
+                                                    file['file']
+                                                            .toString()
+                                                            .length -
+                                                        1);
+                                          });
+                                        } else {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(SnackBar(
+                                                  content: Text(
+                                                      "Image must be less than 700KB")));
                                         }
                                       } catch (e) {
                                         print(e);
