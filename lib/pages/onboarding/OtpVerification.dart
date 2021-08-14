@@ -1,11 +1,10 @@
 import 'dart:async';
 import 'dart:developer';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fostr/core/constants.dart';
+import 'package:fostr/models/UserModel/User.dart';
 import 'package:fostr/pages/clubOwner/dashboard.dart';
-import 'package:fostr/pages/user/UserProfile.dart';
 import 'package:fostr/providers/AuthProvider.dart';
 import 'package:fostr/router/router.dart';
 import 'package:fostr/router/routes.dart';
@@ -32,6 +31,20 @@ class _OtpVerificationState extends State<OtpVerification> with FostrTheme {
 
   bool isError = false;
   String error = "";
+
+  void handleRoute(User? user) {
+    if (user!.name.isEmpty || user.userName.isEmpty) {
+      FostrRouter.goto(context, Routes.addDetails);
+    } else {
+      if (user.userType == UserType.USER) {
+        FostrRouter.removeUntillAndGoto(
+            context, Routes.ongoingRoom, (route) => false);
+      } else if (user.userType == UserType.CLUBOWNER) {
+        Navigator.of(context).pushAndRemoveUntil(
+            CupertinoPageRoute(builder: (_) => Dashboard()), (route) => false);
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -99,21 +112,9 @@ class _OtpVerificationState extends State<OtpVerification> with FostrTheme {
                     onTap: () async {
                       if (otpForm.currentState!.validate()) {
                         try {
-                          await auth.verifyOtp(
+                          var user = await auth.verifyOtp(
                               context, _controller.text, auth.userType!);
-                          if (auth.user!.createdOn == auth.user!.lastLogin) {
-                            FostrRouter.goto(context, Routes.addDetails);
-                          } else {
-                            if (auth.userType == UserType.USER) {
-                              FostrRouter.removeUntillAndGoto(context,
-                                  Routes.userDashboard, (route) => false);
-                            } else if (auth.userType == UserType.CLUBOWNER) {
-                              Navigator.of(context).pushAndRemoveUntil(
-                                  CupertinoPageRoute(
-                                      builder: (_) => Dashboard()),
-                                  (route) => false);
-                            }
-                          }
+                          handleRoute(user);
                         } catch (e) {
                           handleError(e);
                         }

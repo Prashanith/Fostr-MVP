@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:fostr/models/UserModel/User.dart';
 
 class UserService {
   final _userCollection = FirebaseFirestore.instance.collection("users");
   final _userNames = FirebaseFirestore.instance.collection("usernames");
+  final _fcm = FirebaseMessaging.instance;
 
   Future<void> createUser(User user) async {
     try {
@@ -91,11 +93,18 @@ class UserService {
 
   Future<List<Map<String, dynamic>>> searchUser(String query) async {
     try {
-      var rawRes = await _userCollection
+      var rawUsername = await _userCollection
           .where("userName", isGreaterThanOrEqualTo: query)
           .where("userName", isLessThan: query + 'z')
           .get();
-      var res = rawRes.docs.map(
+      var rawNames = await _userCollection
+          .where("name", isGreaterThanOrEqualTo: query)
+          .where("name", isLessThan: query + 'z')
+          .get();
+      var usernameData = rawUsername.docs;
+      var nameData = rawNames.docs;
+      usernameData.addAll(nameData);
+      var res = usernameData.map(
         (e) {
           print(e);
           return e.data();
@@ -129,6 +138,7 @@ class UserService {
         newjson['followers'] = followers;
         await updateUserField(newjson);
       }
+      _fcm.subscribeToTopic(userToFollow.id);
       return user;
     } catch (e) {
       print(e);
@@ -154,6 +164,7 @@ class UserService {
         await updateUserField(json);
       }
 
+      _fcm.unsubscribeFromTopic(userToUnfollow.id);
       return user;
     } catch (e) {
       print(e);

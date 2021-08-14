@@ -25,7 +25,6 @@ class _OnboardingPageState extends State<OnboardingPage> with FostrTheme {
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthProvider>(context);
     if (!auth.isLoading) {
-      print("hi");
       if (auth.logedIn) {
         if (auth.user!.userType == UserType.CLUBOWNER) {
           return Dashboard();

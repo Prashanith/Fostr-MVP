@@ -130,6 +130,7 @@ class _SignupPageState extends State<SignupPage> with FostrTheme {
                     ),
                     (isEmail)
                         ? InputField(
+                            maxLine: 1,
                             controller: _passwordController,
                             hintText: "Password",
                             isPassword: true,
@@ -200,7 +201,7 @@ class _SignupPageState extends State<SignupPage> with FostrTheme {
                       height: 20,
                     ),
                     PrimaryButton(
-                      text: (!isEmail) ? "Send OTP" : "Next",
+                      text: (!isEmail) ? "Send OTP" : "Register",
                       onTap: () async {
                         if (signupForm.currentState!.validate()) {
                           if (Validator.isEmail(_controller.text)) {

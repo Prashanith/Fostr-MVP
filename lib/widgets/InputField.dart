@@ -21,7 +21,7 @@ class InputField extends StatefulWidget {
       this.controller,
       this.onChange,
       this.isPassword = false,
-      this.maxLine})
+      this.maxLine = 1})
       : super(key: key);
 
   @override

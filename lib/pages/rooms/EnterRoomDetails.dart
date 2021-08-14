@@ -161,7 +161,9 @@ class _EnterRoomDetailsState extends State<EnterRoomDetails> with FostrTheme {
                                       });
                                       try {
                                         final file = await Files.getFile();
-                                        if (file['file'] != null) {
+
+                                        if (file['file'] != null &&
+                                            file['size'] < 700000) {
                                           imageUrl =
                                               await Storage.saveRoomImage(
                                                   file,
@@ -181,9 +183,17 @@ class _EnterRoomDetailsState extends State<EnterRoomDetails> with FostrTheme {
                                                             .length -
                                                         1);
                                           });
+                                        } else {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(SnackBar(
+                                                  content: Text(
+                                                      "Image must be less than 700KB")));
                                         }
                                       } catch (e) {
                                         print(e);
+                                        setState(() {
+                                          isLoading = false;
+                                        });
                                       }
                                     },
                                     icon: Icon(
@@ -235,11 +245,7 @@ class _EnterRoomDetailsState extends State<EnterRoomDetails> with FostrTheme {
     });
     var roomToken = await getToken(eventNameTextEditingController.text);
     // Add new data to Firestore collection
-    await roomCollection
-      .doc(user.id)
-      .set({
-        'id': user.id
-      });
+    await roomCollection.doc(user.id).set({'id': user.id});
     await roomCollection
         .doc(user.id)
         .collection("rooms")

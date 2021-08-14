@@ -65,20 +65,21 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  Future<void> verifyOtp(
+  Future<User?> verifyOtp(
       BuildContext context, String otp, UserType userType) async {
     try {
       _setBusy();
       _user = await _authService.verifyOTP(context, otp, userType);
       _localStorage.setLoggedIn();
       _setFree();
+      return _user;
     } catch (e) {
       _setFree();
       throw e;
     }
   }
 
-  Future<void> signInWithEmailPassword(
+  Future<User?> signInWithEmailPassword(
       String email, String password, UserType userType) async {
     try {
       _setBusy();
@@ -86,6 +87,7 @@ class AuthProvider with ChangeNotifier {
           await _authService.signInWithEmailPassword(email, password, userType);
       _localStorage.setLoggedIn();
       _setFree();
+      return _user;
     } catch (e) {
       _setFree();
       print("from auth provider");

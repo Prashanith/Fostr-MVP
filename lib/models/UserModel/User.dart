@@ -10,6 +10,7 @@ class User {
   final String id;
   String name;
   String userName;
+  String? notificationToken;
   UserType userType;
   DateTime createdOn;
   DateTime lastLogin;

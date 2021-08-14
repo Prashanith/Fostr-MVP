@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:fostr/core/constants.dart';
 import 'package:fostr/models/UserModel/User.dart' as UserModel;
@@ -183,15 +185,16 @@ class AuthService {
   Future<UserModel.User?> createUser(User user, UserType userType) async {
     try {
       var time = DateTime.now();
+      var notificationToken = await FirebaseMessaging.instance.getToken();
       var newUser = UserModel.User(
-        id: user.uid,
-        name: user.displayName ?? "Enter your name",
-        userName: "",
-        invites: 10,
-        createdOn: time,
-        lastLogin: time,
-        userType: userType,
-      );
+          id: user.uid,
+          name: user.displayName ?? "",
+          userName: "",
+          invites: 10,
+          createdOn: time,
+          lastLogin: time,
+          userType: userType);
+      newUser.notificationToken = notificationToken;
       await _userService.createUser(newUser);
       return newUser;
     } catch (e) {}

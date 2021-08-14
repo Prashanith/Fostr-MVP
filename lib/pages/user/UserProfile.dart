@@ -1,13 +1,13 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fostr/models/UserModel/User.dart';
 import 'package:fostr/models/UserModel/UserProfile.dart';
 import 'package:fostr/providers/AuthProvider.dart';
 import 'package:fostr/router/router.dart';
 import 'package:fostr/router/routes.dart';
-import 'package:fostr/screen/FollowFollowing.dart';
 import 'package:fostr/services/FilePicker.dart';
 import 'package:fostr/services/StorageService.dart';
 import 'package:fostr/services/UserService.dart';
@@ -48,28 +48,6 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
     return displayTextInputDialog(context, field, maxLine: maxLine)
         .then((shouldUpdate) {
       if (shouldUpdate[0]) {
-        final json = {
-          "id": uid,
-          field.toLowerCase(): shouldUpdate[1],
-        };
-        updateProfile(json);
-        cb(shouldUpdate);
-      }
-    });
-  }
-
-  Future<void> showTextArea(String field, String uid, Function cb,
-      {String? value, int? maxLine}) {
-    return displayTextAreaDialog(
-      context,
-      field,
-    ).then((shouldUpdate) {
-      if (shouldUpdate[0]) {
-        final json = {
-          "id": uid,
-          field.toLowerCase(): shouldUpdate[1],
-        };
-        updateProfile(json);
         cb(shouldUpdate);
       }
     });
@@ -151,22 +129,29 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                                 onTap: () async {
                                   try {
                                     final file = await Files.getFile();
-                                    final url =
-                                        await Storage.saveFile(file, user.id);
-                                    setState(() {
-                                      if (user.userProfile == null) {
-                                        var userProfile = UserProfile();
-                                        userProfile.profileImage = url;
-                                        user.userProfile = userProfile;
-                                      } else {
-                                        user.userProfile!.profileImage = url;
-                                      }
-                                      updateProfile({
-                                        "userProfile":
-                                            user.userProfile!.toJson(),
-                                        "id": user.id
+                                    if (file['size'] < 400000) {
+                                      final url =
+                                          await Storage.saveFile(file, user.id);
+                                      setState(() {
+                                        if (user.userProfile == null) {
+                                          var userProfile = UserProfile();
+                                          userProfile.profileImage = url;
+                                          user.userProfile = userProfile;
+                                        } else {
+                                          user.userProfile!.profileImage = url;
+                                        }
+                                        updateProfile({
+                                          "userProfile":
+                                              user.userProfile!.toJson(),
+                                          "id": user.id
+                                        });
                                       });
-                                    });
+                                    } else {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(SnackBar(
+                                              content: Text(
+                                                  "Image must be less than 400KB")));
+                                    }
                                   } catch (e) {
                                     print(e);
                                   }
@@ -224,8 +209,7 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                                             user.userProfile!.instagram = e[1];
                                           }
                                           updateProfile({
-                                            "userProfile":
-                                                user.userProfile!.toJson(),
+                                            "userProfile.instagram": e[1],
                                             "id": user.id
                                           });
                                         });
@@ -344,7 +328,7 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                                 iconSize: 16,
                                 onPressed: () {
                                   controller.text = user.userProfile?.bio ?? "";
-                                  showTextArea("Bio", user.id, (e) {
+                                  showPopUp("Bio", user.id, (e) {
                                     setState(() {
                                       if (user.userProfile == null) {
                                         var userProfile = UserProfile();
@@ -431,22 +415,67 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                               ),
                               width: MediaQuery.of(context).size.width * 0.9,
                               child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: List.generate(
                                   5,
-                                  (index) => Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 10),
-                                    child: Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Text(
-                                        "e-Habits Book Club",
-                                        style: h2.copyWith(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold),
+                                  (index) {
+                                    return Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 10, horizontal: 10),
+                                      child: Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            controller.value = TextEditingValue(
+                                                text: user.userProfile!
+                                                    .favouriteBooks![index]);
+                                            showPopUp(
+                                              "Favourite Book",
+                                              user.id,
+                                              (e) {
+                                                setState(() {
+                                                  if (user.userProfile ==
+                                                      null) {
+                                                    var userProfile =
+                                                        UserProfile();
+                                                    userProfile.favouriteBooks?[
+                                                        index] = e[1];
+                                                    user.userProfile =
+                                                        userProfile;
+                                                  } else {
+                                                    user.userProfile!
+                                                            .favouriteBooks?[
+                                                        index] = e[1];
+                                                  }
+                                                });
+                                                updateProfile({
+                                                  "userProfile": user
+                                                      .userProfile!
+                                                      .toJson(),
+                                                  "id": user.id
+                                                });
+                                              },
+                                            );
+                                          },
+                                          child: Text(
+                                            (user.userProfile!.favouriteBooks !=
+                                                        null &&
+                                                    user
+                                                        .userProfile!
+                                                        .favouriteBooks![index]
+                                                        .isNotEmpty)
+                                                ? user.userProfile!
+                                                    .favouriteBooks![index]
+                                                : "Tap to enter your favourite book",
+                                            style: h2.copyWith(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                  ),
-                                ),
+                                    );
+                                  },
+                                ).toList(),
                               ),
                             ),
                             SizedBox(
@@ -487,7 +516,7 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                       const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
                   width: size.width * 0.9,
                   constraints: BoxConstraints(
-                    maxHeight: 300,
+                    maxHeight: (maxLine != null && maxLine > 4) ? 380 : 240,
                   ),
                   decoration: BoxDecoration(
                     color: Color(0xffB2D6C3),
@@ -504,9 +533,9 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                         ),
                       ),
                       SizedBox(
-                        height: 60,
+                        height: (maxLine != null && maxLine > 4) ? 180 : 60,
                         child: InputField(
-                          maxLine: maxLine,
+                          maxLine: maxLine ?? 1,
                           controller: controller,
                           hintText: value,
                           onChange: (v) {
@@ -537,94 +566,6 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                               "UPDATE",
                               style: h2.copyWith(
                                 fontSize: 17.sp,
-                                // color: Colors.green,
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  Future displayTextAreaDialog(BuildContext context, String field,
-      {String? value}) async {
-    return showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) {
-        final size = MediaQuery.of(context).size;
-        return Container(
-          height: size.height,
-          width: size.width,
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
-            child: Align(
-              alignment: Alignment(0, -0.5),
-              child: Material(
-                color: Colors.transparent,
-                child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                  width: size.width * 0.9,
-                  constraints: BoxConstraints(
-                    maxHeight: 380,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Color(0xffB2D6C3),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Enter your $field',
-                        style: h2.copyWith(
-                          fontSize: 17.sp,
-                        ),
-                      ),
-                      SizedBox(
-                        height: 180,
-                        child: InputField(
-                          maxLine: 10,
-                          controller: controller,
-                          hintText: value,
-                          onChange: (v) {
-                            value = v;
-                          },
-                        ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop([false]);
-                            },
-                            child: Text(
-                              "CANCEL",
-                              style: h2.copyWith(
-                                fontSize: 16.sp,
-                                // color: Colors.redAccent,
-                              ),
-                            ),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop([true, value]);
-                            },
-                            child: Text(
-                              "UPDATE",
-                              style: h2.copyWith(
-                                fontSize: 16.sp,
                                 // color: Colors.green,
                               ),
                             ),
