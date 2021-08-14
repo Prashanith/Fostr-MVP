@@ -27,12 +27,10 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final instance = FirebaseMessaging.instance;
 
   @override
   void initState() {
     super.initState();
-    instance.subscribeToTopic("test");
   }
 
   @override

@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:fostr/models/UserModel/User.dart';
 
 class UserService {
   final _userCollection = FirebaseFirestore.instance.collection("users");
   final _userNames = FirebaseFirestore.instance.collection("usernames");
+  final _fcm = FirebaseMessaging.instance;
 
   Future<void> createUser(User user) async {
     try {
@@ -129,6 +131,7 @@ class UserService {
         newjson['followers'] = followers;
         await updateUserField(newjson);
       }
+      _fcm.subscribeToTopic(userToFollow.id);
       return user;
     } catch (e) {
       print(e);
@@ -154,6 +157,7 @@ class UserService {
         await updateUserField(json);
       }
 
+      _fcm.unsubscribeFromTopic(userToUnfollow.id);
       return user;
     } catch (e) {
       print(e);
