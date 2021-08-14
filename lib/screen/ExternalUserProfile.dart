@@ -290,9 +290,6 @@ class _ExternalProfilePageState extends State<ExternalProfilePage>
                                   ),
                                 ),
                               ),
-                            ),
-                          ),
-                          ],
                           SizedBox(
                             height: 15,
                           ),

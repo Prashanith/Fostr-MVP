@@ -38,7 +38,7 @@ class _OtpVerificationState extends State<OtpVerification> with FostrTheme {
     } else {
       if (user.userType == UserType.USER) {
         FostrRouter.removeUntillAndGoto(
-            context, Routes.ongoingRoom, (route) => false);
+            context, Routes.userDashboard, (route) => false);
       } else if (user.userType == UserType.CLUBOWNER) {
         Navigator.of(context).pushAndRemoveUntil(
             CupertinoPageRoute(builder: (_) => Dashboard()), (route) => false);
