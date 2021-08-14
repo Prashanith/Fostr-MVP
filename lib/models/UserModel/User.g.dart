@@ -19,7 +19,7 @@ User _$UserFromJson(Map<String, dynamic> json) {
         ? null
         : UserProfile.fromJson(json['userProfile'] as Map<String, dynamic>),
   )
-    ..notificationToken = json['notificationToked'] as String?
+    ..notificationToken = json['notificationToken'] as String?
     ..followers =
         (json['followers'] as List<dynamic>?)?.map((e) => e as String).toList()
     ..followings = (json['followings'] as List<dynamic>?)
@@ -31,7 +31,7 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'id': instance.id,
       'name': instance.name,
       'userName': instance.userName,
-      'notificationToked': instance.notificationToken,
+      'notificationToken': instance.notificationToken,
       'userType': _$UserTypeEnumMap[instance.userType],
       'createdOn': instance.createdOn.toIso8601String(),
       'lastLogin': instance.lastLogin.toIso8601String(),

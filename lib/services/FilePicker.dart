@@ -12,7 +12,8 @@ class Files {
         File file = File(result.files.single.path!);
         final fileContainer = {
           "file": file,
-          "ext": result.files.single.extension
+          "ext": result.files.single.extension,
+          "size": result.files.single.size,
         };
         return fileContainer;
       }

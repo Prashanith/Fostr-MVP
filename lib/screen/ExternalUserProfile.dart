@@ -282,7 +282,9 @@ class _ExternalProfilePageState extends State<ExternalProfilePage>
                                     child: Align(
                                       alignment: Alignment.centerLeft,
                                       child: Text(
-                                        "e-Habits Book Club",
+                                        widget.user.userProfile
+                                                ?.favouriteBooks?[index] ??
+                                            "",
                                         style: h2.copyWith(
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold),

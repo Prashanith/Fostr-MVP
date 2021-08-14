@@ -93,11 +93,18 @@ class UserService {
 
   Future<List<Map<String, dynamic>>> searchUser(String query) async {
     try {
-      var rawRes = await _userCollection
+      var rawUsername = await _userCollection
           .where("userName", isGreaterThanOrEqualTo: query)
           .where("userName", isLessThan: query + 'z')
           .get();
-      var res = rawRes.docs.map(
+      var rawNames = await _userCollection
+          .where("name", isGreaterThanOrEqualTo: query)
+          .where("name", isLessThan: query + 'z')
+          .get();
+      var usernameData = rawUsername.docs;
+      var nameData = rawNames.docs;
+      usernameData.addAll(nameData);
+      var res = usernameData.map(
         (e) {
           print(e);
           return e.data();

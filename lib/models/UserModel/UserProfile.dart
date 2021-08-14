@@ -12,6 +12,19 @@ class UserProfile {
   String? twitter;
   String? profileImage;
   String? phoneNumber;
+  List<String>? favouriteBooks = ["", "", "", "", ""];
+
+  UserProfile.empty() {
+    bio = "";
+    instagram = "";
+    facebook = "";
+    linkedIn = "";
+    google = "";
+    twitter = "";
+    profileImage = "";
+    phoneNumber = "";
+    favouriteBooks = ["", "", "", "", ""];
+  }
 
   UserProfile(
       {this.bio,

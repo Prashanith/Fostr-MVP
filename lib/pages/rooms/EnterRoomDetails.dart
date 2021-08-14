@@ -159,29 +159,40 @@ class _EnterRoomDetailsState extends State<EnterRoomDetails> with FostrTheme {
                                       });
                                       try {
                                         final file = await Files.getFile();
-                                        if (file['file'] != null) {
-                                          imageUrl =
-                                              await Storage.saveRoomImage(
-                                                  file,
-                                                  eventNameTextEditingController
-                                                      .text);
-                                          setState(() {
-                                            isLoading = false;
-                                            image = file['file']
-                                                .toString()
-                                                .substring(
-                                                    file['file']
-                                                            .toString()
-                                                            .lastIndexOf('/') +
-                                                        1,
-                                                    file['file']
-                                                            .toString()
-                                                            .length -
-                                                        1);
-                                          });
+                                        if (file['size'] < 700000) {
+                                          if (file['file'] != null) {
+                                            imageUrl =
+                                                await Storage.saveRoomImage(
+                                                    file,
+                                                    eventNameTextEditingController
+                                                        .text);
+                                            setState(() {
+                                              isLoading = false;
+                                              image = file['file']
+                                                  .toString()
+                                                  .substring(
+                                                      file['file']
+                                                              .toString()
+                                                              .lastIndexOf(
+                                                                  '/') +
+                                                          1,
+                                                      file['file']
+                                                              .toString()
+                                                              .length -
+                                                          1);
+                                            });
+                                          } else {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(SnackBar(
+                                                    content: Text(
+                                                        "Image must be less than 400KB")));
+                                          }
                                         }
                                       } catch (e) {
                                         print(e);
+                                        setState(() {
+                                          isLoading = false;
+                                        });
                                       }
                                     },
                                     icon: Icon(
@@ -233,11 +244,7 @@ class _EnterRoomDetailsState extends State<EnterRoomDetails> with FostrTheme {
     });
     var roomToken = await getToken(eventNameTextEditingController.text);
     // Add new data to Firestore collection
-    await roomCollection
-      .doc(user.id)
-      .set({
-        'id': user.id
-      });
+    await roomCollection.doc(user.id).set({'id': user.id});
     await roomCollection
         .doc(user.id)
         .collection("rooms")

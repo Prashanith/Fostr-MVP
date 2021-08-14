@@ -16,7 +16,9 @@ UserProfile _$UserProfileFromJson(Map<String, dynamic> json) {
     phoneNumber: json['phoneNumber'] as String?,
     profileImage: json['profileImage'] as String?,
     twitter: json['twitter'] as String?,
-  );
+  )..favouriteBooks = (json['favouriteBooks'] as List<dynamic>?)
+      ?.map((e) => e as String)
+      .toList();
 }
 
 Map<String, dynamic> _$UserProfileToJson(UserProfile instance) =>
@@ -29,4 +31,5 @@ Map<String, dynamic> _$UserProfileToJson(UserProfile instance) =>
       'twitter': instance.twitter,
       'profileImage': instance.profileImage,
       'phoneNumber': instance.phoneNumber,
+      'favouriteBooks': instance.favouriteBooks,
     };
