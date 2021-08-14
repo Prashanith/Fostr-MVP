@@ -63,7 +63,7 @@ class _InputFieldState extends State<InputField> with FostrTheme {
             child: SizedBox(
               width: 90.w,
               child: TextFormField(
-                maxLines: widget.maxLine,
+                maxLines: widget.maxLine ?? 1,
                 onChanged: (e) {
                   if (widget.onChange != null) {
                     widget.onChange!(e);

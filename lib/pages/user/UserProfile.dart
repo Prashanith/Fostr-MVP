@@ -129,15 +129,13 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                               Spacer(),
                               InkWell(
                                 onTap: () async {
-                                  await auth.signOut();
-                                  FostrRouter.removeUntillAndGoto(
+                                  FostrRouter.goto(
                                     context,
-                                    Routes.userChoice,
-                                    (route) => false,
+                                    Routes.settings
                                   );
                                 },
                                 child: Icon(
-                                  Icons.logout_outlined,
+                                  Icons.settings_outlined,
                                 ),
                               )
                             ],
@@ -180,7 +178,7 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                                   url: user.userProfile?.profileImage,
                                 ),
                               ),
-                              Spacer(),
+                              SizedBox(width: 20),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [

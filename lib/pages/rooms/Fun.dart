@@ -13,22 +13,18 @@ import 'package:fostr/utils/theme.dart';
 import 'package:fostr/widgets/rooms/DragProfile.dart';
 import 'package:fostr/widgets/rooms/Profile.dart';
 import 'package:provider/provider.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-class Kids extends StatefulWidget {
+class Fun extends StatefulWidget {
   final Room room;
   final ClientRole role;
-  const Kids({Key? key, required this.room, required this.role}) : super(key: key);
+  const Fun({Key? key, required this.room, required this.role}) : super(key: key);
 
   @override
-  State<Kids> createState() => _KidsState();
+  State<Fun> createState() => _FunState();
 }
 
-class _KidsState extends State<Kids> with FostrTheme {
+class _FunState extends State<Fun> with FostrTheme {
   int speakersCount = 0, participantsCount = 0;
-  RefreshController _refreshController = RefreshController(
-    initialRefresh: false,
-  );
 
   bool muted = false, isMicOn = false;
   late RtcEngine _engine;
@@ -60,8 +56,8 @@ class _KidsState extends State<Kids> with FostrTheme {
       .listen((result) {
         print(result.data()?['speakersCount']);
         setState(() {
-          participantsCount = result.data()?['participantsCount'];
-          speakersCount = result.data()?['speakersCount'];
+          participantsCount = (result.data()!['participantsCount'] < 0 ? 0 : result.data()!['participantsCount']);
+          speakersCount = (result.data()!['speakersCount'] < 0 ? 0 : result.data()!['speakersCount']);
         });
       });
   }
@@ -157,20 +153,6 @@ class _KidsState extends State<Kids> with FostrTheme {
     ));
   }
 
-  void _onRefresh() async {
-    await Future.delayed(
-      Duration(milliseconds: 1000),
-    );
-    _refreshController.refreshCompleted();
-  }
-
-  void _onLoading() async {
-    await Future.delayed(
-      Duration(milliseconds: 1000),
-    );
-    _refreshController.loadComplete();
-  }
-
   @override
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthProvider>(context);
@@ -223,7 +205,7 @@ class _KidsState extends State<Kids> with FostrTheme {
                           ),
                           decoration: BoxDecoration(
                             image: new DecorationImage(
-                              image: new AssetImage(IMAGES + "kids-main.png"),
+                              image: new AssetImage(IMAGES + "fun-main.png"),
                               fit: BoxFit.fill,
                             ),
                             borderRadius: BorderRadius.only(

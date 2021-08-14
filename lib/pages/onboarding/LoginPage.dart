@@ -120,8 +120,9 @@ class _LoginPageState extends State<LoginPage> with FostrTheme {
                               isError = false;
                               return error;
                             }
-                            if (!Validator.isEmail(value!) &&
-                                !Validator.isPhone(value)) {
+                            if (!Validator.isEmail(value!)
+                              // && !Validator.isPhone(value)
+                                ) {
                               return "Please provide correct values";
                             }
                             return null;
@@ -192,7 +193,7 @@ class _LoginPageState extends State<LoginPage> with FostrTheme {
                                       if (auth.userType == UserType.USER) {
                                         FostrRouter.removeUntillAndGoto(
                                             context,
-                                            Routes.ongoingRoom,
+                                            Routes.userDashboard,
                                             (route) => false);
                                       } else if (auth.userType ==
                                           UserType.CLUBOWNER) {
@@ -227,7 +228,7 @@ class _LoginPageState extends State<LoginPage> with FostrTheme {
                                   );
                                   if (auth.userType == UserType.USER) {
                                     FostrRouter.removeUntillAndGoto(context,
-                                        Routes.ongoingRoom, (route) => false);
+                                        Routes.userDashboard, (route) => false);
                                   } else if (auth.userType ==
                                       UserType.CLUBOWNER) {
                                     Navigator.of(context).pushAndRemoveUntil(

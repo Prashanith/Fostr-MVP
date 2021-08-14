@@ -11,7 +11,9 @@ import 'package:fostr/router/routes.dart';
 import 'package:fostr/services/UserService.dart';
 import 'package:fostr/utils/theme.dart';
 import 'package:get_it/get_it.dart';
+import 'package:line_icons/line_icons.dart';
 import 'package:provider/provider.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:sizer/sizer.dart';
 
 class CreateRoom extends StatefulWidget {
@@ -23,21 +25,34 @@ class CreateRoom extends StatefulWidget {
 
 class _CreateRoomState extends State<CreateRoom> with FostrTheme {
   final userService = GetIt.I<UserService>();
+  RefreshController _refreshController = RefreshController(
+    initialRefresh: false,
+  );
 
   @override
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthProvider>(context);
     final user = auth.user!;
+
+    void _onRefresh() async {
+      await Future.delayed(
+        Duration(milliseconds: 1000),
+      );
+      var user = await userService.getUserById(auth.user!.id);
+      if (user != null) {
+        auth.refreshUser(user);
+      }
+      _refreshController.refreshCompleted();
+    }
+
+    void _onLoading() async {
+      await Future.delayed(
+        Duration(milliseconds: 1000),
+      );
+      _refreshController.loadComplete();
+    }
+
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.refresh),
-        onPressed: () async {
-          var user = await userService.getUserById(auth.user!.id);
-          if (user != null) {
-            auth.refreshUser(user);
-          }
-        },
-      ),
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -55,18 +70,23 @@ class _CreateRoomState extends State<CreateRoom> with FostrTheme {
             children: [
               Padding(
                 padding: paddingH + const EdgeInsets.only(top: 20),
-                child: Column(
+                child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     (user.name == "")
-                        ? Text(
-                            "Hello, ${user.userName}",
-                            style: h1.apply(color: Colors.white),
-                          )
-                        : Text(
-                            "Hello, ${user.name}",
-                            style: h1.apply(color: Colors.white),
-                          ),
+                      ? Text(
+                          "Hello, ${user.userName}",
+                          style: h1.apply(color: Colors.white),
+                        )
+                      : Text(
+                          "Hello, ${user.name}",
+                          style: h1.apply(color: Colors.white),
+                        ),
+                    Spacer(),
+                    IconButton(
+                      icon: Icon(LineIcons.userFriends),
+                      onPressed: () => FostrRouter.goto(context, Routes.ongoingRoom)
+                    ),
                   ],
                 ),
               ),
@@ -74,28 +94,24 @@ class _CreateRoomState extends State<CreateRoom> with FostrTheme {
                 height: 40,
               ),
               Expanded(
-                child: RefreshIndicator(
-                  onRefresh: () async {
-                    try {
-                      var user = await userService.getUserById(auth.user!.id);
-                      if (user != null) {
-                        auth.refreshUser(user);
-                      }
-                    } catch (e) {}
-                  },
-                  child: Container(
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: Image.asset(IMAGES + "background.png").image,
-                        fit: BoxFit.cover,
-                      ),
-                      borderRadius: BorderRadiusDirectional.only(
-                        topStart: Radius.circular(32),
-                        topEnd: Radius.circular(32),
-                      ),
-                      color: Colors.white,
+                child: Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: Image.asset(IMAGES + "background.png").image,
+                      fit: BoxFit.cover,
                     ),
+                    borderRadius: BorderRadiusDirectional.only(
+                      topStart: Radius.circular(32),
+                      topEnd: Radius.circular(32),
+                    ),
+                    color: Colors.white,
+                  ),
+                  child: SmartRefresher(
+                    enablePullDown: true,
+                    controller: _refreshController,
+                    onRefresh: _onRefresh,
+                    onLoading: _onLoading,
                     child: Stack(
                       children: [
                         Padding(
@@ -228,36 +244,12 @@ class _CreateRoomState extends State<CreateRoom> with FostrTheme {
                             ],
                           ),
                         ),
-                        Align(
-                          alignment: Alignment.bottomCenter,
-                          child: startRoomButton(),
-                        ),
                       ],
                     ),
                   ),
                 ),
               ),
             ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget startRoomButton() {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 20),
-      child: ElevatedButton(
-        child: Text('Schedule Room'),
-        onPressed: () {
-          FostrRouter.goto(context, Routes.clubRoomDetails);
-        },
-        style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(Color(0xff94B5AC)),
-          shape: MaterialStateProperty.all<OutlinedBorder>(
-            RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(30),
-            ),
           ),
         ),
       ),

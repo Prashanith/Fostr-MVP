@@ -7,7 +7,7 @@ import 'package:fostr/core/settings.dart';
 import 'package:fostr/models/RoomModel.dart';
 import 'package:fostr/models/UserModel/User.dart';
 import 'package:fostr/pages/rooms/Cafe.dart';
-import 'package:fostr/pages/rooms/Kids.dart';
+import 'package:fostr/pages/rooms/Fun.dart';
 import 'package:fostr/pages/rooms/Library.dart';
 import 'package:fostr/pages/rooms/Minimal.dart';
 import 'package:fostr/providers/AuthProvider.dart';
@@ -144,13 +144,13 @@ class _SelectThemeState extends State<SelectTheme> {
                     ),
                     GestureDetector(
                       onTap: () => setState(() {
-                        img = "Kidsbg.png";
-                        roomTheme = "Kids";
+                        img = "funbg.png";
+                        roomTheme = "Fun";
                       }),
                       child: Container(
                         decoration: BoxDecoration(
                           image: new DecorationImage(
-                              image: new AssetImage(IMAGES + "kids.png"),
+                              image: new AssetImage(IMAGES + "fun.png"),
                               fit: BoxFit.fill, 
                             ),
                             borderRadius: BorderRadius.circular(35),
@@ -162,7 +162,7 @@ class _SelectThemeState extends State<SelectTheme> {
                         margin: EdgeInsets.all(15.0),
                         //color: Colors.black38
                         child: Text(
-                          'Kids',
+                          'Fun',
                           style: TextStyle(color: Colors.white, fontSize: 20),
                         ),
                       ),
@@ -328,8 +328,8 @@ class _SelectThemeState extends State<SelectTheme> {
       .listen((result) {
         print(result.data()!['speakersCount']);
         setState(() {
-          participantsCount = result.data()!['participantsCount'];
-          speakersCount = result.data()!['speakersCount'];
+          participantsCount = (result.data()!['participantsCount'] < 0 ? 0 : result.data()!['participantsCount']);
+          speakersCount = (result.data()!['speakersCount'] < 0 ? 0 : result.data()!['speakersCount']);
           token = result.data()!['token'];
           channelName = widget.room.title!;
         });
@@ -406,9 +406,9 @@ class _SelectThemeState extends State<SelectTheme> {
           role: role,
         ))
       );
-    } else if(roomTheme == "Kids") {
+    } else if(roomTheme == "Fun") {
       Navigator.pushReplacement(context, CupertinoPageRoute(
-        builder: (context) => Kids(
+        builder: (context) => Fun(
           room: widget.room,
           role: role,
         ))

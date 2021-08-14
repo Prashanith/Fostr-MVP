@@ -42,266 +42,262 @@ class _ExternalProfilePageState extends State<ExternalProfilePage>
 
     return SafeArea(
       child: Scaffold(
-        body: Container(
-          height: 100.h,
-          child: SingleChildScrollView(
-            child: Container(
-              height: 100.h,
-              width: double.infinity,
-              decoration: BoxDecoration(gradient: secondaryBackground),
-              child: Stack(
-                children: [
-                  Positioned(
-                    top: -350,
-                    left: -230,
-                    child: Container(
-                      height: 600,
-                      width: 600,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.white,
-                      ),
+        body: SingleChildScrollView(
+          child: Container(
+            width: double.infinity,
+            decoration: BoxDecoration(gradient: secondaryBackground),
+            child: Stack(
+              children: [
+                Positioned(
+                  top: -350,
+                  left: -230,
+                  child: Container(
+                    height: 600,
+                    width: 600,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.white,
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.symmetric(vertical: 3.h),
-                          child: Row(
-                            children: [
-                              InkWell(
-                                onTap: () async {
-                                  FostrRouter.pop(context);
-                                },
-                                child: Icon(
-                                  Icons.arrow_back,
-                                  size: 20.sp,
-                                ),
-                              ),
-                              SizedBox(
-                                width: 4.w,
-                              ),
-                              Text(
-                                widget.user.userName,
-                                style: h1.copyWith(fontWeight: FontWeight.bold),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(bottom: 3.h),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              RoundedImage(
-                                width: 100,
-                                height: 100,
-                                borderRadius: 35,
-                                url: widget.user.userProfile?.profileImage,
-                              ),
-                              Spacer(),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  IconButton(
-                                      icon: FaIcon(FontAwesomeIcons.twitter),
-                                      color: Colors.teal[800],
-                                      iconSize: 30,
-                                      onPressed: () async {}),
-                                  IconButton(
-                                    icon: FaIcon(FontAwesomeIcons.instagram),
-                                    color: Colors.teal[800],
-                                    iconSize: 30,
-                                    onPressed: () {},
-                                  ),
-                                  IconButton(
-                                    icon: FaIcon(FontAwesomeIcons.linkedinIn),
-                                    color: Colors.teal[800],
-                                    iconSize: 30,
-                                    onPressed: () {},
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(bottom: 2.h),
-                          child: Row(
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  InkWell(
-                                    onTap: () async {},
-                                    child: Text(
-                                      (widget.user.name.isEmpty)
-                                          ? ""
-                                          : widget.user.name,
-                                      // overflow: TextOverflow.ellipsis,
-                                      style: h1.copyWith(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 22.sp),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 5,
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          alignment: Alignment.center,
-                          padding: const EdgeInsets.all(10),
-                          width: 90.w,
-                          height: 60,
-                          decoration: BoxDecoration(
-                            color: Color(0xffEBFFEE),
-                            borderRadius: BorderRadius.circular(13),
-                            boxShadow: boxShadow,
-                          ),
-                          child: InkWell(
-                            onTap: () async {
-                              if (!isFollowed) {
-                                var newUser = await userService.followUser(
-                                    auth.user!, widget.user);
-                                setState(() {
-                                  isFollowed = true;
-                                });
-                                auth.refreshUser(newUser);
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(followedSnackBar);
-                              } else {
-                                var newUser = await userService.unfollowUser(
-                                    auth.user!, widget.user);
-                                setState(() {
-                                  isFollowed = false;
-                                });
-                                auth.refreshUser(newUser);
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(unfollowedSnackBar);
-                              }
-                            },
-                            child: Text(
-                              (!isFollowed) ? "Follow" : "Unfollow",
-                              style: h1.copyWith(
-                                fontSize: 20.sp,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 2.h,
-                        ),
-                        Text(
-                          'Bio',
-                          textAlign: TextAlign.start,
-                          style: TextStyle(
-                            fontSize: 18.sp,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.teal[900],
-                          ),
-                        ),
-                        SizedBox(
-                          height: 15,
-                        ),
-                        Container(
-                          padding: EdgeInsets.symmetric(horizontal: 20),
-                          height: 80,
-                          decoration: ShapeDecoration(
-                            gradient: LinearGradient(
-                              colors: [
-                                const Color(0xFF80CBC4),
-                                const Color(0xFFB2DFDB),
-                              ],
-                              begin: Alignment.bottomCenter,
-                              end: Alignment.center,
-                              stops: [0.0, 0.5],
-                              tileMode: TileMode.clamp,
-                            ),
-                            shadows: [
-                              BoxShadow(
-                                offset: Offset(-5, -4),
-                                blurRadius: 20,
-                                color: Colors.black.withOpacity(0.25),
-                              )
-                            ],
-                            shape: RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(15)),
-                            ),
-                          ),
-                          alignment: Alignment.center,
-                          child: Text(
-                            widget.user.userProfile?.bio ?? "",
-                            style: h2.copyWith(
-                                fontSize: 17, fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        Column(
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.symmetric(vertical: 3.h),
+                        child: Row(
                           children: [
-                            Container(
-                              alignment: Alignment.topLeft,
-                              child: Row(
-                                children: [
-                                  Text(
-                                    'Favourite Books:',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 15,
-                                        color: Colors.teal[900]),
-                                  ),
-                                ],
+                            InkWell(
+                              onTap: () async {
+                                FostrRouter.pop(context);
+                              },
+                              child: Icon(
+                                Icons.arrow_back,
+                                size: 20.sp,
                               ),
                             ),
                             SizedBox(
-                              height: 10,
+                              width: 4.w,
                             ),
-                            Container(
-                              padding: const EdgeInsets.all(15),
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadiusDirectional.circular(34),
-                                color: Color(0xFFE6FAED),
-                              ),
-                              width: MediaQuery.of(context).size.width * 0.9,
-                              child: Column(
-                                children: List.generate(
-                                  5,
-                                  (index) => Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 10),
-                                    child: Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Text(
-                                        "e-Habits Book Club",
-                                        style: h2.copyWith(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              height: 15,
+                            Text(
+                              widget.user.userName,
+                              style: h1.copyWith(fontWeight: FontWeight.bold),
                             ),
                           ],
                         ),
-                      ],
-                    ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(bottom: 3.h),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            RoundedImage(
+                              width: 100,
+                              height: 100,
+                              borderRadius: 35,
+                              url: widget.user.userProfile?.profileImage,
+                            ),
+                            SizedBox(width: 20),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                IconButton(
+                                    icon: FaIcon(FontAwesomeIcons.twitter),
+                                    color: Colors.teal[800],
+                                    iconSize: 30,
+                                    onPressed: () async {}),
+                                IconButton(
+                                  icon: FaIcon(FontAwesomeIcons.instagram),
+                                  color: Colors.teal[800],
+                                  iconSize: 30,
+                                  onPressed: () {},
+                                ),
+                                IconButton(
+                                  icon: FaIcon(FontAwesomeIcons.linkedinIn),
+                                  color: Colors.teal[800],
+                                  iconSize: 30,
+                                  onPressed: () {},
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(bottom: 2.h),
+                        child: Row(
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                InkWell(
+                                  onTap: () async {},
+                                  child: Text(
+                                    (widget.user.name.isEmpty)
+                                        ? ""
+                                        : widget.user.name,
+                                    // overflow: TextOverflow.ellipsis,
+                                    style: h1.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 22.sp),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 5,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        alignment: Alignment.center,
+                        padding: const EdgeInsets.all(10),
+                        width: 90.w,
+                        height: 60,
+                        decoration: BoxDecoration(
+                          color: Color(0xffEBFFEE),
+                          borderRadius: BorderRadius.circular(13),
+                          boxShadow: boxShadow,
+                        ),
+                        child: InkWell(
+                          onTap: () async {
+                            if (!isFollowed) {
+                              var newUser = await userService.followUser(
+                                  auth.user!, widget.user);
+                              setState(() {
+                                isFollowed = true;
+                              });
+                              auth.refreshUser(newUser);
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(followedSnackBar);
+                            } else {
+                              var newUser = await userService.unfollowUser(
+                                  auth.user!, widget.user);
+                              setState(() {
+                                isFollowed = false;
+                              });
+                              auth.refreshUser(newUser);
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(unfollowedSnackBar);
+                            }
+                          },
+                          child: Text(
+                            (!isFollowed) ? "Follow" : "Unfollow",
+                            style: h1.copyWith(
+                              fontSize: 20.sp,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 2.h,
+                      ),
+                      Text(
+                        'Bio',
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                          fontSize: 18.sp,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.teal[900],
+                        ),
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Container(
+                        padding: EdgeInsets.symmetric(horizontal: 20),
+                        height: 80,
+                        decoration: ShapeDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              const Color(0xFF80CBC4),
+                              const Color(0xFFB2DFDB),
+                            ],
+                            begin: Alignment.bottomCenter,
+                            end: Alignment.center,
+                            stops: [0.0, 0.5],
+                            tileMode: TileMode.clamp,
+                          ),
+                          shadows: [
+                            BoxShadow(
+                              offset: Offset(-5, -4),
+                              blurRadius: 20,
+                              color: Colors.black.withOpacity(0.25),
+                            )
+                          ],
+                          shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(15)),
+                          ),
+                        ),
+                        alignment: Alignment.center,
+                        child: Text(
+                          widget.user.userProfile?.bio ?? "",
+                          style: h2.copyWith(
+                              fontSize: 17, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      Column(
+                        children: [
+                          Container(
+                            alignment: Alignment.topLeft,
+                            child: Row(
+                              children: [
+                                Text(
+                                  'Favourite Books:',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 15,
+                                      color: Colors.teal[900]),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Container(
+                            padding: const EdgeInsets.all(15),
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              borderRadius:
+                                  BorderRadiusDirectional.circular(34),
+                              color: Color(0xFFE6FAED),
+                            ),
+                            width: MediaQuery.of(context).size.width * 0.9,
+                            child: Column(
+                              children: List.generate(
+                                5,
+                                (index) => Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 10),
+                                  child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      "e-Habits Book Club",
+                                      style: h2.copyWith(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),

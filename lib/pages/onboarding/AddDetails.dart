@@ -138,7 +138,7 @@ class _AddDetailsState extends State<AddDetails> with FostrTheme {
                         auth.addUserDetails(newUser).then((value) {
                           if (user.userType == UserType.USER) {
                             FostrRouter.removeUntillAndGoto(
-                                context, Routes.ongoingRoom, (route) => false);
+                                context, Routes.userDashboard, (route) => false);
                           } else if (auth.userType == UserType.CLUBOWNER) {
                             Navigator.of(context).pushAndRemoveUntil(
                                 CupertinoPageRoute(builder: (_) => Dashboard()),

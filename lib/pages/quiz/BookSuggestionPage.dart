@@ -101,7 +101,7 @@ class _BookSuggestionPageState extends State<BookSuggestionPage>
                               text: "Go to Home",
                               onTap: () {
                                 FostrRouter.removeUntillAndGoto(context,
-                                    Routes.ongoingRoom, (route) => false);
+                                    Routes.userDashboard, (route) => false);
                               },
                               width: 40.w,
                             ),

@@ -13,7 +13,6 @@ import 'package:fostr/utils/theme.dart';
 import 'package:fostr/widgets/rooms/DragProfile.dart';
 import 'package:fostr/widgets/rooms/Profile.dart';
 import 'package:provider/provider.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class Library extends StatefulWidget {
   final Room room;
@@ -27,9 +26,6 @@ class Library extends StatefulWidget {
 
 class _LibraryState extends State<Library> with FostrTheme {
   int speakersCount = 0, participantsCount = 0;
-  RefreshController _refreshController = RefreshController(
-    initialRefresh: false,
-  );
 
   bool muted = false, isMicOn = false;
   late RtcEngine _engine;
@@ -61,8 +57,8 @@ class _LibraryState extends State<Library> with FostrTheme {
         .listen((result) {
       print(result.data()?['speakersCount']);
       setState(() {
-        participantsCount = result.data()?['participantsCount'];
-        speakersCount = result.data()?['speakersCount'];
+        participantsCount = (result.data()!['participantsCount'] < 0 ? 0 : result.data()!['participantsCount']);
+        speakersCount = (result.data()!['speakersCount'] < 0 ? 0 : result.data()!['speakersCount']);
       });
     });
   }
@@ -157,20 +153,6 @@ class _LibraryState extends State<Library> with FostrTheme {
       //   await _engine.renewToken(token);
       // },
     ));
-  }
-
-  void _onRefresh() async {
-    await Future.delayed(
-      Duration(milliseconds: 1000),
-    );
-    _refreshController.refreshCompleted();
-  }
-
-  void _onLoading() async {
-    await Future.delayed(
-      Duration(milliseconds: 1000),
-    );
-    _refreshController.loadComplete();
   }
 
   @override

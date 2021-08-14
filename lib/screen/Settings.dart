@@ -6,10 +6,16 @@ import 'package:fostr/pages/rooms/EnterClubRoomDetails.dart';
 import 'package:fostr/pages/rooms/EnterRoomDetails.dart';
 import 'package:fostr/pages/rooms/SelectTheme.dart';
 import 'package:fostr/providers/AuthProvider.dart';
+import 'package:fostr/router/router.dart';
+import 'package:fostr/router/routes.dart';
 import 'package:fostr/utils/Theme.dart';
+import 'package:fostr/widgets/Buttons.dart';
+import 'package:fostr/widgets/InputField.dart';
+import 'package:fostr/widgets/LightBtn.dart';
 import 'package:provider/provider.dart';
+import 'package:sizer/sizer.dart';
 
-class RoomDetails extends StatelessWidget with FostrTheme {
+class SettingsPage extends StatelessWidget with FostrTheme {
   @override
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthProvider>(context);
@@ -59,12 +65,63 @@ class RoomDetails extends StatelessWidget with FostrTheme {
                 height: 40,
               ),
               Expanded(
-                child: EnterRoomDetails(),
+                child: Settings(),
               ),
             ],
           ),
         ),
       ),
+    );
+  }
+}
+
+
+class Settings extends StatelessWidget with FostrTheme {
+  @override
+  Widget build(BuildContext context) {
+    final auth = Provider.of<AuthProvider>(context);
+    return Container(
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: Image.asset(IMAGES + "background.png").image,
+          fit: BoxFit.cover,
+        ),
+        borderRadius: BorderRadiusDirectional.only(
+          topStart: Radius.circular(32),
+          topEnd: Radius.circular(32),
+        ),
+        color: Colors.white,
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          LightBtn(
+            text: "Privacy Policy",
+            url: "http://www.fostrreads.com/privacy"
+          ),
+          LightBtn(
+            text: "Terms and Conditions",
+            url: "http://www.fostrreads.com/terms"
+          ),
+          LightBtn(
+            text: "About Us",
+            url: "http://www.fostrreads.com/about"
+          ),
+          SizedBox(height: 20.h),
+          PrimaryButton(
+            text: "Logout",
+            onTap: () async {
+              await auth.signOut();
+              FostrRouter.removeUntillAndGoto(
+                context,
+                Routes.userChoice,
+                (route) => false,
+              );
+            },
+          ),
+        ],
+      )
     );
   }
 }

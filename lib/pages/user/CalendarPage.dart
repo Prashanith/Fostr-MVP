@@ -81,7 +81,7 @@ class _CalendarPageState extends State<CalendarPage> with FostrTheme {
                       },
                     );
                   } else {
-                    return CircularProgressIndicator();
+                    return Center(child: CircularProgressIndicator());
                   }
                 },
               ),
@@ -126,9 +126,7 @@ class RoomWidget extends StatelessWidget {
             ).toList(),
           );
         }
-        return Center(
-          child: CircularProgressIndicator(),
-        );
+        return Container();
       },
     );
   }

@@ -116,8 +116,9 @@ class _SignupPageState extends State<SignupPage> with FostrTheme {
                           isError = false;
                           return error;
                         }
-                        if (!Validator.isEmail(value!) &&
-                            !Validator.isPhone(value)) {
+                        if (!Validator.isEmail(value!)
+                          // && !Validator.isPhone(value)
+                          ) {
                           return "Please provide correct values";
                         }
                         return null;
@@ -181,7 +182,7 @@ class _SignupPageState extends State<SignupPage> with FostrTheme {
                                 } else {
                                   if (auth.userType == UserType.USER) {
                                     FostrRouter.removeUntillAndGoto(context,
-                                        Routes.ongoingRoom, (route) => false);
+                                        Routes.userDashboard, (route) => false);
                                   } else if (auth.userType ==
                                       UserType.CLUBOWNER) {
                                     Navigator.of(context).pushAndRemoveUntil(

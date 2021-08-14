@@ -19,11 +19,16 @@ class Routes {
   static const bookClubSuggetion = "/bookClubSuggetion";
 
   //user
+  static const userDashboard = "/userDashboard";
   static const ongoingRoom = "/ongoingRoom";
+  static const dashboard = "/dashboard";
 
   //follow following page
   static const followFollowing = "/followFollowing";
   //room
   static const roomDetails = "/roomDetails";
   static const clubRoomDetails = "/clubRoomDetails";
+
+  //settings
+  static const settings = "/settings";
 }

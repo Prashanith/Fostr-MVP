@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fostr/models/RoomModel.dart';
+import 'package:fostr/pages/clubOwner/dashboard.dart';
 import 'package:fostr/pages/onboarding/AddDetails.dart';
 import 'package:fostr/pages/onboarding/LoginPage.dart';
 import 'package:fostr/pages/onboarding/Onboardingpage.dart';
@@ -18,6 +19,7 @@ import 'package:fostr/pages/rooms/RoomDetails.dart';
 import 'package:fostr/pages/user/HomePage.dart';
 import 'package:fostr/router/routes.dart';
 import 'package:fostr/screen/FollowFollowing.dart';
+import 'package:fostr/screen/Settings.dart';
 
 class FostrRouter {
   static goto(BuildContext context, String route) =>
@@ -82,13 +84,22 @@ class FostrRouter {
         return BookSuggestionPage();
 
       case Routes.ongoingRoom:
-        return OngoingRoom();
+        return OngoingRoom();      
+
+      case Routes.userDashboard:
+        return UserDashboard();
+
+      case Routes.dashboard:
+        return Dashboard();
       
       case Routes.roomDetails:
         return RoomDetails();
 
       case Routes.clubRoomDetails:
         return ClubRoomDetails();
+
+      case Routes.settings:
+        return SettingsPage();
 
       default:
         return Material(

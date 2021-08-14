@@ -1,5 +1,6 @@
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:fostr/core/constants.dart';
 import 'package:fostr/core/data.dart';
 import 'package:fostr/core/functions.dart';
 import 'package:fostr/models/UserModel/User.dart';
@@ -38,16 +39,16 @@ class _EnterClubRoomDetailsState extends State<EnterClubRoomDetails> with FostrT
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width*0.03),
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [gradientTop, gradientBottom]
+            image: DecorationImage(
+              image: Image.asset(IMAGES + "background.png").image,
+              fit: BoxFit.cover,
+            ),
+            borderRadius: BorderRadiusDirectional.only(
+              topStart: Radius.circular(32),
+              topEnd: Radius.circular(32),
+            ),
+            color: Colors.white,
           ),
-          borderRadius: BorderRadiusDirectional.only(
-            topStart: Radius.circular(32),
-            topEnd: Radius.circular(32),
-          ),
-        ),
         child: ListView(
           children: [
             Container(
