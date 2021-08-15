@@ -73,20 +73,23 @@ class _CreateRoomState extends State<CreateRoom> with FostrTheme {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    (user.name == "")
-                      ? Text(
-                          "Hello, ${user.userName}",
-                          style: h1.apply(color: Colors.white),
-                        )
-                      : Text(
-                          "Hello, ${user.name}",
-                          style: h1.apply(color: Colors.white),
-                        ),
+                    (user.bookClubName == "")
+                        ? Text(
+                            "Hello, ${user.userName}",
+                            style: h1.apply(color: Colors.white),
+                          )
+                        : Text(
+                            "Hello, ${user.bookClubName}",
+                            style: h1.apply(color: Colors.white),
+                          ),
                     Spacer(),
                     IconButton(
-                      icon: Icon(LineIcons.userFriends),
-                      onPressed: () => FostrRouter.goto(context, Routes.ongoingRoom)
-                    ),
+                        icon: Icon(
+                          LineIcons.userFriends,
+                          color: Colors.white,
+                        ),
+                        onPressed: () =>
+                            FostrRouter.goto(context, Routes.ongoingRoom)),
                   ],
                 ),
               ),
@@ -211,10 +214,10 @@ class _CreateRoomState extends State<CreateRoom> with FostrTheme {
                                                             top: 10),
                                                     child: RoomLine(
                                                       width: index == 0
-                                                          ? 200
+                                                          ? 230
                                                           : index == 1
-                                                              ? 150
-                                                              : 100,
+                                                              ? 180
+                                                              : 130,
                                                       bookName: roomName[index]
                                                           .id
                                                           .toString(),
@@ -271,16 +274,6 @@ class RoomLine extends StatelessWidget with FostrTheme {
           width: width,
           bookName: bookName,
         ),
-        SizedBox(
-          width: 2.w,
-        ),
-        Padding(
-          padding: const EdgeInsets.only(right: 10),
-          child: Text(
-            (width * 4).toInt().toString(),
-            style: h1.copyWith(color: Colors.white, fontSize: 22.sp),
-          ),
-        )
       ],
     );
   }

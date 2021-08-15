@@ -38,11 +38,21 @@ class AuthProvider with ChangeNotifier {
 
   void setUserType(UserType userType) {
     _userType = userType;
+    if (userType == UserType.CLUBOWNER) {
+      _localStorage.setClub();
+    } else {
+      _localStorage.setUser();
+    }
     notifyListeners();
   }
 
   Future<void> initAuth() async {
     await _localStorage.readPrefs();
+    if (_localStorage.isClub) {
+      _userType = UserType.CLUBOWNER;
+    } else {
+      _userType = UserType.USER;
+    }
     if (!logedIn) {
       _status = Status.Unauthenticated;
     } else if (_authService.currentUser != null) {

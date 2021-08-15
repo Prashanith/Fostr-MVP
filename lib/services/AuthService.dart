@@ -36,12 +36,8 @@ class AuthService {
       verifyUser(firebaseUser);
       var user = await _userService.getUserById(firebaseUser.uid);
       if (user != null) {
-        if (userType == user.userType) {
-          var updatedUser = updateLastLogin(user);
-          return updatedUser;
-        } else {
-          throw "user-type-mismatch";
-        }
+        var updatedUser = updateLastLogin(user);
+        return updatedUser;
       } else {
         throw "invalid-email";
       }
@@ -71,10 +67,6 @@ class AuthService {
         if (!credential.additionalUserInfo!.isNewUser) {
           var user = await _userService.getUserById(credential.user!.uid);
           if (user != null) {
-            if (user.userType != userType) {
-              await _googleSignIn.signOut();
-              throw "user-type-mismatch";
-            }
             var updatedUser = updateLastLogin(user);
             return updatedUser;
           }
@@ -140,11 +132,9 @@ class AuthService {
         return user;
       } else {
         var user = await _userService.getUserById(userCredential.user!.uid);
-        if (user!.userType == userType) {
+        if (user != null) {
           var updatedUser = updateLastLogin(user);
           return updatedUser;
-        } else {
-          throw "user-type-mismatch";
         }
       }
     } on FirebaseAuthException catch (e) {
@@ -188,12 +178,12 @@ class AuthService {
       var notificationToken = await FirebaseMessaging.instance.getToken();
       var newUser = UserModel.User(
           id: user.uid,
-          name: user.displayName ?? "",
           userName: "",
           invites: 10,
           createdOn: time,
           lastLogin: time,
           userType: userType);
+      newUser.name = user.displayName ?? "";
       newUser.notificationToken = notificationToken;
       await _userService.createUser(newUser);
       return newUser;

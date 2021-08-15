@@ -9,7 +9,6 @@ part of 'User.dart';
 User _$UserFromJson(Map<String, dynamic> json) {
   return User(
     id: json['id'] as String,
-    name: json['name'] as String,
     userName: json['userName'] as String,
     userType: _$enumDecode(_$UserTypeEnumMap, json['userType']),
     createdOn: DateTime.parse(json['createdOn'] as String),
@@ -19,6 +18,8 @@ User _$UserFromJson(Map<String, dynamic> json) {
         ? null
         : UserProfile.fromJson(json['userProfile'] as Map<String, dynamic>),
   )
+    ..name = json['name'] as String
+    ..bookClubName = json['bookClubName'] as String?
     ..notificationToken = json['notificationToken'] as String?
     ..followers =
         (json['followers'] as List<dynamic>?)?.map((e) => e as String).toList()
@@ -29,8 +30,9 @@ User _$UserFromJson(Map<String, dynamic> json) {
 
 Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'id': instance.id,
-      'name': instance.name,
       'userName': instance.userName,
+      'name': instance.name,
+      'bookClubName': instance.bookClubName,
       'notificationToken': instance.notificationToken,
       'userType': _$UserTypeEnumMap[instance.userType],
       'createdOn': instance.createdOn.toIso8601String(),

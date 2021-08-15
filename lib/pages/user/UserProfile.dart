@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:fostr/core/constants.dart';
 import 'package:fostr/models/UserModel/User.dart';
 import 'package:fostr/models/UserModel/UserProfile.dart';
 import 'package:fostr/providers/AuthProvider.dart';
@@ -27,6 +28,7 @@ class UserProfilePage extends StatefulWidget {
 
 class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
   TextEditingController controller = TextEditingController();
+  bool isClub = false;
 
   UserService userServices = GetIt.I<UserService>();
   User user = User.fromJson({
@@ -37,6 +39,7 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
     "createdOn": DateTime.now().toString(),
     "lastLogin": DateTime.now().toString(),
     "invites": 10,
+    // "bookClubName": ""
   });
 
   void updateProfile(Map<String, dynamic> data) async {
@@ -70,6 +73,8 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
     if (auth.user != null) {
       user = auth.user!;
     }
+    print(auth.userType);
+    isClub = auth.userType == UserType.CLUBOWNER;
     return Material(
       child: SafeArea(
         child: Container(
@@ -255,28 +260,47 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                                     onTap: () async {
                                       controller.text = user.name;
                                       await showPopUp(
-                                        "Name",
+                                        (isClub) ? "Book Club Name" : "Name",
                                         user.id,
                                         (e) {
                                           setState(() {
-                                            user.name = e[1];
-                                            updateProfile({
-                                              "name": user.name,
-                                              "id": user.id
-                                            });
+                                            if (isClub) {
+                                              user.name = e[1];
+                                              updateProfile({
+                                                "name": user.name,
+                                                "id": user.id
+                                              });
+                                            } else {
+                                              user.bookClubName = e[1];
+                                              updateProfile({
+                                                "bookClubName":
+                                                    user.bookClubName,
+                                                "id": user.id
+                                              });
+                                            }
                                           });
                                         },
                                       );
                                     },
-                                    child: Text(
-                                      (user.name.isEmpty)
-                                          ? "Enter your name"
-                                          : user.name,
-                                      // overflow: TextOverflow.ellipsis,
-                                      style: h1.copyWith(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 22.sp),
-                                    ),
+                                    child: (auth.userType == UserType.CLUBOWNER)
+                                        ? Text(
+                                            (user.bookClubName!.isEmpty)
+                                                ? "Enter Book Club name"
+                                                : user.bookClubName!,
+                                            // overflow: TextOverflow.ellipsis,
+                                            style: h1.copyWith(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 22.sp),
+                                          )
+                                        : Text(
+                                            (user.name.isEmpty)
+                                                ? "Enter name"
+                                                : user.name,
+                                            // overflow: TextOverflow.ellipsis,
+                                            style: h1.copyWith(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 22.sp),
+                                          ),
                                   ),
                                   SizedBox(
                                     height: 5,

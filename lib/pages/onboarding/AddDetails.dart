@@ -41,7 +41,12 @@ class _AddDetailsState extends State<AddDetails> with FostrTheme {
     super.initState();
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
       final auth = Provider.of<AuthProvider>(context, listen: false);
-      nameController.value = TextEditingValue(text: auth.user?.name ?? "");
+      if (auth.userType == UserType.CLUBOWNER) {
+        nameController.value =
+            TextEditingValue(text: auth.user?.bookClubName ?? "");
+      } else {
+        nameController.value = TextEditingValue(text: auth.user?.name ?? "");
+      }
     });
   }
 
@@ -85,34 +90,42 @@ class _AddDetailsState extends State<AddDetails> with FostrTheme {
                         controller: nameController,
                         validator: (value) {
                           if (value!.isEmpty) {
-                            return "Enter a name";
+                            if (auth.userType == UserType.CLUBOWNER) {
+                              return "Enter a Book Club name";
+                            } else {
+                              return "Enter a name";
+                            }
                           }
                         },
-                        hintText: "Enter your name",
+                        hintText: (auth.userType == UserType.CLUBOWNER)
+                            ? "Enter Book Club name"
+                            : "Enter your name",
                         keyboardType: TextInputType.text,
                       ),
                       SizedBox(
                         height: 20,
                       ),
-                      InputField(
-                        onChange: (value) => checkUsername(),
-                        controller: usernameController,
-                        validator: (value) {
-                          if (value!.isNotEmpty) {
-                            if (!Validator.isUsername(value)) {
-                              return "Username is not valid";
-                            }
-                            if (isExists) {
-                              return "Username already exists";
-                            }
-                          } else {
-                            return "Enter a user name";
-                          }
-                        },
-                        // controller: _controller,
-                        hintText: "Username",
-                        keyboardType: TextInputType.text,
-                      ),
+                      (auth.user!.userName.isEmpty)
+                          ? InputField(
+                              onChange: (value) => checkUsername(),
+                              controller: usernameController,
+                              validator: (value) {
+                                if (value!.isNotEmpty) {
+                                  if (!Validator.isUsername(value)) {
+                                    return "Username is not valid";
+                                  }
+                                  if (isExists) {
+                                    return "Username already exists";
+                                  }
+                                } else {
+                                  return "Enter a user name";
+                                }
+                              },
+                              // controller: _controller,
+                              hintText: "Username",
+                              keyboardType: TextInputType.text,
+                            )
+                          : SizedBox.fromSize(),
                     ],
                   ),
                 ),
@@ -125,20 +138,28 @@ class _AddDetailsState extends State<AddDetails> with FostrTheme {
                       await checkUsername();
                       if (nameForm.currentState!.validate()) {
                         var user = auth.user!;
-                        var newUser = User(
-                            id: user.id,
-                            name: nameController.text,
-                            userName:
-                                usernameController.text.trim().toLowerCase(),
-                            userType: user.userType,
-                            createdOn: user.createdOn,
-                            lastLogin: user.lastLogin,
-                            invites: user.invites);
-
+                        var newUser;
+                        if (user.createdOn == user.lastLogin) {
+                          newUser = User(
+                              id: user.id,
+                              userName:
+                                  usernameController.text.trim().toLowerCase(),
+                              userType: user.userType,
+                              createdOn: user.createdOn,
+                              lastLogin: user.lastLogin,
+                              invites: user.invites);
+                        } else {
+                          newUser = user;
+                        }
+                        if (auth.userType == UserType.CLUBOWNER) {
+                          newUser.bookClubName = nameController.text.trim();
+                        } else {
+                          newUser.name = nameController.text.trim();
+                        }
                         auth.addUserDetails(newUser).then((value) {
-                          if (user.userType == UserType.USER) {
-                            FostrRouter.removeUntillAndGoto(
-                                context, Routes.userDashboard, (route) => false);
+                          if (auth.userType == UserType.USER) {
+                            FostrRouter.removeUntillAndGoto(context,
+                                Routes.userDashboard, (route) => false);
                           } else if (auth.userType == UserType.CLUBOWNER) {
                             Navigator.of(context).pushAndRemoveUntil(
                                 CupertinoPageRoute(builder: (_) => Dashboard()),

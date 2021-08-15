@@ -56,8 +56,13 @@ class _LoginPageState extends State<LoginPage> with FostrTheme {
     }
   }
 
-  void handleRoute(User? user) {
-    if (user!.name.isEmpty || user.userName.isEmpty) {
+  void handleRoute(User? user, UserType userType) {
+    if ((user!.name.isEmpty || user.userName.isEmpty) &&
+        userType == UserType.USER) {
+      FostrRouter.goto(context, Routes.addDetails);
+    } else if (user.bookClubName != null &&
+        (user.bookClubName!.isEmpty || user.userName.isEmpty) &&
+        userType == UserType.CLUBOWNER) {
       FostrRouter.goto(context, Routes.addDetails);
     } else {
       if (user.userType == UserType.USER) {
@@ -201,7 +206,7 @@ class _LoginPageState extends State<LoginPage> with FostrTheme {
                                     var user = await auth
                                         .signInWithGoogle(auth.userType!);
                                     if (user != null) {
-                                      handleRoute(user);
+                                      handleRoute(user, auth.userType!);
                                     }
                                   } catch (e) {
                                     handleError(e);
@@ -224,7 +229,7 @@ class _LoginPageState extends State<LoginPage> with FostrTheme {
                                     passwordController.text.trim(),
                                     auth.userType!,
                                   );
-                                  handleRoute(user);
+                                  handleRoute(user, auth.userType!);
                                 } catch (e) {
                                   handleError(e);
                                 }

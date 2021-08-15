@@ -8,20 +8,20 @@ part 'User.g.dart';
 @JsonSerializable(explicitToJson: true)
 class User {
   final String id;
-  String name;
   String userName;
+  String name = "";
+  String? bookClubName = "";
   String? notificationToken;
   UserType userType;
   DateTime createdOn;
   DateTime lastLogin;
   int invites;
-  UserProfile? userProfile;
+  UserProfile? userProfile = UserProfile.empty();
   List<String>? followers = [];
   List<String>? followings = [];
 
   User({
     required this.id,
-    required this.name,
     required this.userName,
     required this.userType,
     required this.createdOn,

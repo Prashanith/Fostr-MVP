@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fostr/core/constants.dart';
 import 'package:fostr/pages/clubOwner/dashboard.dart';
+import 'package:fostr/widgets/CheckboxFormField.dart';
 import 'package:fostr/widgets/Layout.dart';
 import 'package:fostr/providers/AuthProvider.dart';
 import 'package:fostr/router/router.dart';
@@ -31,6 +32,7 @@ class _SignupPageState extends State<SignupPage> with FostrTheme {
   bool isEmail = false;
   bool isNumber = false;
   bool isError = false;
+  bool isAgree = false;
   String countryCode = "+91";
   String error = "";
 
@@ -116,9 +118,8 @@ class _SignupPageState extends State<SignupPage> with FostrTheme {
                           isError = false;
                           return error;
                         }
-                        if (!Validator.isEmail(value!)
-                          // && !Validator.isPhone(value)
-                          ) {
+                        if (!Validator.isEmail(value!) &&
+                            !Validator.isPhone(value)) {
                           return "Please provide correct values";
                         }
                         return null;
@@ -162,6 +163,21 @@ class _SignupPageState extends State<SignupPage> with FostrTheme {
                             ),
                           )
                         : Container(),
+                    CheckboxFormField(
+                      initialValue: false,
+                      validator: (value) {
+                        if (value != null && !value) {
+                          return "You must agree to the terms and condition";
+                        }
+                      },
+                      title: Text(
+                        "By registering you agree to the terms and condition of this app.",
+                        style: textFieldStyle.copyWith(
+                          color: Colors.black.withOpacity(0.6),
+                          fontSize: 12.sp,
+                        ),
+                      ),
+                    )
                   ],
                 ),
               ),
