@@ -135,9 +135,8 @@ class _LoginPageState extends State<LoginPage> with FostrTheme {
                               isError = false;
                               return error;
                             }
-                            if (!Validator.isEmail(value!)
-                              // && !Validator.isPhone(value)
-                                ) {
+                            if (!Validator.isEmail(value!) &&
+                                !Validator.isPhone(value)) {
                               return "Please provide correct values";
                             }
                             return null;

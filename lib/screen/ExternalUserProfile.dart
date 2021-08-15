@@ -34,8 +34,8 @@ class _ExternalProfilePageState extends State<ExternalProfilePage>
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthProvider>(context);
     final currentUser = auth.user!;
-    if (currentUser.followers != null) {
-      if (currentUser.followers!.contains(widget.user.id)) {
+    if (currentUser.followings != null) {
+      if (currentUser.followings!.contains(widget.user.id)) {
         isFollowed = true;
       }
     }
@@ -231,8 +231,7 @@ class _ExternalProfilePageState extends State<ExternalProfilePage>
                             )
                           ],
                           shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(15)),
+                            borderRadius: BorderRadius.all(Radius.circular(15)),
                           ),
                         ),
                         alignment: Alignment.center,
@@ -269,27 +268,28 @@ class _ExternalProfilePageState extends State<ExternalProfilePage>
                                   BorderRadiusDirectional.circular(34),
                               color: Color(0xFFE6FAED),
                             ),
-                              width: MediaQuery.of(context).size.width * 0.9,
-                              child: Column(
-                                children: List.generate(
-                                  5,
-                                  (index) => Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 10),
-                                    child: Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Text(
-                                        widget.user.userProfile
-                                                ?.favouriteBooks?[index] ??
-                                            "",
-                                        style: h2.copyWith(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold),
-                                      ),
+                            width: MediaQuery.of(context).size.width * 0.9,
+                            child: Column(
+                              children: List.generate(
+                                5,
+                                (index) => Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 10),
+                                  child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      widget.user.userProfile
+                                              ?.favouriteBooks?[index] ??
+                                          "",
+                                      style: h2.copyWith(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold),
                                     ),
                                   ),
                                 ),
                               ),
+                            ),
+                          ),
                           SizedBox(
                             height: 15,
                           ),

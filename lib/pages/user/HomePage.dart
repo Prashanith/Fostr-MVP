@@ -19,7 +19,6 @@ import 'package:fostr/router/router.dart';
 import 'package:fostr/router/routes.dart';
 import 'package:fostr/utils/theme.dart';
 import 'package:fostr/widgets/rooms/OngoingRoomCard.dart';
-import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:intl/intl.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -165,26 +164,28 @@ class _OngoingRoomState extends State<OngoingRoom> with FostrTheme {
                         color: Colors.white,
                       ),
                       child: Padding(
-                        padding:
-                            const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                        child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                            stream: roomCollection.snapshots(),
-                            builder: (BuildContext context,
-                                AsyncSnapshot<QuerySnapshot> outerData) {
-                              if (outerData.hasData) {
-                                final docs = outerData.data!.docs;
-                          
-                                return ListView.builder(
-                                  itemCount: docs.length,
-                                  itemBuilder: (context, index) {
-                                    final id = docs[index].id;
-                                    return RoomList(id: id);
-                                  },
-                                );
-                              } else {
-                                return Center(child: CircularProgressIndicator());
-                              }
-                            }),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 10),
+                        child:
+                            StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                                stream: roomCollection.snapshots(),
+                                builder: (BuildContext context,
+                                    AsyncSnapshot<QuerySnapshot> outerData) {
+                                  if (outerData.hasData) {
+                                    final docs = outerData.data!.docs;
+
+                                    return ListView.builder(
+                                      itemCount: docs.length,
+                                      itemBuilder: (context, index) {
+                                        final id = docs[index].id;
+                                        return RoomList(id: id);
+                                      },
+                                    );
+                                  } else {
+                                    return Center(
+                                        child: CircularProgressIndicator());
+                                  }
+                                }),
                       ),
                     ),
                   ),
@@ -232,18 +233,11 @@ class RoomList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<
-        QuerySnapshot<Map<String, dynamic>>>(
-      stream: roomCollection
-          .doc(id)
-          .collection('rooms')
-          .snapshots(),
+    return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+      stream: roomCollection.doc(id).collection('rooms').snapshots(),
       builder: (BuildContext context, snapshot) {
-        if (snapshot.hasData &&
-            snapshot.data!.docs.length == 0)
-          return Center(
-              child:
-                  Text('No Ongoing Rooms Yet'));
+        if (snapshot.hasData && snapshot.data!.docs.length == 0)
+          return Center(child: Text('No Ongoing Rooms Yet'));
 
         if (snapshot.hasData) {
           final roomList = snapshot.data!.docs;
@@ -252,18 +246,14 @@ class RoomList extends StatelessWidget {
             children: List.generate(
               roomList.length,
               (index) {
-                final room =
-                    roomList[index].data();
+                final room = roomList[index].data();
                 return GestureDetector(
                   onTap: () async {
                     Navigator.push(
                       context,
                       CupertinoPageRoute(
-                        builder: (BuildContext
-                                context) =>
-                            ThemePage(
-                          room:
-                              Room.fromJson(room),
+                        builder: (BuildContext context) => ThemePage(
+                          room: Room.fromJson(room),
                         ),
                       ),
                     );

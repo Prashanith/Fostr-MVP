@@ -107,10 +107,7 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                               Spacer(),
                               InkWell(
                                 onTap: () async {
-                                  FostrRouter.goto(
-                                    context,
-                                    Routes.settings
-                                  );
+                                  FostrRouter.goto(context, Routes.settings);
                                 },
                                 child: Icon(
                                   Icons.settings_outlined,
@@ -426,9 +423,18 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                                         alignment: Alignment.centerLeft,
                                         child: GestureDetector(
                                           onTap: () {
-                                            controller.value = TextEditingValue(
-                                                text: user.userProfile!
-                                                    .favouriteBooks![index]);
+                                            if (user.userProfile
+                                                    ?.favouriteBooks ==
+                                                null) {
+                                              controller.value =
+                                                  TextEditingValue(text: "");
+                                            } else {
+                                              controller.value =
+                                                  TextEditingValue(
+                                                      text: user.userProfile!
+                                                              .favouriteBooks![
+                                                          index]);
+                                            }
                                             showPopUp(
                                               "Favourite Book",
                                               user.id,
@@ -438,14 +444,19 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                                                       null) {
                                                     var userProfile =
                                                         UserProfile();
+
                                                     userProfile.favouriteBooks?[
                                                         index] = e[1];
                                                     user.userProfile =
                                                         userProfile;
-                                                  } else {
+                                                  } else if (user.userProfile
+                                                          ?.favouriteBooks ==
+                                                      null) {
+                                                    var arr = List.generate(
+                                                        5, (index) => "");
+                                                    arr[index] = e[1];
                                                     user.userProfile!
-                                                            .favouriteBooks?[
-                                                        index] = e[1];
+                                                        .favouriteBooks = arr;
                                                   }
                                                 });
                                                 updateProfile({
@@ -458,7 +469,7 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                                             );
                                           },
                                           child: Text(
-                                            (user.userProfile!.favouriteBooks !=
+                                            (user.userProfile?.favouriteBooks !=
                                                         null &&
                                                     user
                                                         .userProfile!
