@@ -218,7 +218,11 @@ class _EnterRoomDetailsState extends State<EnterRoomDetails> with FostrTheme {
                       : ElevatedButton(
                           child: Text('Schedule Room'),
                           onPressed: () {
-                            _createChannel(context, user);
+                            if(eventNameTextEditingController.text.isEmpty) {
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Event Name is required")));
+                            } else {
+                              _createChannel(context, user);
+                            }
                           },
                           style: ButtonStyle(
                             backgroundColor:

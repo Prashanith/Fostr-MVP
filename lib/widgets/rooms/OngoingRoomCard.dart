@@ -56,7 +56,7 @@ class OngoingRoomCard extends StatelessWidget with FostrTheme {
                       width: 8,
                     ),
                     Text(
-                      room.participantsCount.toString(),
+                      (room.participantsCount! < 0 ? "0" : room.participantsCount.toString()),
                       style: h2.copyWith(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -73,7 +73,7 @@ class OngoingRoomCard extends StatelessWidget with FostrTheme {
                       width: 8,
                     ),
                     Text(
-                      room.speakersCount.toString(),
+                      (room.speakersCount! < 0 ? "0" : room.speakersCount.toString()),
                       style: h2.copyWith(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,

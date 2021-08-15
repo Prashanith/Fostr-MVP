@@ -237,7 +237,7 @@ class RoomList extends StatelessWidget {
       stream: roomCollection.doc(id).collection('rooms').snapshots(),
       builder: (BuildContext context, snapshot) {
         if (snapshot.hasData && snapshot.data!.docs.length == 0)
-          return Center(child: Text('No Ongoing Rooms Yet'));
+          return Container();
 
         if (snapshot.hasData) {
           final roomList = snapshot.data!.docs;
@@ -258,9 +258,12 @@ class RoomList extends StatelessWidget {
                       ),
                     );
                   },
-                  child: OngoingRoomCard(
-                    room: Room.fromJson(room),
-                  ),
+                  child: (DateTime.parse(Room.fromJson(room).dateTime.toString()).isAfter(DateTime.now().subtract(Duration(minutes: 30)))
+                        && DateTime.parse(Room.fromJson(room).dateTime.toString()).isBefore(DateTime.now().add(Duration(minutes: 30))))
+                    ? OngoingRoomCard(
+                      room: Room.fromJson(room),
+                    )
+                    : Container()
                 );
               },
             ).toList(),
