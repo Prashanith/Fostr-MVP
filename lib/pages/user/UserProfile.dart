@@ -73,7 +73,6 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
     if (auth.user != null) {
       user = auth.user!;
     }
-    print(auth.userType);
     isClub = auth.userType == UserType.CLUBOWNER;
     return Material(
       child: SafeArea(
@@ -258,13 +257,17 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                                 children: [
                                   InkWell(
                                     onTap: () async {
-                                      controller.text = user.name;
+                                      controller.text = user.bookClubName ?? "";
+                                      if (isClub) {
+                                      } else {
+                                        controller.text = user.name;
+                                      }
                                       await showPopUp(
                                         (isClub) ? "Book Club Name" : "Name",
                                         user.id,
                                         (e) {
                                           setState(() {
-                                            if (isClub) {
+                                            if (!isClub) {
                                               user.name = e[1];
                                               updateProfile({
                                                 "name": user.name,
@@ -284,9 +287,11 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                                     },
                                     child: (auth.userType == UserType.CLUBOWNER)
                                         ? Text(
-                                            (user.bookClubName!.isEmpty)
-                                                ? "Enter Book Club name"
-                                                : user.bookClubName!,
+                                            (user.bookClubName != null)
+                                                ? (user.bookClubName!.isEmpty)
+                                                    ? "Enter Bok Club name"
+                                                    : user.bookClubName!
+                                                : "Enter Book Club name",
                                             // overflow: TextOverflow.ellipsis,
                                             style: h1.copyWith(
                                                 fontWeight: FontWeight.bold,

@@ -163,6 +163,7 @@ class AuthProvider with ChangeNotifier {
   }
 
   signOut() async {
+    _localStorage.setLoggedOut();
     await _authService.signOut();
     _setFree();
     notifyListeners();
