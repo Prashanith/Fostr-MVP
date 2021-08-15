@@ -176,6 +176,7 @@ class AuthService {
     try {
       var time = DateTime.now();
       var notificationToken = await FirebaseMessaging.instance.getToken();
+      print("token" + notificationToken.toString());
       var newUser = UserModel.User(
           id: user.uid,
           userName: "",

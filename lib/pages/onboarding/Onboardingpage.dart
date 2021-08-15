@@ -26,9 +26,9 @@ class _OnboardingPageState extends State<OnboardingPage> with FostrTheme {
     final auth = Provider.of<AuthProvider>(context);
     if (!auth.isLoading) {
       if (auth.logedIn) {
-        if (auth.user!.userType == UserType.CLUBOWNER) {
+        if (auth.userType == UserType.CLUBOWNER) {
           return Dashboard();
-        } else if (auth.user!.userType == UserType.USER) {
+        } else if (auth.userType == UserType.USER) {
           return UserDashboard();
         } else {
           return SplashScreen();

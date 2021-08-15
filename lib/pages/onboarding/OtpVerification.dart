@@ -32,14 +32,14 @@ class _OtpVerificationState extends State<OtpVerification> with FostrTheme {
   bool isError = false;
   String error = "";
 
-  void handleRoute(User? user) {
+  void handleRoute(User? user, UserType userType) {
     if (user!.name.isEmpty || user.userName.isEmpty) {
       FostrRouter.goto(context, Routes.addDetails);
     } else {
-      if (user.userType == UserType.USER) {
+      if (userType == UserType.USER) {
         FostrRouter.removeUntillAndGoto(
             context, Routes.userDashboard, (route) => false);
-      } else if (user.userType == UserType.CLUBOWNER) {
+      } else if (userType == UserType.CLUBOWNER) {
         Navigator.of(context).pushAndRemoveUntil(
             CupertinoPageRoute(builder: (_) => Dashboard()), (route) => false);
       }
@@ -114,7 +114,7 @@ class _OtpVerificationState extends State<OtpVerification> with FostrTheme {
                         try {
                           var user = await auth.verifyOtp(
                               context, _controller.text, auth.userType!);
-                          handleRoute(user);
+                          handleRoute(user, auth.userType!);
                         } catch (e) {
                           handleError(e);
                         }

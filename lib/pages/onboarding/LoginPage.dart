@@ -65,10 +65,10 @@ class _LoginPageState extends State<LoginPage> with FostrTheme {
         userType == UserType.CLUBOWNER) {
       FostrRouter.goto(context, Routes.addDetails);
     } else {
-      if (user.userType == UserType.USER) {
+      if (userType == UserType.USER) {
         FostrRouter.removeUntillAndGoto(
             context, Routes.userDashboard, (route) => false);
-      } else if (user.userType == UserType.CLUBOWNER) {
+      } else if (userType == UserType.CLUBOWNER) {
         Navigator.of(context).pushAndRemoveUntil(
             CupertinoPageRoute(builder: (_) => Dashboard()), (route) => false);
       }
