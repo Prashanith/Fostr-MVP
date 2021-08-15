@@ -1,3 +1,9 @@
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = rootProject.file('key.properties')
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file('local.properties')
 if (localPropertiesFile.exists()) {
@@ -52,11 +58,18 @@ android {
         multiDexEnabled true
     }
 
+    signingConfigs {
+       release {
+           storeFile file('C:\\Users\\miten\\upload-keystore.jks') 
+           storePassword 'fostr@123'
+           keyPassword 'fostr@123'
+           keyAlias = 'upload'
+       }
+   }
+    
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release
         }
     }
 }

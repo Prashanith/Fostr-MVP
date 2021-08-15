@@ -30,6 +30,14 @@
           }
         },
         {
+          "client_id": "559126256610-8e35fnuukc11h118n90l6ong9cv0d6oe.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.clubfostr.fostr",
+            "certificate_hash": "bea6bde9f8081ae0e3622d9f2acb5af03ce92846"
+          }
+        },
+        {
           "client_id": "559126256610-hr8vmbg8kdo0tfjp623n50upvr911cf6.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -45,6 +53,13 @@
             {
               "client_id": "559126256610-hr8vmbg8kdo0tfjp623n50upvr911cf6.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "559126256610-f6lem4un4kdl31bl0qemm6ne5u67r0m4.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.clubfostr.fostr"
+              }
             }
           ]
         }
@@ -82,6 +97,13 @@
             {
               "client_id": "559126256610-hr8vmbg8kdo0tfjp623n50upvr911cf6.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "559126256610-f6lem4un4kdl31bl0qemm6ne5u67r0m4.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.clubfostr.fostr"
+              }
             }
           ]
         }
