@@ -175,7 +175,8 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                                     onPressed: () async {
                                       controller.text =
                                           user.userProfile?.twitter ?? "";
-                                      await showPopUp("Twitter", user.id, (e) {
+                                      await showPopUp(
+                                          "Twitter username", user.id, (e) {
                                         setState(() {
                                           if (user.userProfile == null) {
                                             var userProfile = UserProfile();
@@ -200,7 +201,8 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                                     onPressed: () {
                                       controller.text =
                                           user.userProfile?.instagram ?? "";
-                                      showPopUp("Instagram", user.id, (e) {
+                                      showPopUp("Instagram username", user.id,
+                                          (e) {
                                         setState(() {
                                           if (user.userProfile == null) {
                                             var userProfile = UserProfile();
@@ -224,7 +226,8 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                                     onPressed: () {
                                       controller.text =
                                           user.userProfile?.linkedIn ?? "";
-                                      showPopUp("linkedIn", user.id, (e) {
+                                      showPopUp("LinkedIn username", user.id,
+                                          (e) {
                                         setState(() {
                                           if (user.userProfile == null) {
                                             var userProfile = UserProfile();
@@ -289,7 +292,7 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                                         ? Text(
                                             (user.bookClubName != null)
                                                 ? (user.bookClubName!.isEmpty)
-                                                    ? "Enter Bok Club name"
+                                                    ? "Enter Book Club name"
                                                     : user.bookClubName!
                                                 : "Enter Book Club name",
                                             // overflow: TextOverflow.ellipsis,

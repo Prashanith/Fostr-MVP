@@ -20,15 +20,14 @@ class User {
   List<String>? followers = [];
   List<String>? followings = [];
 
-  User({
-    required this.id,
-    required this.userName,
-    required this.userType,
-    required this.createdOn,
-    required this.lastLogin,
-    this.invites = 10,
-    this.userProfile,
-  });
+  User(
+      {required this.id,
+      required this.userName,
+      required this.userType,
+      required this.createdOn,
+      required this.lastLogin,
+      this.invites = 10,
+      this.userProfile});
 
   Map<String, dynamic> toJson() => _$UserToJson(this);
 

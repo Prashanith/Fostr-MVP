@@ -171,7 +171,7 @@ class _SignupPageState extends State<SignupPage> with FostrTheme {
                         }
                       },
                       title: Text(
-                        "By registering you agree to the terms and condition of this app.",
+                        "By registering you agree to the terms and conditions of this app.",
                         style: textFieldStyle.copyWith(
                           color: Colors.black.withOpacity(0.6),
                           fontSize: 12.sp,
@@ -196,7 +196,7 @@ class _SignupPageState extends State<SignupPage> with FostrTheme {
                                 if (user != null &&
                                     user.createdOn == user.lastLogin) {
                                   FostrRouter.goto(context, Routes.addDetails);
-                                } else {
+                                } else if (user != null) {
                                   if (auth.userType == UserType.USER) {
                                     FostrRouter.removeUntillAndGoto(context,
                                         Routes.userDashboard, (route) => false);
@@ -209,6 +209,7 @@ class _SignupPageState extends State<SignupPage> with FostrTheme {
                                   }
                                 }
                               } catch (e) {
+                                print(e);
                                 handleError(e);
                               }
                             })

@@ -125,8 +125,15 @@ class _ExternalProfilePageState extends State<ExternalProfilePage>
                                                 iconSize: 30,
                                                 onPressed: () {
                                                   try {
+                                                    var twitter = widget.user
+                                                        .userProfile!.twitter!;
+                                                    if (twitter.isNotEmpty &&
+                                                        twitter[0] == '@') {
+                                                      twitter =
+                                                          twitter.substring(1);
+                                                    }
                                                     url.launch(
-                                                        "https://twitter.com/${widget.user.userProfile!.twitter}");
+                                                        "https://twitter.com/$twitter");
                                                   } catch (e) {}
                                                 })
                                             : SizedBox.shrink(),
@@ -143,8 +150,19 @@ class _ExternalProfilePageState extends State<ExternalProfilePage>
                                                 iconSize: 30,
                                                 onPressed: () {
                                                   try {
+                                                    var insta = widget
+                                                        .user
+                                                        .userProfile!
+                                                        .instagram!;
+                                                    print(insta);
+                                                    if (insta.isNotEmpty &&
+                                                        insta[0] == '@') {
+                                                      insta =
+                                                          insta.substring(1);
+                                                    }
+                                                    print(insta);
                                                     url.launch(
-                                                        "http://instagram.com/${widget.user.userProfile!.instagram}");
+                                                        "http://instagram.com/$insta");
                                                   } catch (e) {}
                                                 })
                                             : SizedBox.shrink(),
@@ -161,8 +179,15 @@ class _ExternalProfilePageState extends State<ExternalProfilePage>
                                                 iconSize: 30,
                                                 onPressed: () {
                                                   try {
+                                                    var linkedIn = widget.user
+                                                        .userProfile!.linkedIn!;
+                                                    if (linkedIn.isNotEmpty &&
+                                                        linkedIn[0] == '@') {
+                                                      linkedIn =
+                                                          linkedIn.substring(1);
+                                                    }
                                                     url.launch(
-                                                        "https://www.linkedin.com/in/${widget.user.userProfile!.linkedIn}");
+                                                        "https://www.linkedin.com/in/$linkedIn");
                                                   } catch (e) {}
                                                 })
                                             : SizedBox.shrink(),

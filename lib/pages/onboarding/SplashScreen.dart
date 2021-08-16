@@ -33,9 +33,9 @@ class _SplashScreenState extends State<SplashScreen> {
                 width: double.infinity,
               ),
               Text(
-                "FOSTR",
+                "FOSTR READS",
                 style: TextStyle(
-                  fontSize: 30,
+                  fontSize: 28,
                   fontFamily: "Lato",
                   color: Colors.white,
                 ),

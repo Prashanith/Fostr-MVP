@@ -258,8 +258,8 @@ class RoomList extends StatelessWidget {
                       ),
                     );
                   },
-                  child: (DateTime.parse(Room.fromJson(room).dateTime.toString()).isAfter(DateTime.now().subtract(Duration(minutes: 30)))
-                        && DateTime.parse(Room.fromJson(room).dateTime.toString()).isBefore(DateTime.now().add(Duration(minutes: 30))))
+                  child: (DateTime.parse(Room.fromJson(room).dateTime.toString()).isAfter(DateTime.now().subtract(Duration(minutes: 90)))
+                        && DateTime.parse(Room.fromJson(room).dateTime.toString()).isBefore(DateTime.now().add(Duration(minutes: 10))))
                     ? OngoingRoomCard(
                       room: Room.fromJson(room),
                     )

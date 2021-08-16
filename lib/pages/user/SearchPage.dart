@@ -228,7 +228,7 @@ class _UserCardState extends State<UserCard> with FostrTheme {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 20),
       width: 60.w,
-      height: 10.h,
+      constraints: BoxConstraints(minHeight: 65),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(29),
         color: Color(0xffEBFFEE),
@@ -240,7 +240,7 @@ class _UserCardState extends State<UserCard> with FostrTheme {
           )
         ],
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -266,10 +266,23 @@ class _UserCardState extends State<UserCard> with FostrTheme {
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                widget.user.name,
-                style: h1.copyWith(fontSize: 14.sp),
+              (widget.user.name.isNotEmpty)
+                  ? Text(
+                      widget.user.name,
+                      style: h1.copyWith(fontSize: 14.sp),
+                    )
+                  : SizedBox.shrink(),
+              SizedBox(
+                height: 5,
               ),
+              (widget.user.bookClubName != null &&
+                      widget.user.bookClubName!.isNotEmpty)
+                  ? Text(
+                      widget.user.bookClubName!,
+                      style: h1.copyWith(
+                          fontSize: 14.sp, fontWeight: FontWeight.bold),
+                    )
+                  : SizedBox.shrink(),
               Text(
                 "@" + widget.user.userName,
                 style: h2.copyWith(fontSize: 12.sp),

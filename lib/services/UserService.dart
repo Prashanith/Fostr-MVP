@@ -101,9 +101,15 @@ class UserService {
           .where("name", isGreaterThanOrEqualTo: query)
           .where("name", isLessThan: query + 'z')
           .get();
+      var rawBook = await _userCollection
+          .where("bookClubName", isGreaterThanOrEqualTo: query)
+          .where("bookClubName", isLessThan: query + 'z')
+          .get();
       var usernameData = rawUsername.docs;
       var nameData = rawNames.docs;
+      var bookNameData = rawBook.docs;
       usernameData.addAll(nameData);
+      usernameData.addAll(bookNameData);
       var res = usernameData.map(
         (e) {
           print(e);

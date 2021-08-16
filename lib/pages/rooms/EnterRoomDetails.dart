@@ -184,13 +184,18 @@ class _EnterRoomDetailsState extends State<EnterRoomDetails> with FostrTheme {
                                                         1);
                                           });
                                         } else {
+                                          setState(() {
+                                            isLoading = false;
+                                          });
                                           ScaffoldMessenger.of(context)
-                                              .showSnackBar(SnackBar(
-                                                  content: Text(
-                                                      "Image must be less than 700KB")));
+                                              .showSnackBar(
+                                            SnackBar(
+                                              content: Text(
+                                                  "Image must be less than 700KB"),
+                                            ),
+                                          );
                                         }
                                       } catch (e) {
-                                        print(e);
                                         setState(() {
                                           isLoading = false;
                                         });
@@ -218,8 +223,10 @@ class _EnterRoomDetailsState extends State<EnterRoomDetails> with FostrTheme {
                       : ElevatedButton(
                           child: Text('Schedule Room'),
                           onPressed: () {
-                            if(eventNameTextEditingController.text.isEmpty) {
-                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Event Name is required")));
+                            if (eventNameTextEditingController.text.isEmpty) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                      content: Text("Event Name is required")));
                             } else {
                               _createChannel(context, user);
                             }

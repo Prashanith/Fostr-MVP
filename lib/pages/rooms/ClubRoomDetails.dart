@@ -42,15 +42,11 @@ class ClubRoomDetails extends StatelessWidget with FostrTheme {
                     // SizedBox(
                     //   height: 30,
                     // ),
-                    (user.name == "")
-                      ? Text(
-                        "Hello, User",
-                        style: h1.apply(color: Colors.white),
-                      )
-                      : Text(
-                        "Hello, ${user.name}",
-                        style: h1.apply(color: Colors.white),
-                      ),
+
+                    Text(
+                      "Schedule a room",
+                      style: h1.apply(color: Colors.white),
+                    )
                   ],
                 ),
               ),

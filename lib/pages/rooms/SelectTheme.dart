@@ -45,10 +45,9 @@ class _SelectThemeState extends State<SelectTheme> {
       child: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [gradientTop, gradientBottom]
-          ),
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [gradientTop, gradientBottom]),
           borderRadius: BorderRadiusDirectional.only(
             topStart: Radius.circular(32),
             topEnd: Radius.circular(32),
@@ -70,21 +69,20 @@ class _SelectThemeState extends State<SelectTheme> {
                           decoration: BoxDecoration(
                             image: new DecorationImage(
                               image: new AssetImage(IMAGES + "minimalist.png"),
-                              fit: BoxFit.fill, 
+                              fit: BoxFit.fill,
                             ),
                             borderRadius: BorderRadius.circular(35),
                             //color: Colors.black38
                           ),
                           alignment: Alignment.center,
-                          height: MediaQuery.of(context).size.height*0.15,
-                          width: MediaQuery.of(context).size.width*0.4,
+                          height: MediaQuery.of(context).size.height * 0.15,
+                          width: MediaQuery.of(context).size.width * 0.4,
                           //color: Colors.blue,
                           margin: EdgeInsets.all(15.0),
                           //color: Colors.black38
                           child: Text(
                             'Minimalist',
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 20),
+                            style: TextStyle(color: Colors.white, fontSize: 20),
                           )),
                     ),
                     GestureDetector(
@@ -94,22 +92,21 @@ class _SelectThemeState extends State<SelectTheme> {
                       }),
                       child: Container(
                           decoration: BoxDecoration(
-                            image: new DecorationImage(
-                              image: new AssetImage(IMAGES + "cafe.png"),
-                              fit: BoxFit.fill, 
-                            ),
+                              image: new DecorationImage(
+                                image: new AssetImage(IMAGES + "cafe.png"),
+                                fit: BoxFit.fill,
+                              ),
                               borderRadius: BorderRadius.circular(35),
                               color: Colors.pink[200]),
                           alignment: Alignment.center,
-                          height: MediaQuery.of(context).size.height*0.15,
-                          width: MediaQuery.of(context).size.width*0.4,
+                          height: MediaQuery.of(context).size.height * 0.15,
+                          width: MediaQuery.of(context).size.width * 0.4,
                           //color: Colors.blue,
                           margin: EdgeInsets.all(15.0),
                           //color: Colors.black38
                           child: Text(
                             'Cafe',
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 20),
+                            style: TextStyle(color: Colors.white, fontSize: 20),
                           )),
                     ),
                   ],
@@ -118,28 +115,27 @@ class _SelectThemeState extends State<SelectTheme> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     GestureDetector(
-                      onTap: () =>setState(() {
+                      onTap: () => setState(() {
                         img = "librarybg.png";
                         roomTheme = "Library";
                       }),
                       child: Container(
                           decoration: BoxDecoration(
-                            image: new DecorationImage(
-                              image: new AssetImage(IMAGES + "library.png"),
-                              fit: BoxFit.fill, 
-                            ),
+                              image: new DecorationImage(
+                                image: new AssetImage(IMAGES + "library.png"),
+                                fit: BoxFit.fill,
+                              ),
                               borderRadius: BorderRadius.circular(35),
                               color: Colors.blue[200]),
                           alignment: Alignment.center,
-                          height: MediaQuery.of(context).size.height*0.15,
-                          width: MediaQuery.of(context).size.width*0.4,
+                          height: MediaQuery.of(context).size.height * 0.15,
+                          width: MediaQuery.of(context).size.width * 0.4,
                           //color: Colors.blue,
                           margin: EdgeInsets.all(15.0),
                           //color: Colors.black38
                           child: Text(
                             'Library',
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 20),
+                            style: TextStyle(color: Colors.white, fontSize: 20),
                           )),
                     ),
                     GestureDetector(
@@ -149,15 +145,15 @@ class _SelectThemeState extends State<SelectTheme> {
                       }),
                       child: Container(
                         decoration: BoxDecoration(
-                          image: new DecorationImage(
+                            image: new DecorationImage(
                               image: new AssetImage(IMAGES + "fun.png"),
-                              fit: BoxFit.fill, 
+                              fit: BoxFit.fill,
                             ),
                             borderRadius: BorderRadius.circular(35),
                             color: Colors.red[200]),
                         alignment: Alignment.center,
-                        height: MediaQuery.of(context).size.height*0.15,
-                        width: MediaQuery.of(context).size.width*0.4,
+                        height: MediaQuery.of(context).size.height * 0.15,
+                        width: MediaQuery.of(context).size.width * 0.4,
                         //color: Colors.blue,
                         margin: EdgeInsets.all(15.0),
                         //color: Colors.black38
@@ -173,12 +169,13 @@ class _SelectThemeState extends State<SelectTheme> {
             ),
             Container(
               width: MediaQuery.of(context).size.width,
-              padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.height*0.02),
+              padding: EdgeInsets.symmetric(
+                  horizontal: MediaQuery.of(context).size.height * 0.02),
               decoration: BoxDecoration(
                 color: Colors.white,
                 image: new DecorationImage(
                   image: new AssetImage(IMAGES + img),
-                  fit: BoxFit.cover, 
+                  fit: BoxFit.cover,
                 ),
                 borderRadius: BorderRadius.only(
                   topRight: Radius.circular(40),
@@ -187,128 +184,163 @@ class _SelectThemeState extends State<SelectTheme> {
               ),
               child: Column(
                 children: [
-                  SizedBox(height: 5,),
-                  Text('You can join room either as: ',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.teal.shade800,
-                      fontFamily: "Lato",
-                    )
+                  SizedBox(
+                    height: 5,
                   ),
-                  SizedBox(height: 5,),
+                  Text('You can join room either as: ',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.teal.shade800,
+                        fontFamily: "Lato",
+                      )),
+                  SizedBox(
+                    height: 5,
+                  ),
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      SizedBox(height:20),
+                      SizedBox(height: 20),
                       Expanded(
-                      child: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            userKind = "participant";
-                            role = ClientRole.Audience;
-                            msg = 'Participants can only listen :)';
-                          });
-                        },
-                        child: Container(
-                          alignment: Alignment.center,
-                          width: MediaQuery.of(context).size.width,
-                          padding: EdgeInsets.all(20,),
-                          decoration: BoxDecoration(
-                            color: userKind == "participant" ? gradientBottom : gradientTop,
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          child: Text("Participant", style: TextStyle(
-                            color: userKind == "participant" ? Colors.white : Colors.teal.shade800,
-                            fontSize: 16,
-                          ),),
-                        ),
-                      ),
-                      ),
-                      (speakersCount < 8)
-                        ? Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          child: Text("OR", style: TextStyle(
-                              fontSize: 16,
-                              color: Color(0xB2476747),
-                              fontFamily: "Lato",
-                            )),
-                        )
-                        : Container(),
-                      (speakersCount < 8)
-                        ? Expanded(
                         child: GestureDetector(
                           onTap: () {
                             setState(() {
-                              userKind = "speaker";
-                              role = ClientRole.Broadcaster;
-                              msg = 'Only Speakers can talk :)';
+                              userKind = "participant";
+                              role = ClientRole.Audience;
+                              msg = 'Participants can only listen :)';
                             });
                           },
                           child: Container(
                             alignment: Alignment.center,
                             width: MediaQuery.of(context).size.width,
-                            padding: EdgeInsets.all(20,),
+                            padding: EdgeInsets.all(
+                              20,
+                            ),
                             decoration: BoxDecoration(
-                              color: userKind == "speaker" ? gradientBottom : gradientTop,
+                              color: userKind == "participant"
+                                  ? gradientBottom
+                                  : gradientTop,
                               borderRadius: BorderRadius.circular(30),
                             ),
-                            child: Text("Speaker", style: TextStyle(
-                              color: userKind == "speaker" ? Colors.white : Colors.teal.shade800,
-                              fontSize: 16,
-                            ),),
-                          ),
-                          ),
-                        )
-                      : Container()
-                    ],
-                  ),
-                  SizedBox(height: 20),
-                  Text('$msg', 
-                    style: TextStyle(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 16,
-                      color: Colors.teal.shade800
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text("Theme Selected: $roomTheme", style: TextStyle(
-                      color: Colors.teal.shade800, 
-                    ),),
-                  ),
-                  SizedBox(height: 20),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text("Participants: $participantsCount", style: TextStyle(
-                      color: Colors.teal.shade800, 
-                    ),),
-                  ),
-                  SizedBox(height: 20),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text("Speakers: $speakersCount", style: TextStyle(
-                      color: Colors.teal.shade800, 
-                    ),),
-                  ),
-                  Divider(color: Colors.teal.shade500,),
-                  isLoading
-                    ? CircularProgressIndicator()
-                    : ElevatedButton(
-                        child: Text('Join Room'),
-                        onPressed: () {
-                          updateRoom(user);
-                        },
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(Color(0xff94B5AC)),
-                          shape: MaterialStateProperty.all<OutlinedBorder>(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30),
+                            child: Text(
+                              "Participant",
+                              style: TextStyle(
+                                color: userKind == "participant"
+                                    ? Colors.white
+                                    : Colors.teal.shade800,
+                                fontSize: 16,
+                              ),
                             ),
                           ),
                         ),
+                      ),
+                      (speakersCount < 8)
+                          ? Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 10),
+                              child: Text("OR",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Color(0xB2476747),
+                                    fontFamily: "Lato",
+                                  )),
+                            )
+                          : Container(),
+                      (speakersCount < 8)
+                          ? Expanded(
+                              child: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    userKind = "speaker";
+                                    role = ClientRole.Broadcaster;
+                                    msg = 'Only Speakers can talk :)';
+                                  });
+                                },
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  width: MediaQuery.of(context).size.width,
+                                  padding: EdgeInsets.all(
+                                    20,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: userKind == "speaker"
+                                        ? gradientBottom
+                                        : gradientTop,
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                  child: Text(
+                                    "Speaker",
+                                    style: TextStyle(
+                                      color: userKind == "speaker"
+                                          ? Colors.white
+                                          : Colors.teal.shade800,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            )
+                          : Container()
+                    ],
+                  ),
+                  SizedBox(height: 20),
+                  Text(
+                    '$msg',
+                    style: TextStyle(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 16,
+                        color: Colors.teal.shade800),
+                  ),
+                  SizedBox(height: 20),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "Theme Selected: $roomTheme",
+                      style: TextStyle(
+                        color: Colors.teal.shade800,
+                      ),
                     ),
-                  SizedBox(height: MediaQuery.of(context).size.height*0.05)
+                  ),
+                  SizedBox(height: 20),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "Participants: $participantsCount",
+                      style: TextStyle(
+                        color: Colors.teal.shade800,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "Speakers: $speakersCount",
+                      style: TextStyle(
+                        color: Colors.teal.shade800,
+                      ),
+                    ),
+                  ),
+                  Divider(
+                    color: Colors.teal.shade500,
+                  ),
+                  isLoading
+                      ? CircularProgressIndicator()
+                      : ElevatedButton(
+                          child: Text('Join Room'),
+                          onPressed: () {
+                            updateRoom(user);
+                          },
+                          style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.all(Color(0xff94B5AC)),
+                            shape: MaterialStateProperty.all<OutlinedBorder>(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                            ),
+                          ),
+                        ),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.05)
                 ],
               ),
             ),
@@ -321,20 +353,24 @@ class _SelectThemeState extends State<SelectTheme> {
   initRoom() async {
     // get the details of room
     roomCollection
-      .doc(widget.room.id)
-      .collection("rooms")
-      .doc(widget.room.title)
-      .snapshots()
-      .listen((result) {
-        print(result.data()!['speakersCount']);
-        setState(() {
-          participantsCount = (result.data()!['participantsCount'] < 0 ? 0 : result.data()!['participantsCount']);
-          speakersCount = (result.data()!['speakersCount'] < 0 ? 0 : result.data()!['speakersCount']);
-          token = result.data()!['token'];
-          channelName = widget.room.title!;
-        });
-        print("set");
+        .doc(widget.room.id)
+        .collection("rooms")
+        .doc(widget.room.title)
+        .snapshots()
+        .listen((result) {
+      print(result.data()!['speakersCount']);
+      setState(() {
+        participantsCount = (result.data()!['participantsCount'] < 0
+            ? 0
+            : result.data()!['participantsCount']);
+        speakersCount = (result.data()!['speakersCount'] < 0
+            ? 0
+            : result.data()!['speakersCount']);
+        token = result.data()!['token'];
+        channelName = widget.room.title!;
       });
+      print("set");
+    });
   }
 
   updateRoom(User user) async {
@@ -342,42 +378,78 @@ class _SelectThemeState extends State<SelectTheme> {
       isLoading = true;
     });
 
-    if(userKind == "speaker") {
+    if (userKind == "speaker") {
       // update the list of speakers
-      await roomCollection
-        .doc(widget.room.id)
-        .collection("rooms")
-        .doc(widget.room.title)
-        .update({
+      var rawSpeakers = await roomCollection
+          .doc(widget.room.id)
+          .collection("rooms")
+          .doc(widget.room.title)
+          .collection("speakers")
+          .get();
+      var speakers = rawSpeakers.docs.map((e) => e.data()).toList();
+      bool isThere = false;
+      speakers.forEach((element) {
+        if (element['id'] == user.id && !isThere) {
+          isThere = true;
+        }
+      });
+      if (!isThere) {
+        await roomCollection
+            .doc(widget.room.id)
+            .collection("rooms")
+            .doc(widget.room.title)
+            .update({
           'speakersCount': speakersCount + 1,
         });
-      await roomCollection
-        .doc(widget.room.id)
-        .collection("rooms")
-        .doc(widget.room.title)
-        .collection("speakers")
-        .doc(user.userName)
-        .set(user.toJson());
+        await roomCollection
+            .doc(widget.room.id)
+            .collection("rooms")
+            .doc(widget.room.title)
+            .collection("speakers")
+            .doc(user.userName)
+            .set(user.toJson());
+        setState(() {
+          speakersCount = speakers.length + 1;
+        });
+      }
     } else {
       // update the list of participants
-      await roomCollection
-        .doc(widget.room.id)
-        .collection("rooms")
-        .doc(widget.room.title)
-        .update({
+      var rawParticipants = await roomCollection
+          .doc(widget.room.id)
+          .collection("rooms")
+          .doc(widget.room.title)
+          .collection("participants") // participants
+          .get();
+      var participants = rawParticipants.docs.map((e) => e.data()).toList();
+      bool isThere = false;
+      participants.forEach((element) {
+        if (element['id'] == user.id && !isThere) {
+          isThere = true;
+        }
+      });
+      if (!isThere) {
+        await roomCollection
+            .doc(widget.room.id)
+            .collection("rooms")
+            .doc(widget.room.title)
+            .update({
           'participantsCount': participantsCount + 1,
         });
-      await roomCollection
-        .doc(widget.room.id)
-        .collection("rooms")
-        .doc(widget.room.title)
-        .collection("participants")
-        .doc(user.userName)
-        .set({
+        await roomCollection
+            .doc(widget.room.id)
+            .collection("rooms")
+            .doc(widget.room.title)
+            .collection("participants")
+            .doc(user.userName)
+            .set({
           'username': user.userName,
           'name': user.name,
           'profileImage': user.userProfile?.profileImage ?? "image",
         });
+        setState(() {
+          participantsCount = participants.length + 1;
+        });
+      }
     }
 
     navigateToRoom();
@@ -385,35 +457,38 @@ class _SelectThemeState extends State<SelectTheme> {
 
   navigateToRoom() {
     // navigate to the room
-    if(roomTheme == "Minimalist") {
-      Navigator.pushReplacement(context, CupertinoPageRoute(
-        builder: (context) => Minimal(
-          room: widget.room,
-          role: role,
-        ))
-      );
-    } else if(roomTheme == "Cafe") {
-      Navigator.pushReplacement(context, CupertinoPageRoute(
-        builder: (context) => Cafe(
-          room: widget.room,
-          role: role,
-        ))
-      );
-    } else if(roomTheme == "Library") {
-      Navigator.pushReplacement(context, CupertinoPageRoute(
-        builder: (context) => Library(
-          room: widget.room,
-          role: role,
-        ))
-      );
-    } else if(roomTheme == "Fun") {
-      Navigator.pushReplacement(context, CupertinoPageRoute(
-        builder: (context) => Fun(
-          room: widget.room,
-          role: role,
-        ))
-      );
+    if (roomTheme == "Minimalist") {
+      Navigator.pushReplacement(
+          context,
+          CupertinoPageRoute(
+              builder: (context) => Minimal(
+                    room: widget.room,
+                    role: role,
+                  )));
+    } else if (roomTheme == "Cafe") {
+      Navigator.pushReplacement(
+          context,
+          CupertinoPageRoute(
+              builder: (context) => Cafe(
+                    room: widget.room,
+                    role: role,
+                  )));
+    } else if (roomTheme == "Library") {
+      Navigator.pushReplacement(
+          context,
+          CupertinoPageRoute(
+              builder: (context) => Library(
+                    room: widget.room,
+                    role: role,
+                  )));
+    } else if (roomTheme == "Fun") {
+      Navigator.pushReplacement(
+          context,
+          CupertinoPageRoute(
+              builder: (context) => Fun(
+                    room: widget.room,
+                    role: role,
+                  )));
     }
   }
-
 }
