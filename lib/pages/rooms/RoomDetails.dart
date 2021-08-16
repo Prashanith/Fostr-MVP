@@ -25,10 +25,6 @@ class RoomDetails extends StatelessWidget with FostrTheme {
               Color.fromRGBO(229, 229, 229, 1),
             ],
           ),
-          borderRadius: BorderRadiusDirectional.only(
-            topStart: Radius.circular(32),
-            topEnd: Radius.circular(32),
-          ),
         ),
         child: SafeArea(
           child: Column(
