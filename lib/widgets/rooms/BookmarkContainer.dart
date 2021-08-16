@@ -8,18 +8,22 @@ class BookmarkContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print(imgURL);
-    return ClipPath(
-      clipper: MyCustomClipper(),
-      child: Container(
-        decoration: BoxDecoration(
+    return Container(
+      transform: Transform.scale(scale: 0.75).transform,
+      child: ClipPath(
+        clipper: MyCustomClipper(),
+        child: Container(
+          decoration: BoxDecoration(
             color: Colors.white,
             image: DecorationImage(
-                image: (imgURL == null)
-                    ? Image.asset(IMAGES + "logo_white.png").image
-                    : NetworkImage(imgURL!),
-                fit: BoxFit.contain)),
-        height: 88,
-        width: 70,
+                image: (imgURL != null && imgURL!.isNotEmpty)
+                    ? NetworkImage(imgURL!)
+                    : Image.asset(IMAGES + "logo_white.png").image,
+                fit: BoxFit.contain),
+          ),
+          height: 88,
+          width: 70,
+        ),
       ),
     );
   }
