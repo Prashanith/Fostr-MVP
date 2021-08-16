@@ -15,7 +15,7 @@ class BookmarkContainer extends StatelessWidget {
             color: Colors.white,
             image: DecorationImage(
                 image: (imgURL == null)
-                    ? Image.asset(IMAGES + "background.png").image
+                    ? Image.asset(IMAGES + "logo_white.png").image
                     : NetworkImage(imgURL!),
                 fit: BoxFit.contain)),
         height: 88,

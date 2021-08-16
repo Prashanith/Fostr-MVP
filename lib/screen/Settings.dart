@@ -25,10 +25,6 @@ class SettingsPage extends StatelessWidget with FostrTheme {
               Color.fromRGBO(229, 229, 229, 1),
             ],
           ),
-          borderRadius: BorderRadiusDirectional.only(
-            topStart: Radius.circular(32),
-            topEnd: Radius.circular(32),
-          ),
         ),
         child: SafeArea(
           child: Column(
@@ -86,35 +82,41 @@ class Settings extends StatelessWidget with FostrTheme {
         ),
         color: Colors.white,
       ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          LightBtn(
-            text: "Privacy Policy",
-            url: "http://www.fostrreads.com/privacy"
-          ),
-          LightBtn(
-            text: "Terms and Conditions",
-            url: "http://www.fostrreads.com/terms"
-          ),
-          LightBtn(
-            text: "About Us",
-            url: "http://www.fostrreads.com/about"
-          ),
-          SizedBox(height: 20.h),
-          PrimaryButton(
-            text: "Logout",
-            onTap: () async {
-              await auth.signOut();
-              FostrRouter.removeUntillAndGoto(
-                context,
-                Routes.userChoice,
-                (route) => false,
-              );
-            },
-          ),
-        ],
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            LightBtn(
+              text: "Privacy Policy",
+              url: "https://www.fostrreads.com/privacy"
+            ),
+            LightBtn(
+              text: "Terms and Conditions",
+              url: "https://www.fostrreads.com/terms"
+            ),
+            LightBtn(
+              text: "About Us",
+              url: "https://www.fostrreads.com/about"
+            ),
+            LightBtn(
+              text: "Contact Us",
+              url: "https://www.fostrreads.com/contact"
+            ),
+            SizedBox(height: 20.h),
+            PrimaryButton(
+              text: "Logout",
+              onTap: () async {
+                await auth.signOut();
+                FostrRouter.removeUntillAndGoto(
+                  context,
+                  Routes.userChoice,
+                  (route) => false,
+                );
+              },
+            ),
+          ],
+        ),
       )
     );
   }
