@@ -22,9 +22,7 @@ class OngoingRoomCard extends StatelessWidget with FostrTheme {
           child: Container(
             width: double.infinity,
             // height: MediaQuery.of(context).size.height * 0.25,
-            constraints: BoxConstraints(
-              maxHeight: 150,
-            ),
+            constraints: BoxConstraints(maxHeight: 150, maxWidth: 370),
             decoration: BoxDecoration(
               // gradient: LinearGradient(
               //   begin: Alignment.topLeft,
@@ -55,10 +53,9 @@ class OngoingRoomCard extends StatelessWidget with FostrTheme {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(24),
                     gradient: LinearGradient(colors: [
-                      Colors.black.withOpacity(0.7),
-                      Colors.black.withOpacity(0.5),
-                      Colors.black.withOpacity(0.3),
-                      Colors.black.withOpacity(0.1),
+                      Colors.green.shade100.withOpacity(1),
+                      Colors.green.shade100.withOpacity(0.7),
+                      Colors.green.shade100.withOpacity(0.3),
                     ])),
                 padding: const EdgeInsets.all(15),
                 child: BackdropFilter(
@@ -72,7 +69,7 @@ class OngoingRoomCard extends StatelessWidget with FostrTheme {
                           SvgPicture.asset(
                             ICONS + "people.svg",
                             height: 20,
-                            color: Colors.white,
+                            color: Colors.black54,
                           ),
                           SizedBox(
                             width: 8,
@@ -82,7 +79,7 @@ class OngoingRoomCard extends StatelessWidget with FostrTheme {
                                 ? "0"
                                 : room.participantsCount.toString()),
                             style: h2.copyWith(
-                              color: Colors.white,
+                              color: Colors.black87,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -92,7 +89,7 @@ class OngoingRoomCard extends StatelessWidget with FostrTheme {
                           SvgPicture.asset(
                             ICONS + "mic.svg",
                             height: 20,
-                            color: Colors.white,
+                            color: Colors.black54,
                           ),
                           SizedBox(
                             width: 8,
@@ -102,7 +99,7 @@ class OngoingRoomCard extends StatelessWidget with FostrTheme {
                                 ? "0"
                                 : room.speakersCount.toString()),
                             style: h2.copyWith(
-                              color: Colors.white,
+                              color: Colors.black87,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -114,7 +111,7 @@ class OngoingRoomCard extends StatelessWidget with FostrTheme {
                       Text(
                         "by " + room.roomCreator.toString(),
                         style: TextStyle(
-                          color: Colors.white,
+                          color: Colors.black87,
                           fontSize: 11,
                           fontFamily: "Lato",
                         ),
@@ -123,7 +120,7 @@ class OngoingRoomCard extends StatelessWidget with FostrTheme {
                       Text(
                         room.title.toString(),
                         style: h2.copyWith(
-                            color: Colors.white, fontWeight: FontWeight.w700),
+                            color: Colors.black87, fontWeight: FontWeight.w700),
                       ),
                       SizedBox(
                         height: 5,
@@ -144,7 +141,7 @@ class OngoingRoomCard extends StatelessWidget with FostrTheme {
                             .format(DateTime.parse(room.dateTime.toString())),
                         style: TextStyle(
                             fontSize: 15,
-                            color: Colors.white,
+                            color: Colors.black87,
                             fontFamily: "Lato",
                             overflow: TextOverflow.ellipsis),
                       )
