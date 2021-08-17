@@ -10,7 +10,6 @@ import 'package:fostr/providers/AuthProvider.dart';
 import 'package:fostr/utils/theme.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'BookmarkContainer.dart';
 
 class OngoingRoomCard extends StatelessWidget with FostrTheme {
   final Room room;
@@ -30,20 +29,20 @@ class OngoingRoomCard extends StatelessWidget with FostrTheme {
             // height: MediaQuery.of(context).size.height * 0.25,
             constraints: BoxConstraints(maxHeight: 150, maxWidth: 370),
             decoration: BoxDecoration(
-              // gradient: LinearGradient(
-              //   begin: Alignment.topLeft,
-              //   end: Alignment.bottomRight,
-              //   colors: [
-              //     Color(0xff9BC8B1),
-              //     Color(0xffA5C5BD),
-              //   ],
-              // ),
-              image: DecorationImage(
-                image: (room.imageUrl != null && room.imageUrl!.isNotEmpty)
-                    ? NetworkImage(room.imageUrl!)
-                    : Image.asset(IMAGES + "logo_white.png").image,
-                fit: BoxFit.cover,
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Color(0xffAAC8B1),
+                  Color(0xffA5C5BD),
+                ],
               ),
+              // image: DecorationImage(
+              // image: (room.imageUrl != null && room.imageUrl!.isNotEmpty)
+              //     ? NetworkImage(room.imageUrl!)
+              //     : Image.asset(IMAGES + "logo_white.png").image,
+              //   fit: BoxFit.cover,
+              // ),
               borderRadius: BorderRadius.circular(24),
               boxShadow: [
                 BoxShadow(
@@ -53,20 +52,30 @@ class OngoingRoomCard extends StatelessWidget with FostrTheme {
                 )
               ],
             ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(24),
-              child: Container(
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(24),
-                    gradient: LinearGradient(colors: [
-                      Colors.green.shade100.withOpacity(1),
-                      Colors.green.shade100.withOpacity(0.7),
-                      Colors.green.shade100.withOpacity(0.3),
-                    ])),
-                padding: const EdgeInsets.all(15),
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 1, sigmaY: 1),
-                  child: Column(
+            child: Container(
+              padding: const EdgeInsets.all(15),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(24),
+              ),
+              child: Stack(
+                children: [
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Container(
+                      height: 100,
+                      width: 100,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        image: DecorationImage(
+                            fit: BoxFit.fill,
+                            image: (room.imageUrl != null &&
+                                    room.imageUrl!.isNotEmpty)
+                                ? Image.network(room.imageUrl!).image
+                                : Image.asset(IMAGES + "logo_white.png").image),
+                      ),
+                    ),
+                  ),
+                  Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
@@ -135,7 +144,7 @@ class OngoingRoomCard extends StatelessWidget with FostrTheme {
                         room.agenda.toString(),
                         style: TextStyle(
                             fontSize: 12,
-                            color: Colors.white,
+                            color: Colors.black87,
                             fontFamily: "Lato",
                             overflow: TextOverflow.ellipsis),
                       ),
@@ -153,32 +162,37 @@ class OngoingRoomCard extends StatelessWidget with FostrTheme {
                       )
                     ],
                   ),
-                ),
+                ],
               ),
             ),
           ),
         ),
-        room.roomCreator == ((user.bookClubName == "") ? user.name : user.bookClubName)
-          ? Positioned(
-              right: 5,
-              bottom: 5,
-              child: IconButton(
-                icon: Icon(Icons.delete_outline_rounded),
-                onPressed: () async {
-                  if (await confirm(
-                    context,
-                    title: Text('Confirm'),
-                    content: Text('Are you sure you want to delete this room?'),
-                    textOK: Text('Yes'),
-                    textCancel: Text('No'),
-                  )) {
-                    roomCollection.doc(user.id).collection('rooms').doc(room.title).delete();
-                  }
-                  return;
-                }
-              ),
-            )
-          : Container(),
+        room.roomCreator ==
+                ((user.bookClubName == "") ? user.name : user.bookClubName)
+            ? Positioned(
+                right: 5,
+                bottom: 5,
+                child: IconButton(
+                    icon: Icon(Icons.delete_outline_rounded),
+                    onPressed: () async {
+                      if (await confirm(
+                        context,
+                        title: Text('Confirm'),
+                        content:
+                            Text('Are you sure you want to delete this room?'),
+                        textOK: Text('Yes'),
+                        textCancel: Text('No'),
+                      )) {
+                        roomCollection
+                            .doc(user.id)
+                            .collection('rooms')
+                            .doc(room.title)
+                            .delete();
+                      }
+                      return;
+                    }),
+              )
+            : Container(),
         // Positioned(
         //   right: 8,
         //   top: 20,
