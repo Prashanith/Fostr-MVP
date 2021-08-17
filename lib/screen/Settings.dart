@@ -111,6 +111,7 @@ class Settings extends StatelessWidget with FostrTheme {
             ),
           ],
         ),
+        
       ),
     );
   }

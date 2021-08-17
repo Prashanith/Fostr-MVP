@@ -35,19 +35,10 @@ class RoomDetails extends StatelessWidget with FostrTheme {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // SvgPicture.asset(ICONS + "menu.svg"),
-                    // SizedBox(
-                    //   height: 30,
-                    // ),
-                    (user.name == "")
-                      ? Text(
-                        "Hello, User",
-                        style: h1.apply(color: Colors.white),
-                      )
-                      : Text(
-                        "Hello, ${user.name}",
-                        style: h1.apply(color: Colors.white),
-                      ),
+                    Text(
+                      "Add Room",
+                      style: h1.apply(color: Colors.white),
+                    )
                   ],
                 ),
               ),
