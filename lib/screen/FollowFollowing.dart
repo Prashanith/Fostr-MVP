@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:fostr/core/constants.dart';
 import 'package:fostr/models/UserModel/User.dart';
 import 'package:fostr/providers/AuthProvider.dart';
@@ -111,9 +112,6 @@ class _UserCardState extends State<UserCard> with FostrTheme {
     "invites": 10,
   });
   bool followed = true;
-  final followedSnackBar = SnackBar(content: Text('Followed Successfully!'));
-  final unfollowedSnackBar =
-      SnackBar(content: Text('Unfollowed Successfully!'));
   final UserService userService = GetIt.I<UserService>();
 
   @override
@@ -227,8 +225,15 @@ class _UserCardState extends State<UserCard> with FostrTheme {
                               followed = true;
                             });
                             auth.refreshUser(newUser);
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(followedSnackBar);
+                            Fluttertoast.showToast(
+                              msg: "Followed Successfully!",
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.BOTTOM,
+                              timeInSecForIosWeb: 1,
+                              backgroundColor: gradientBottom,
+                              textColor: Colors.white,
+                              fontSize: 16.0
+                            );
                           } else {
                             var newUser = await userService.unfollowUser(
                                 auth.user!, user);
@@ -236,8 +241,15 @@ class _UserCardState extends State<UserCard> with FostrTheme {
                               followed = false;
                             });
                             auth.refreshUser(newUser);
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(unfollowedSnackBar);
+                            Fluttertoast.showToast(
+                              msg: "Unfollowed Successfully!",
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.BOTTOM,
+                              timeInSecForIosWeb: 1,
+                              backgroundColor: gradientBottom,
+                              textColor: Colors.white,
+                              fontSize: 16.0
+                            );
                           }
                         }
                       } catch (e) {

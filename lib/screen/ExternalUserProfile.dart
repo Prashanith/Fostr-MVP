@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fostr/models/UserModel/User.dart';
 import 'package:fostr/providers/AuthProvider.dart';
@@ -13,6 +14,7 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart' as url;
 
 import 'package:sizer/sizer.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ExternalProfilePage extends StatefulWidget {
   final User user;
@@ -26,10 +28,6 @@ class _ExternalProfilePageState extends State<ExternalProfilePage>
   final UserService userService = GetIt.I<UserService>();
 
   bool isFollowed = false;
-
-  final followedSnackBar = SnackBar(content: Text('Followed Successfully!'));
-  final unfollowedSnackBar =
-      SnackBar(content: Text('Unfollowed Successfully!'));
 
   @override
   Widget build(BuildContext context) {
@@ -234,8 +232,15 @@ class _ExternalProfilePageState extends State<ExternalProfilePage>
                                 isFollowed = true;
                               });
                               auth.refreshUser(newUser);
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(followedSnackBar);
+                              Fluttertoast.showToast(
+                                msg: "Followed Successfully!",
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.BOTTOM,
+                                timeInSecForIosWeb: 1,
+                                backgroundColor: gradientBottom,
+                                textColor: Colors.white,
+                                fontSize: 16.0
+                              );
                             } else {
                               var newUser = await userService.unfollowUser(
                                   auth.user!, widget.user);
@@ -243,8 +248,15 @@ class _ExternalProfilePageState extends State<ExternalProfilePage>
                                 isFollowed = false;
                               });
                               auth.refreshUser(newUser);
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(unfollowedSnackBar);
+                              Fluttertoast.showToast(
+                                msg: "Unfollowed Successfully!",
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.BOTTOM,
+                                timeInSecForIosWeb: 1,
+                                backgroundColor: gradientBottom,
+                                textColor: Colors.white,
+                                fontSize: 16.0
+                              );
                             }
                           },
                           child: Container(
@@ -373,6 +385,17 @@ class _ExternalProfilePageState extends State<ExternalProfilePage>
                         ),
                       ],
                     ),
+                  ),
+                  Positioned(
+                    top: 10,
+                    right: 10,
+                    child: Tooltip(
+                      message: "Report User",
+                      child: IconButton(
+                        icon: Icon(Icons.report),
+                        onPressed: () => launch("https://www.fostrreads.com/contact")
+                      ),
+                    )
                   ),
                 ],
               ),

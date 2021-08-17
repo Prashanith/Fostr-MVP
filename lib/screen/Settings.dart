@@ -1,3 +1,4 @@
+import 'package:confirm_dialog/confirm_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:fostr/core/constants.dart';
 import 'package:fostr/providers/AuthProvider.dart';
@@ -61,47 +62,56 @@ class Settings extends StatelessWidget with FostrTheme {
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthProvider>(context);
     return Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: Image.asset(IMAGES + "background.png").image,
-            fit: BoxFit.cover,
-          ),
-          borderRadius: BorderRadiusDirectional.only(
-            topStart: Radius.circular(32),
-            topEnd: Radius.circular(32),
-          ),
-          color: Colors.white,
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: Image.asset(IMAGES + "background.png").image,
+          fit: BoxFit.cover,
         ),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              LightBtn(
-                  text: "Privacy Policy",
-                  url: "https://www.fostrreads.com/privacy"),
-              LightBtn(
-                  text: "Terms and Conditions",
-                  url: "https://www.fostrreads.com/terms"),
-              LightBtn(
-                  text: "About Us", url: "https://www.fostrreads.com/about"),
-              LightBtn(
-                  text: "Contact Us",
-                  url: "https://www.fostrreads.com/contact"),
-              SizedBox(height: 20.h),
-              PrimaryButton(
-                text: "Logout",
-                onTap: () async {
+        borderRadius: BorderRadiusDirectional.only(
+          topStart: Radius.circular(32),
+          topEnd: Radius.circular(32),
+        ),
+        color: Colors.white,
+      ),
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            LightBtn(
+                text: "Privacy Policy",
+                url: "https://www.fostrreads.com/privacy"),
+            LightBtn(
+                text: "Terms and Conditions",
+                url: "https://www.fostrreads.com/terms"),
+            LightBtn(text: "About Us", url: "https://www.fostrreads.com/about"),
+            LightBtn(
+                text: "Contact Us", url: "https://www.fostrreads.com/contact"),
+            SizedBox(height: 20.h),
+            PrimaryButton(
+              text: "Logout",
+              onTap: () async {
+                if (await confirm(
+                  context,
+                  title: Text('Confirm'),
+                  content: Text(
+                      'Are you sure you want to leave such amazing application?'),
+                  textOK: Text('Yes'),
+                  textCancel: Text('No'),
+                )) {
                   await auth.signOut();
                   FostrRouter.removeUntillAndGoto(
                     context,
                     Routes.userChoice,
-                    (route) => route.settings.name == Routes.entry,
+                    (route) => false,
                   );
-                },
-              ),
-            ],
-          ),
-        ));
+                }
+                return;
+              },
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

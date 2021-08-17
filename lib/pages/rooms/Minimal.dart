@@ -220,7 +220,9 @@ class _MinimalState extends State<Minimal> with FostrTheme {
                                 .collection('speakers')
                                 .snapshots(),
                               builder: (BuildContext context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
-                                if (snapshot.hasData) {
+                                if (snapshot.hasData && snapshot.data!.docs.length == 0) {
+                                  return Align(child: Text("No speakers yet!"), alignment: Alignment.topCenter,);
+                                } else if (snapshot.hasData) {
                                   List<QueryDocumentSnapshot<Map<String, dynamic>>> map = snapshot.data!.docs;
                                   return Padding(
                                     padding: const EdgeInsets.only(top: 25),

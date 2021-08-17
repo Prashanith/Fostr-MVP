@@ -19,7 +19,7 @@ class BookmarkContainer extends StatelessWidget {
                 image: (imgURL != null && imgURL!.isNotEmpty)
                     ? NetworkImage(imgURL!)
                     : Image.asset(IMAGES + "logo_white.png").image,
-                fit: BoxFit.contain),
+                fit: BoxFit.fill),
           ),
           height: 88,
           width: 70,

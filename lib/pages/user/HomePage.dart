@@ -55,23 +55,23 @@ class _UserDashboardState extends State<UserDashboard> with FostrTheme {
         items: <Widget>[
           Icon(
             LineIcons.plus,
-            size: 18,
+            size: 17,
           ),
           Icon(
             LineIcons.calendar,
-            size: 18,
+            size: 17,
           ),
           Icon(
             LineIcons.home,
-            size: 18,
+            size: 17,
           ),
           Icon(
             LineIcons.search,
-            size: 18,
+            size: 17,
           ),
           Icon(
             LineIcons.user,
-            size: 18,
+            size: 17,
           ),
         ],
         onTap: (index) {
@@ -168,24 +168,23 @@ class _OngoingRoomState extends State<OngoingRoom> with FostrTheme {
                             horizontal: 10, vertical: 10),
                         child:
                             StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                                stream: roomCollection.snapshots(),
-                                builder: (BuildContext context,
-                                    AsyncSnapshot<QuerySnapshot> outerData) {
-                                  if (outerData.hasData) {
-                                    final docs = outerData.data!.docs;
-
-                                    return ListView.builder(
-                                      itemCount: docs.length,
-                                      itemBuilder: (context, index) {
-                                        final id = docs[index].id;
-                                        return RoomList(id: id);
-                                      },
-                                    );
-                                  } else {
-                                    return Center(
-                                        child: CircularProgressIndicator());
-                                  }
-                                }),
+                              stream: roomCollection.snapshots(),
+                              builder: (BuildContext context,
+                                  AsyncSnapshot<QuerySnapshot> outerData) {
+                                if (outerData.hasData) {
+                                  final docs = outerData.data!.docs;
+                                  return ListView.builder(
+                                    itemCount: docs.length,
+                                    itemBuilder: (context, index) {
+                                      final id = docs[index].id;
+                                      return RoomList(id: id);
+                                    },
+                                  );
+                                } else {
+                                  return Center(
+                                      child: CircularProgressIndicator());
+                                }
+                              }),
                       ),
                     ),
                   ),

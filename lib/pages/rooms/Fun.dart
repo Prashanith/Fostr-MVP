@@ -228,8 +228,10 @@ class _FunState extends State<Fun> with FostrTheme {
                                     List<QueryDocumentSnapshot<Map<String, dynamic>>> map = snapshot.data!.docs;
                                     return Stack(
                                       children: [
-                                        DragProfile(user: User.fromJson(map[0].data()), 
-                                          offset: Offset(MediaQuery.of(context).size.width*0.05, MediaQuery.of(context).size.height*0.32), isSpeaker: true),
+                                        map.length >= 1
+                                          ? DragProfile(user: User.fromJson(map[0].data()), 
+                                              offset: Offset(MediaQuery.of(context).size.width*0.05, MediaQuery.of(context).size.height*0.32), isSpeaker: true)
+                                          : Align(child: Text("No speakers yet!"), alignment: Alignment.topCenter,),
                                         map.length >= 2
                                           ? DragProfile(user: User.fromJson(map[1].data()),
                                               offset: Offset(MediaQuery.of(context).size.width*0.4, MediaQuery.of(context).size.height*0.31), isSpeaker: true)
