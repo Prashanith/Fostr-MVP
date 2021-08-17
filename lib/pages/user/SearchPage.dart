@@ -22,6 +22,7 @@ class _SearchPageState extends State<SearchPage> with FostrTheme {
   bool searched = false;
 
   List<Map<String, dynamic>> users = [];
+  List<String> containedUsers = [];
 
   final UserService userService = GetIt.I<UserService>();
   final searchForm = GlobalKey<FormState>();
@@ -98,6 +99,7 @@ class _SearchPageState extends State<SearchPage> with FostrTheme {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Container(
+                              padding: const EdgeInsets.symmetric(vertical: 10),
                               margin: const EdgeInsets.only(right: 20),
                               width: 60.w,
                               decoration: BoxDecoration(
@@ -115,7 +117,7 @@ class _SearchPageState extends State<SearchPage> with FostrTheme {
                                 child: TextFormField(
                                   validator: (va) {
                                     if (va!.isEmpty) {
-                                      return "Enter valid name or username";
+                                      return "Search can't be empty";
                                     }
                                   },
                                   style: h2.copyWith(fontSize: 14.sp),
@@ -130,7 +132,8 @@ class _SearchPageState extends State<SearchPage> with FostrTheme {
                                   },
                                   decoration: InputDecoration(
                                     contentPadding: EdgeInsets.symmetric(
-                                        horizontal: 20, vertical: 2.h),
+                                      horizontal: 20,
+                                    ),
                                     hintText: "Search",
                                     hintStyle: h2.copyWith(fontSize: 14.sp),
                                     border: InputBorder.none,
@@ -193,22 +196,27 @@ class _SearchPageState extends State<SearchPage> with FostrTheme {
                                 itemCount: users.length,
                                 itemBuilder: (context, idx) {
                                   var user = User.fromJson(users[idx]);
-                                  return UserCard(
-                                    user: user,
-                                  );
+                                  if (!containedUsers.contains(user.id)) {
+                                    containedUsers.add(user.id);
+                                    return UserCard(
+                                      user: user,
+                                    );
+                                  }
+                                  return SizedBox.shrink();
                                 },
                               )
                             : (searched)
-                                ? Center(child: Text("No Users or Book Club found"))
-                                : Center(child: Text("You can find someone try to search")),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 40, bottom: 20),
-                        child: Divider(
-                          endIndent: 40,
-                          indent: 40,
-                          thickness: 2,
-                        ),
+                                ? Center(
+                                    child: Text(
+                                    "No Users or Book Clubs found",
+                                    style: h2,
+                                  ))
+                                : Center(
+                                    child: Text(
+                                      "You can find someone try to search",
+                                      style: h2,
+                                    ),
+                                  ),
                       ),
                     ],
                   ),

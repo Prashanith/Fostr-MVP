@@ -135,11 +135,15 @@ class _LoginPageState extends State<LoginPage> with FostrTheme {
                     child: Column(
                       children: [
                         InputField(
+                          onEditingCompleted: () {
+                            FocusScope.of(context).nextFocus();
+                          },
                           validator: (value) {
-                            if (isError) {
+                            if (isError && error != "Wrong password") {
                               isError = false;
                               return error;
                             }
+
                             if (!Validator.isEmail(value!) &&
                                 !Validator.isPhone(value)) {
                               return "Please provide correct values";
@@ -159,6 +163,10 @@ class _LoginPageState extends State<LoginPage> with FostrTheme {
                                 validator: (value) {
                                   if (passwordController.text.length < 6) {
                                     return "Password dose not match";
+                                  } else if (isError &&
+                                      error == "Wrong password") {
+                                    isError = false;
+                                    return error;
                                   }
                                 },
                                 controller: passwordController,

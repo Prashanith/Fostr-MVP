@@ -39,7 +39,7 @@ dependencies:
   firebase: ^9.0.1
   firebase_auth: ^3.0.1
   firebase_core: ^1.4.0
-  firebase_messaging: null
+  firebase_messaging: ^10.0.4
   firebase_storage: ^10.0.1
   flutter:
     sdk: flutter
@@ -51,6 +51,7 @@ dependencies:
   google_nav_bar: ^5.0.5
   google_sign_in: ^5.0.5
   intl: ^0.17.0
+  image_cropper: ^1.4.1
   json_annotation: ^4.0.0
   line_icons: ^2.0.1
   location: ^4.3.0

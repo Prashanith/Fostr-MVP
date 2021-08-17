@@ -36,19 +36,10 @@ class SettingsPage extends StatelessWidget with FostrTheme {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // SvgPicture.asset(ICONS + "menu.svg"),
-                    // SizedBox(
-                    //   height: 30,
-                    // ),
-                    (user.name == "")
-                      ? Text(
-                        "Hello, User",
-                        style: h1.apply(color: Colors.white),
-                      )
-                      : Text(
-                        "Hello, ${user.name}",
-                        style: h1.apply(color: Colors.white),
-                      ),
+                    Text(
+                      "Settings",
+                      style: h1.apply(color: Colors.white),
+                    )
                   ],
                 ),
               ),
@@ -65,7 +56,6 @@ class SettingsPage extends StatelessWidget with FostrTheme {
     );
   }
 }
-
 
 class Settings extends StatelessWidget with FostrTheme {
   @override
@@ -89,21 +79,14 @@ class Settings extends StatelessWidget with FostrTheme {
           mainAxisSize: MainAxisSize.min,
           children: [
             LightBtn(
-              text: "Privacy Policy",
-              url: "https://www.fostrreads.com/privacy"
-            ),
+                text: "Privacy Policy",
+                url: "https://www.fostrreads.com/privacy"),
             LightBtn(
-              text: "Terms and Conditions",
-              url: "https://www.fostrreads.com/terms"
-            ),
+                text: "Terms and Conditions",
+                url: "https://www.fostrreads.com/terms"),
+            LightBtn(text: "About Us", url: "https://www.fostrreads.com/about"),
             LightBtn(
-              text: "About Us",
-              url: "https://www.fostrreads.com/about"
-            ),
-            LightBtn(
-              text: "Contact Us",
-              url: "https://www.fostrreads.com/contact"
-            ),
+                text: "Contact Us", url: "https://www.fostrreads.com/contact"),
             SizedBox(height: 20.h),
             PrimaryButton(
               text: "Logout",
@@ -111,7 +94,8 @@ class Settings extends StatelessWidget with FostrTheme {
                 if (await confirm(
                   context,
                   title: Text('Confirm'),
-                  content: Text('Are you sure you want to leave such amazing application?'),
+                  content: Text(
+                      'Are you sure you want to leave such amazing application?'),
                   textOK: Text('Yes'),
                   textCancel: Text('No'),
                 )) {
@@ -127,7 +111,8 @@ class Settings extends StatelessWidget with FostrTheme {
             ),
           ],
         ),
-      )
+        
+      ),
     );
   }
 }

@@ -49,7 +49,8 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
 
   Future<void> showPopUp(String field, String uid, Function cb,
       {String? value, int? maxLine}) {
-    return displayTextInputDialog(context, field, maxLine: maxLine)
+    return displayTextInputDialog(context, field,
+            maxLine: maxLine, value: value)
         .then((shouldUpdate) {
       if (shouldUpdate[0]) {
         cb(shouldUpdate);
@@ -197,7 +198,9 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                                             "id": user.id
                                           });
                                         });
-                                      });
+                                      },
+                                          value:
+                                              user.userProfile?.twitter ?? "");
                                     },
                                   ),
                                   IconButton(
@@ -221,7 +224,9 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                                             "id": user.id
                                           });
                                         });
-                                      });
+                                      },
+                                          value: user.userProfile?.instagram ??
+                                              "");
                                     },
                                   ),
                                   IconButton(
@@ -246,7 +251,9 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                                             "id": user.id
                                           });
                                         });
-                                      });
+                                      },
+                                          value:
+                                              user.userProfile?.linkedIn ?? "");
                                     },
                                   ),
                                 ],
@@ -290,6 +297,9 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                                             }
                                           });
                                         },
+                                        value: (isClub)
+                                            ? user.bookClubName
+                                            : user.name,
                                       );
                                     },
                                     child: (auth.userType == UserType.CLUBOWNER)
@@ -356,7 +366,7 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                                       fontWeight: FontWeight.w500,
                                       color: Colors.teal[900])),
                               IconButton(
-                                icon: FaIcon(FontAwesomeIcons.pen),
+                                icon: FaIcon(FontAwesomeIcons.edit),
                                 color: Colors.teal[800],
                                 iconSize: 16,
                                 onPressed: () {
@@ -376,7 +386,9 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                                         "id": user.id
                                       });
                                     });
-                                  }, maxLine: 5);
+                                  },
+                                      maxLine: 5,
+                                      value: user.userProfile?.bio ?? "");
                                 },
                               ),
                             ],
@@ -386,16 +398,6 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                           padding: EdgeInsets.symmetric(horizontal: 20),
                           height: 80,
                           decoration: ShapeDecoration(
-                            // gradient: LinearGradient(
-                            //   colors: [
-                            //     const Color(0xFF80CBC4),
-                            //     const Color(0xFFB2DFDB),
-                            //   ],
-                            //   begin: Alignment.bottomCenter,
-                            //   end: Alignment.center,
-                            //   stops: [0.0, 0.5],
-                            //   tileMode: TileMode.clamp,
-                            // ),
                             color: Colors.white,
                             shadows: [
                               BoxShadow(
@@ -453,7 +455,7 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: List.generate(
-                                  5,
+                                  3,
                                   (index) {
                                     return Padding(
                                       padding: const EdgeInsets.symmetric(
@@ -496,6 +498,10 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                                                     arr[index] = e[1];
                                                     user.userProfile!
                                                         .favouriteBooks = arr;
+                                                  } else {
+                                                    user.userProfile!
+                                                            .favouriteBooks![
+                                                        index] = e[1];
                                                   }
                                                 });
                                                 updateProfile({

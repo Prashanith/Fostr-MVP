@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class CheckboxFormField extends FormField<bool> {
   CheckboxFormField(
       {required Widget title,
+      required ValueChanged<bool?> onChanged,
       FormFieldSetter<bool>? onSaved,
       FormFieldValidator<bool>? validator,
       bool initialValue = false,
@@ -18,7 +19,10 @@ class CheckboxFormField extends FormField<bool> {
                 dense: state.hasError,
                 title: title,
                 value: state.value,
-                onChanged: state.didChange,
+                onChanged: (value) {
+                  onChanged(value);
+                  state.didChange(value);
+                },
                 subtitle: state.hasError
                     ? Builder(
                         builder: (BuildContext context) => Text(

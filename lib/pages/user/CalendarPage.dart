@@ -156,8 +156,8 @@ class _CalendarPageState extends State<CalendarPage> with FostrTheme {
   }
 }
 
-class RoomWidget extends StatelessWidget {
-  const RoomWidget({
+class RoomWidget extends StatelessWidget with FostrTheme {
+  RoomWidget({
     Key? key,
     required this.id,
     required this.date,
@@ -172,7 +172,15 @@ class RoomWidget extends StatelessWidget {
       stream: roomCollection.doc(id).collection('rooms').snapshots(),
       builder: (BuildContext context, snapshot) {
         if (snapshot.hasData && snapshot.data!.docs.length == 0)
-          return Container();
+          return Container(
+            child: Center(
+              child: Text(
+                "No Rooms Scheduled for today",
+                style: h1,
+                textAlign: TextAlign.center,
+              ),
+            ),
+          );
 
         if (snapshot.hasData) {
           final roomList = snapshot.data!.docs;
@@ -194,7 +202,9 @@ class RoomWidget extends StatelessWidget {
                     ),
                   );
                 }
-                return Container();
+                return Container(
+                  child: Text("hello"),
+                );
               },
             ).toList(),
           );
