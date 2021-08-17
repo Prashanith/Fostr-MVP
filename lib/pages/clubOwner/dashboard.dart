@@ -36,23 +36,23 @@ class _DashboardState extends State<Dashboard> {
         items: <Widget>[
           Icon(
             LineIcons.plus,
-            size: 18,
+            size: 17,
           ),
           Icon(
             LineIcons.calendar,
-            size: 18,
+            size: 17,
           ),
           Icon(
             LineIcons.home,
-            size: 18,
+            size: 17,
           ),
           Icon(
             LineIcons.search,
-            size: 18,
+            size: 17,
           ),
           Icon(
             LineIcons.user,
-            size: 18,
+            size: 17,
           ),
         ],
         onTap: (index) {

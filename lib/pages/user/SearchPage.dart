@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:fostr/core/constants.dart';
 import 'package:fostr/models/UserModel/User.dart';
 import 'package:fostr/providers/AuthProvider.dart';
@@ -206,7 +207,6 @@ class UserCard extends StatefulWidget {
 
 class _UserCardState extends State<UserCard> with FostrTheme {
   bool followed = false;
-  final snackBar = SnackBar(content: Text('Followed Successfully!'));
   final UserService userService = GetIt.I<UserService>();
 
   @override
@@ -300,7 +300,15 @@ class _UserCardState extends State<UserCard> with FostrTheme {
                   setState(() {
                     followed = true;
                   });
-                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  Fluttertoast.showToast(
+                    msg: "Followed Successfully!",
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.BOTTOM,
+                    timeInSecForIosWeb: 1,
+                    backgroundColor: gradientBottom,
+                    textColor: Colors.white,
+                    fontSize: 16.0
+                  );
                 }
               } catch (e) {
                 print(e);

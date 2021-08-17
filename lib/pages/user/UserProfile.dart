@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fostr/core/constants.dart';
 import 'package:fostr/models/UserModel/User.dart';
@@ -81,7 +82,8 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
           child: SingleChildScrollView(
             child: Container(
               width: double.infinity,
-              decoration: BoxDecoration(gradient: secondaryBackground),
+              color: Colors.white,
+              // decoration: BoxDecoration(gradient: secondaryBackground),
               child: Stack(
                 children: [
                   Positioned(
@@ -148,10 +150,15 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                                         });
                                       });
                                     } else {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(SnackBar(
-                                              content: Text(
-                                                  "Image must be less than 400KB")));
+                                      Fluttertoast.showToast(
+                                        msg: "Image must be less than 400KB",
+                                        toastLength: Toast.LENGTH_SHORT,
+                                        gravity: ToastGravity.BOTTOM,
+                                        timeInSecForIosWeb: 1,
+                                        backgroundColor: gradientBottom,
+                                        textColor: Colors.white,
+                                        fontSize: 16.0
+                                      );
                                     }
                                   } catch (e) {
                                     print(e);
@@ -170,13 +177,12 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                                 children: [
                                   IconButton(
                                     icon: FaIcon(FontAwesomeIcons.twitter),
-                                    color: Colors.teal[800],
+                                    color: Color(0xB2476747),
                                     iconSize: 30,
                                     onPressed: () async {
                                       controller.text =
                                           user.userProfile?.twitter ?? "";
-                                      await showPopUp(
-                                          "Twitter username", user.id, (e) {
+                                      await showPopUp("Twitter", user.id, (e) {
                                         setState(() {
                                           if (user.userProfile == null) {
                                             var userProfile = UserProfile();
@@ -196,13 +202,12 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                                   ),
                                   IconButton(
                                     icon: FaIcon(FontAwesomeIcons.instagram),
-                                    color: Colors.teal[800],
+                                    color: Color(0xB2476747),
                                     iconSize: 30,
                                     onPressed: () {
                                       controller.text =
                                           user.userProfile?.instagram ?? "";
-                                      showPopUp("Instagram username", user.id,
-                                          (e) {
+                                      showPopUp("Instagram", user.id, (e) {
                                         setState(() {
                                           if (user.userProfile == null) {
                                             var userProfile = UserProfile();
@@ -221,13 +226,12 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                                   ),
                                   IconButton(
                                     icon: FaIcon(FontAwesomeIcons.linkedinIn),
-                                    color: Colors.teal[800],
+                                    color: Color(0xB2476747),
                                     iconSize: 30,
                                     onPressed: () {
                                       controller.text =
                                           user.userProfile?.linkedIn ?? "";
-                                      showPopUp("LinkedIn username", user.id,
-                                          (e) {
+                                      showPopUp("linkedIn", user.id, (e) {
                                         setState(() {
                                           if (user.userProfile == null) {
                                             var userProfile = UserProfile();
@@ -333,7 +337,7 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                             maxWidth: 90.w,
                           ),
                           decoration: BoxDecoration(
-                            color: Color(0xffEBFFEE),
+                            color: Colors.white,
                             borderRadius: BorderRadius.circular(13),
                             boxShadow: boxShadow,
                           ),
@@ -392,7 +396,7 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                             //   stops: [0.0, 0.5],
                             //   tileMode: TileMode.clamp,
                             // ),
-                            color: Color(0xFFE6FAED),
+                            color: Colors.white,
                             shadows: [
                               BoxShadow(
                                 offset: Offset(-5, -4),
@@ -435,13 +439,16 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                               height: 10,
                             ),
                             Container(
-                              padding: const EdgeInsets.all(15),
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadiusDirectional.circular(34),
-                                color: Color(0xFFE6FAED),
+                              padding: const EdgeInsets.all(10),
+                              constraints: BoxConstraints(
+                                maxWidth: 90.w,
                               ),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(13),
+                                boxShadow: boxShadow,
+                              ),
+                              alignment: Alignment.center,
                               width: MediaQuery.of(context).size.width * 0.9,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -572,7 +579,7 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                       Text(
                         'Enter your $field',
                         style: h2.copyWith(
-                          fontSize: 17.sp,
+                          fontSize: 15.sp,
                         ),
                       ),
                       SizedBox(

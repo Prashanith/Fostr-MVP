@@ -1,5 +1,6 @@
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:fostr/core/constants.dart';
 import 'package:fostr/core/data.dart';
 import 'package:fostr/core/functions.dart';
@@ -151,8 +152,7 @@ class _EnterClubRoomDetailsState extends State<EnterClubRoomDetails>
                           type: DateTimePickerType.date,
                           dateMask: 'yyyy/MM/dd',
                           controller: dateTextEditingController,
-                          // initialValue: Date,
-                          firstDate: DateTime(2000),
+                          firstDate: DateTime.now(),
                           lastDate: DateTime(2100),
                           icon: Icon(Icons.event, color: Color(0xff476747)),
                           dateLabelText: 'Date',
@@ -175,7 +175,7 @@ class _EnterClubRoomDetailsState extends State<EnterClubRoomDetails>
                           icon:
                               Icon(Icons.access_time, color: Color(0xff476747)),
                           timeLabelText: "Time",
-                          // use24HourFormat: false,
+                          initialTime: TimeOfDay.now(),
                           onChanged: (val) => setState(
                               () => timeTextEditingController.text = val),
                           // validator: (val) {
@@ -199,43 +199,63 @@ class _EnterClubRoomDetailsState extends State<EnterClubRoomDetails>
                                   )
                                 : IconButton(
                                     onPressed: () async {
-                                      setState(() {
-                                        isLoading = true;
-                                      });
-                                      try {
-                                        final file = await Files.getFile();
-                                        if (file['file'] != null &&
-                                            file['size'] < 700000) {
-                                          imageUrl =
-                                              await Storage.saveRoomImage(
-                                                  file,
-                                                  eventNameTextEditingController
-                                                      .text);
-                                          setState(() {
-                                            isLoading = false;
-                                            image = file['file']
-                                                .toString()
-                                                .substring(
-                                                    file['file']
-                                                            .toString()
-                                                            .lastIndexOf('/') +
-                                                        1,
-                                                    file['file']
-                                                            .toString()
-                                                            .length -
-                                                        1);
-                                          });
-                                        } else {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(SnackBar(
-                                                  content: Text(
-                                                      "Image must be less than 700KB")));
-                                        }
-                                      } catch (e) {
-                                        print(e);
+                                      if(eventNameTextEditingController.text.isNotEmpty) {
                                         setState(() {
                                           isLoading = true;
                                         });
+                                        try {
+                                          final file = await Files.getFile();
+                                          if (file['file'] != null &&
+                                              file['size'] < 700000) {
+                                            imageUrl =
+                                                await Storage.saveRoomImage(
+                                                    file,
+                                                    eventNameTextEditingController
+                                                        .text);
+                                            setState(() {
+                                              isLoading = false;
+                                              image = file['file']
+                                                  .toString()
+                                                  .substring(
+                                                      file['file']
+                                                              .toString()
+                                                              .lastIndexOf('/') +
+                                                          1,
+                                                      file['file']
+                                                              .toString()
+                                                              .length -
+                                                          1);
+                                            });
+                                          } else {
+                                            setState(() {
+                                              isLoading = false;
+                                            });
+                                            Fluttertoast.showToast(
+                                              msg: "Image must be less than 700KB",
+                                              toastLength: Toast.LENGTH_SHORT,
+                                              gravity: ToastGravity.BOTTOM,
+                                              timeInSecForIosWeb: 1,
+                                              backgroundColor: gradientBottom,
+                                              textColor: Colors.white,
+                                              fontSize: 16.0
+                                            );
+                                          }
+                                        } catch (e) {
+                                          print(e);
+                                          setState(() {
+                                            isLoading = true;
+                                          });
+                                        }
+                                      } else {
+                                        Fluttertoast.showToast(
+                                          msg: "Event Name is required!",
+                                          toastLength: Toast.LENGTH_SHORT,
+                                          gravity: ToastGravity.BOTTOM,
+                                          timeInSecForIosWeb: 1,
+                                          backgroundColor: gradientBottom,
+                                          textColor: Colors.white,
+                                          fontSize: 16.0
+                                        );
                                       }
                                     },
                                     icon: Icon(
@@ -257,7 +277,45 @@ class _EnterClubRoomDetailsState extends State<EnterClubRoomDetails>
                           child: Text('Schedule Room'),
                           onPressed: () {
                             if(eventNameTextEditingController.text.isEmpty) {
-                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Event Name is required")));
+                              Fluttertoast.showToast(
+                                msg: "Event Name is required!",
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.BOTTOM,
+                                timeInSecForIosWeb: 1,
+                                backgroundColor: gradientBottom,
+                                textColor: Colors.white,
+                                fontSize: 16.0
+                              );
+                            } else if(dateTextEditingController.text.isEmpty) {
+                              Fluttertoast.showToast(
+                                msg: "Date is required!",
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.BOTTOM,
+                                timeInSecForIosWeb: 1,
+                                backgroundColor: gradientBottom,
+                                textColor: Colors.white,
+                                fontSize: 16.0
+                              );
+                            } else if(timeTextEditingController.text.isEmpty) {
+                              Fluttertoast.showToast(
+                                msg: "Time is required!",
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.BOTTOM,
+                                timeInSecForIosWeb: 1,
+                                backgroundColor: gradientBottom,
+                                textColor: Colors.white,
+                                fontSize: 16.0
+                              );
+                            } else if(DateTime.parse(dateTextEditingController.text + " " + timeTextEditingController.text).isBefore(DateTime.now())) {
+                              Fluttertoast.showToast(
+                                msg: "Select valid time!",
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.BOTTOM,
+                                timeInSecForIosWeb: 1,
+                                backgroundColor: gradientBottom,
+                                textColor: Colors.white,
+                                fontSize: 16.0
+                              );
                             } else {
                               _createChannel(context, user);
                             }
@@ -300,7 +358,7 @@ class _EnterClubRoomDetailsState extends State<EnterClubRoomDetails>
       'image': imageUrl,
       'dateTime':
           dateTextEditingController.text + " " + timeTextEditingController.text,
-      'roomCreator': user.userName,
+      'roomCreator': (user.bookClubName == "") ? user.name : user.bookClubName,
       'token': roomToken.toString(),
       'id': user.id
       // });

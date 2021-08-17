@@ -1,9 +1,14 @@
+import 'package:confirm_dialog/confirm_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fostr/core/constants.dart';
+import 'package:fostr/core/data.dart';
 import 'package:fostr/models/RoomModel.dart';
+import 'package:fostr/providers/AuthProvider.dart';
 import 'package:fostr/utils/theme.dart';
 import 'package:intl/intl.dart';
+import 'package:line_icons/line_icons.dart';
+import 'package:provider/provider.dart';
 
 import 'BookmarkContainer.dart';
 class OngoingRoomCard extends StatelessWidget with FostrTheme {
@@ -13,6 +18,8 @@ class OngoingRoomCard extends StatelessWidget with FostrTheme {
 
   @override
   Widget build(BuildContext context) {
+    final auth = Provider.of<AuthProvider>(context);
+    final user = auth.user!;
     return Stack(
       children: [
         Padding(
@@ -37,7 +44,7 @@ class OngoingRoomCard extends StatelessWidget with FostrTheme {
               boxShadow: [
                 BoxShadow(
                   offset: Offset(0, 4),
-                  blurRadius: 16,
+                  blurRadius: 5,
                   color: Colors.black.withOpacity(0.25),
                 )
               ],
@@ -51,6 +58,7 @@ class OngoingRoomCard extends StatelessWidget with FostrTheme {
                     SvgPicture.asset(
                       ICONS + "people.svg",
                       height: 20,
+                      color: Colors.black54,
                     ),
                     SizedBox(
                       width: 8,
@@ -68,6 +76,7 @@ class OngoingRoomCard extends StatelessWidget with FostrTheme {
                     SvgPicture.asset(
                       ICONS + "mic.svg",
                       height: 20,
+                      color: Colors.black54,
                     ),
                     SizedBox(
                       width: 8,
@@ -106,6 +115,7 @@ class OngoingRoomCard extends StatelessWidget with FostrTheme {
                   style: TextStyle(
                       fontSize: 12,
                       color: Colors.white,
+                      fontFamily: "Lato",
                       overflow: TextOverflow.ellipsis),
                 ),
                 SizedBox(
@@ -116,6 +126,7 @@ class OngoingRoomCard extends StatelessWidget with FostrTheme {
                   style: TextStyle(
                       fontSize: 15,
                       color: Colors.white,
+                      fontFamily: "Lato",
                       overflow: TextOverflow.ellipsis),
                 )
               ],
@@ -123,7 +134,7 @@ class OngoingRoomCard extends StatelessWidget with FostrTheme {
           ),
         ),
         Positioned(
-          right: 20,
+          right: 8,
           top: 20,
           child: BookmarkContainer(imgURL: room.imageUrl),
         ),

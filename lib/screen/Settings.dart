@@ -1,3 +1,4 @@
+import 'package:confirm_dialog/confirm_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:fostr/core/constants.dart';
 import 'package:fostr/providers/AuthProvider.dart';
@@ -107,12 +108,21 @@ class Settings extends StatelessWidget with FostrTheme {
             PrimaryButton(
               text: "Logout",
               onTap: () async {
-                await auth.signOut();
-                FostrRouter.removeUntillAndGoto(
+                if (await confirm(
                   context,
-                  Routes.userChoice,
-                  (route) => false,
-                );
+                  title: Text('Confirm'),
+                  content: Text('Are you sure you want to leave such amazing application?'),
+                  textOK: Text('Yes'),
+                  textCancel: Text('No'),
+                )) {
+                  await auth.signOut();
+                  FostrRouter.removeUntillAndGoto(
+                    context,
+                    Routes.userChoice,
+                    (route) => false,
+                  );
+                }
+                return;
               },
             ),
           ],

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:fostr/core/constants.dart';
 import 'package:fostr/core/data.dart';
 import 'package:fostr/core/functions.dart';
@@ -156,49 +157,64 @@ class _EnterRoomDetailsState extends State<EnterRoomDetails> with FostrTheme {
                                   )
                                 : IconButton(
                                     onPressed: () async {
-                                      setState(() {
-                                        isLoading = true;
-                                      });
-                                      try {
-                                        final file = await Files.getFile();
-
-                                        if (file['file'] != null &&
-                                            file['size'] < 700000) {
-                                          imageUrl =
-                                              await Storage.saveRoomImage(
-                                                  file,
-                                                  eventNameTextEditingController
-                                                      .text);
-                                          setState(() {
-                                            isLoading = false;
-                                            image = file['file']
-                                                .toString()
-                                                .substring(
-                                                    file['file']
-                                                            .toString()
-                                                            .lastIndexOf('/') +
-                                                        1,
-                                                    file['file']
-                                                            .toString()
-                                                            .length -
-                                                        1);
-                                          });
-                                        } else {
-                                          setState(() {
-                                            isLoading = false;
-                                          });
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
-                                            SnackBar(
-                                              content: Text(
-                                                  "Image must be less than 700KB"),
-                                            ),
-                                          );
-                                        }
-                                      } catch (e) {
+                                      if(eventNameTextEditingController.text.isNotEmpty) {
                                         setState(() {
-                                          isLoading = false;
+                                          isLoading = true;
                                         });
+                                        try {
+                                          final file = await Files.getFile();
+
+                                          if (file['file'] != null &&
+                                              file['size'] < 700000) {
+                                            imageUrl =
+                                                await Storage.saveRoomImage(
+                                                    file,
+                                                    eventNameTextEditingController
+                                                        .text);
+                                            setState(() {
+                                              isLoading = false;
+                                              image = file['file']
+                                                  .toString()
+                                                  .substring(
+                                                      file['file']
+                                                              .toString()
+                                                              .lastIndexOf('/') +
+                                                          1,
+                                                      file['file']
+                                                              .toString()
+                                                              .length -
+                                                          1);
+                                            });
+                                          } else {
+                                            setState(() {
+                                              isLoading = false;
+                                            });
+                                            Fluttertoast.showToast(
+                                              msg: "Image must be less than 700KB",
+                                              toastLength: Toast.LENGTH_SHORT,
+                                              gravity: ToastGravity.BOTTOM,
+                                              timeInSecForIosWeb: 1,
+                                              backgroundColor: gradientBottom,
+                                              textColor: Colors.white,
+                                              fontSize: 16.0
+                                            );
+                                          }
+                                        } catch (e) {
+                                          print(e);
+                                          setState(() {
+                                            isLoading = false;
+                                          });
+                                        }
+                                      } else {
+                                        Fluttertoast.showToast(
+                                          msg: "Event Name is required!",
+                                          toastLength: Toast.LENGTH_SHORT,
+                                          gravity: ToastGravity.BOTTOM,
+                                          timeInSecForIosWeb: 1,
+                                          backgroundColor: gradientBottom,
+                                          textColor: Colors.white,
+                                          fontSize: 16.0
+                                        );
                                       }
                                     },
                                     icon: Icon(
@@ -223,10 +239,16 @@ class _EnterRoomDetailsState extends State<EnterRoomDetails> with FostrTheme {
                       : ElevatedButton(
                           child: Text('Schedule Room'),
                           onPressed: () {
-                            if (eventNameTextEditingController.text.isEmpty) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                      content: Text("Event Name is required")));
+                            if(eventNameTextEditingController.text.isEmpty) {
+                              Fluttertoast.showToast(
+                                msg: "Event Name is required!",
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.BOTTOM,
+                                timeInSecForIosWeb: 1,
+                                backgroundColor: gradientBottom,
+                                textColor: Colors.white,
+                                fontSize: 16.0
+                              );
                             } else {
                               _createChannel(context, user);
                             }
@@ -269,7 +291,7 @@ class _EnterRoomDetailsState extends State<EnterRoomDetails> with FostrTheme {
       'image': imageUrl,
       'dateTime': '$now',
       // 'dateTime': dateTextEditingController.text + " " + timeTextEditingController.text,
-      'roomCreator': user.userName,
+      'roomCreator': (user.bookClubName == "") ? user.name : user.bookClubName,
       'token': roomToken.toString(),
       'id': user.id
       // });
