@@ -176,7 +176,7 @@ class _SearchPageState extends State<SearchPage> with FostrTheme {
                                   ))
                                 : Center(
                                     child: Text(
-                                      "You can find someone try to search",
+                                      "You can follow some readers here",
                                       style: h2,
                                     ),
                                   ),
