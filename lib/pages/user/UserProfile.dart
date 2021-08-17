@@ -152,14 +152,13 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                                       });
                                     } else {
                                       Fluttertoast.showToast(
-                                        msg: "Image must be less than 400KB",
-                                        toastLength: Toast.LENGTH_SHORT,
-                                        gravity: ToastGravity.BOTTOM,
-                                        timeInSecForIosWeb: 1,
-                                        backgroundColor: gradientBottom,
-                                        textColor: Colors.white,
-                                        fontSize: 16.0
-                                      );
+                                          msg: "Image must be less than 400KB",
+                                          toastLength: Toast.LENGTH_SHORT,
+                                          gravity: ToastGravity.BOTTOM,
+                                          timeInSecForIosWeb: 1,
+                                          backgroundColor: gradientBottom,
+                                          textColor: Colors.white,
+                                          fontSize: 16.0);
                                     }
                                   } catch (e) {
                                     print(e);
@@ -575,7 +574,7 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                     maxHeight: (maxLine != null && maxLine > 4) ? 380 : 240,
                   ),
                   decoration: BoxDecoration(
-                    color: Color(0xffB2D6C3),
+                    color: Colors.white,
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Column(

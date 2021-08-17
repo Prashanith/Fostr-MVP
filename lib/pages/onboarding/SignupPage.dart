@@ -348,7 +348,7 @@ Future<bool?> confirmDialog(BuildContext context, TextStyle h2) async {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'An account by this name already exists. Would you like to be signed in instead?',
+                      'An account with this email already exists. Would you like to be signed in instead?',
                       style: h2.copyWith(
                         fontSize: 17.sp,
                         color: Colors.black.withOpacity(0.6),

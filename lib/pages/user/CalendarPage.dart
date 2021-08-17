@@ -5,7 +5,6 @@ import 'package:fostr/core/data.dart';
 import 'package:fostr/models/RoomModel.dart';
 import 'package:fostr/providers/AuthProvider.dart';
 import 'package:fostr/utils/theme.dart';
-import 'package:fostr/widgets/Layout.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
@@ -19,6 +18,18 @@ class CalendarPage extends StatefulWidget {
 class _CalendarPageState extends State<CalendarPage> with FostrTheme {
   DateTime date = DateTime.now();
   bool isEmpty = true;
+
+  Future<List<Map<String, dynamic>>> getRooms(List<String> followings) async {
+    List<Map<String, dynamic>> rooms = [];
+    followings.forEach((id) async {
+      await roomCollection.doc(id).collection('rooms').get().then((value) {
+        final rawRooms = value.docs.map((e) => e.data()).toList();
+        rooms.addAll(rawRooms);
+      });
+    });
+
+    return rooms;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -105,44 +116,66 @@ class _CalendarPageState extends State<CalendarPage> with FostrTheme {
                         ),
                       ),
                       Expanded(
-                        child: (user?.followings != null &&
-                                user?.followings?.length != 0)
-                            ? ListView.builder(
-                                itemCount: user?.followings?.length ?? 0,
-                                itemBuilder: (context, index) {
-                                  print(user?.followings?.length);
-                                  return RoomWidget(
-                                    id: user!.followings![index],
-                                    date: date,
-                                  );
-                                },
-                              )
-                            : Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 10.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      "It's so quite here right?",
-                                      style: h1,
-                                    ),
-                                    SizedBox(
-                                      height: 30,
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 10.0),
-                                      child: Text(
-                                        "You should follow some greatness 😉",
-                                        style: h1,
-                                        textAlign: TextAlign.center,
+                        child: FutureBuilder<List<Map<String, dynamic>>>(
+                          future: getRooms(user?.followings ?? []),
+                          initialData: [],
+                          builder: (BuildContext context,
+                              AsyncSnapshot<List<Map<String, dynamic>>>
+                                  snapshot) {
+                            if (snapshot.hasData &&
+                                snapshot.data!.length == 0) {
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "No schedules currently",
+                                    style: h2.copyWith(fontSize: 14.sp),
+                                  ),
+                                  Text(
+                                    "You can follow some readers here",
+                                    style: h2.copyWith(fontSize: 14.sp),
+                                  ),
+                                ],
+                              );
+                            } else if (snapshot.hasData) {
+                              var roomListData =
+                                  snapshot.data!.where((element) {
+                                final room = Room.fromJson(element);
+                                return room.dateTime?.substring(0, 10) ==
+                                    date.toString().substring(0, 10);
+                              });
+                              if (roomListData.length == 0) {
+                                return Center(
+                                  child: Text(
+                                    "No schedules currently",
+                                    style: h2.copyWith(fontSize: 14.sp),
+                                  ),
+                                );
+                              }
+                              return ListView(
+                                children: roomListData.map(
+                                  (element) {
+                                    final room = Room.fromJson(element);
+
+                                    return GestureDetector(
+                                      onTap: () async {},
+                                      child: EventCard(
+                                        room: room,
                                       ),
-                                    )
-                                  ],
-                                ),
+                                    );
+                                  },
+                                ).toList(),
+                              );
+                            }
+                            return Center(
+                              child: Text(
+                                "Getting fresh rooms",
+                                style: h2.copyWith(fontSize: 14.sp),
                               ),
+                            );
+                          },
+                        ),
                       ),
                     ],
                   ),
@@ -278,3 +311,43 @@ class EventCard extends StatelessWidget with FostrTheme {
     );
   }
 }
+
+
+// (user?.followings != null &&
+//                                 user?.followings?.length != 0)
+//                             ? ListView.builder(
+//                                 itemCount: user?.followings?.length ?? 0,
+//                                 itemBuilder: (context, index) {
+//                                   print(user?.followings?.length);
+//                                   return RoomWidget(
+//                                     id: user!.followings![index],
+//                                     date: date,
+//                                   );
+//                                 },
+//                               )
+//                             : Padding(
+//                                 padding: const EdgeInsets.symmetric(
+//                                     horizontal: 10.0),
+//                                 child: Column(
+//                                   crossAxisAlignment: CrossAxisAlignment.center,
+//                                   mainAxisAlignment: MainAxisAlignment.center,
+//                                   children: [
+//                                     Text(
+//                                       "No schedules currently",
+//                                       style: h1,
+//                                     ),
+//                                     SizedBox(
+//                                       height: 30,
+//                                     ),
+//                                     Padding(
+//                                       padding: const EdgeInsets.symmetric(
+//                                           horizontal: 10.0),
+//                                       child: Text(
+//                                         "You can follow some readers here",
+//                                         style: h1,
+//                                         textAlign: TextAlign.center,
+//                                       ),
+//                                     )
+//                                   ],
+//                                 ),
+//                               ),

@@ -61,19 +61,66 @@ class _SearchPageState extends State<SearchPage> with FostrTheme {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: paddingH + const EdgeInsets.only(top: 20),
+                padding: const EdgeInsets.only(top: 20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      "Search",
-                      style: h1.apply(color: Colors.white),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          width: 90.w,
+                          decoration: BoxDecoration(
+                              color: Color(0XFFEBFFEE),
+                              borderRadius: BorderRadius.circular(25),
+                              boxShadow: [
+                                BoxShadow(
+                                  offset: Offset(0, 4),
+                                  blurRadius: 16,
+                                  color: Colors.black.withOpacity(0.25),
+                                ),
+                              ]),
+                          child: Form(
+                            key: searchForm,
+                            child: TextFormField(
+                              validator: (va) {
+                                if (va!.isEmpty) {
+                                  return "Search can't be empty";
+                                }
+                              },
+                              style: h2.copyWith(fontSize: 14.sp),
+                              onEditingComplete: () {
+                                searchUsers(auth.user!.id);
+                                FocusScope.of(context).unfocus();
+                              },
+                              onChanged: (value) {
+                                setState(() {
+                                  query = value;
+                                });
+                                if (value.isNotEmpty && value.length >= 3) {
+                                  searchUsers(auth.user!.id);
+                                }
+                              },
+                              decoration: InputDecoration(
+                                contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 20,
+                                ),
+                                hintText: "Search readers here",
+                                hintStyle: h2.copyWith(fontSize: 14.sp),
+                                border: InputBorder.none,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
               ),
               SizedBox(
-                height: 40,
+                height: 20,
               ),
               Expanded(
                 child: Container(
@@ -93,116 +140,32 @@ class _SearchPageState extends State<SearchPage> with FostrTheme {
                   child: Column(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(top: 30.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.symmetric(vertical: 10),
-                              margin: const EdgeInsets.only(right: 20),
-                              width: 60.w,
-                              decoration: BoxDecoration(
-                                  color: Color(0XFFEBFFEE),
-                                  borderRadius: BorderRadius.circular(25),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      offset: Offset(0, 4),
-                                      blurRadius: 16,
-                                      color: Colors.black.withOpacity(0.25),
-                                    ),
-                                  ]),
-                              child: Form(
-                                key: searchForm,
-                                child: TextFormField(
-                                  validator: (va) {
-                                    if (va!.isEmpty) {
-                                      return "Search can't be empty";
-                                    }
-                                  },
-                                  style: h2.copyWith(fontSize: 14.sp),
-                                  onEditingComplete: () {
-                                    searchUsers(auth.user!.id);
-                                    FocusScope.of(context).unfocus();
-                                  },
-                                  onChanged: (value) {
-                                    setState(() {
-                                      query = value;
-                                    });
-                                  },
-                                  decoration: InputDecoration(
-                                    contentPadding: EdgeInsets.symmetric(
-                                      horizontal: 20,
-                                    ),
-                                    hintText: "Search",
-                                    hintStyle: h2.copyWith(fontSize: 14.sp),
-                                    border: InputBorder.none,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            InkWell(
-                              onTap: () {
-                                if (searchForm.currentState!.validate()) {
-                                  searchUsers(auth.user!.id);
-                                }
-                              },
-                              child: Container(
-                                height: 7.h,
-                                width: 7.h,
-                                decoration: BoxDecoration(
-                                    color: Color(0xffEBFFEE),
-                                    shape: BoxShape.circle,
-                                    boxShadow: [
-                                      BoxShadow(
-                                        offset: Offset(0, 4),
-                                        blurRadius: 16,
-                                        color: Colors.black.withOpacity(0.25),
-                                      )
-                                    ]),
-                                child: Icon(
-                                  Icons.search_rounded,
-                                  size: 20.sp,
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 40, bottom: 20),
+                        padding: const EdgeInsets.only(top: 20, bottom: 10),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              "Users",
+                              "",
                               style: h1.copyWith(fontSize: 16.sp),
-                            ),
-                            SvgPicture.asset(
-                              ICONS + "menu.svg",
-                              color: h1.color,
                             ),
                           ],
                         ),
                       ),
-                      Divider(
-                        endIndent: 40,
-                        indent: 40,
-                        thickness: 2,
-                      ),
+                      // Divider(
+                      //   endIndent: 40,
+                      //   indent: 40,
+                      //   thickness: 2,
+                      // ),
                       Expanded(
                         child: (users.length > 0)
                             ? ListView.builder(
                                 itemCount: users.length,
                                 itemBuilder: (context, idx) {
                                   var user = User.fromJson(users[idx]);
-                                  if (!containedUsers.contains(user.id)) {
-                                    containedUsers.add(user.id);
-                                    return UserCard(
-                                      user: user,
-                                    );
-                                  }
-                                  return SizedBox.shrink();
+                                  containedUsers.add(user.id);
+                                  return UserCard(
+                                    user: user,
+                                  );
                                 },
                               )
                             : (searched)
@@ -213,7 +176,7 @@ class _SearchPageState extends State<SearchPage> with FostrTheme {
                                   ))
                                 : Center(
                                     child: Text(
-                                      "You can find someone try to search",
+                                      "You can follow some readers here",
                                       style: h2,
                                     ),
                                   ),
@@ -337,14 +300,13 @@ class _UserCardState extends State<UserCard> with FostrTheme {
                     followed = true;
                   });
                   Fluttertoast.showToast(
-                    msg: "Followed Successfully!",
-                    toastLength: Toast.LENGTH_SHORT,
-                    gravity: ToastGravity.BOTTOM,
-                    timeInSecForIosWeb: 1,
-                    backgroundColor: gradientBottom,
-                    textColor: Colors.white,
-                    fontSize: 16.0
-                  );
+                      msg: "Followed Successfully!",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.BOTTOM,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: gradientBottom,
+                      textColor: Colors.white,
+                      fontSize: 16.0);
                 }
               } catch (e) {
                 print(e);
