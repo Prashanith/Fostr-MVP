@@ -11,7 +11,6 @@ import 'package:line_icons/line_icons.dart';
 import 'package:provider/provider.dart';
 
 import 'BookmarkContainer.dart';
-
 class OngoingRoomCard extends StatelessWidget with FostrTheme {
   final Room room;
 
@@ -65,9 +64,7 @@ class OngoingRoomCard extends StatelessWidget with FostrTheme {
                       width: 8,
                     ),
                     Text(
-                      (room.participantsCount! < 0
-                          ? "0"
-                          : room.participantsCount.toString()),
+                      (room.participantsCount! < 0 ? "0" : room.participantsCount.toString()),
                       style: h2.copyWith(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -85,9 +82,7 @@ class OngoingRoomCard extends StatelessWidget with FostrTheme {
                       width: 8,
                     ),
                     Text(
-                      (room.speakersCount! < 0
-                          ? "0"
-                          : room.speakersCount.toString()),
+                      (room.speakersCount! < 0 ? "0" : room.speakersCount.toString()),
                       style: h2.copyWith(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -127,8 +122,7 @@ class OngoingRoomCard extends StatelessWidget with FostrTheme {
                   height: 5,
                 ),
                 Text(
-                  DateFormat('dd-MMM-yy (KK:mm) aa')
-                      .format(DateTime.parse(room.dateTime.toString())),
+                  DateFormat('dd-MMM-yy (KK:mm) aa').format(DateTime.parse(room.dateTime.toString())),
                   style: TextStyle(
                       fontSize: 15,
                       color: Colors.white,
@@ -139,6 +133,27 @@ class OngoingRoomCard extends StatelessWidget with FostrTheme {
             ),
           ),
         ),
+        room.roomCreator == ((user.bookClubName == "") ? user.name : user.bookClubName)
+          ? Positioned(
+              right: 5,
+              bottom: 5,
+              child: IconButton(
+                icon: Icon(Icons.delete_outline_rounded),
+                onPressed: () async {
+                  if (await confirm(
+                    context,
+                    title: Text('Confirm'),
+                    content: Text('Are you sure you want to delete this room?'),
+                    textOK: Text('Yes'),
+                    textCancel: Text('No'),
+                  )) {
+                    roomCollection.doc(user.id).collection('rooms').doc(room.title).delete();
+                  }
+                  return;
+                }
+              ),
+            )
+          : Container(),
         Positioned(
           right: 8,
           top: 20,
