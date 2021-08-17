@@ -35,19 +35,10 @@ class SettingsPage extends StatelessWidget with FostrTheme {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // SvgPicture.asset(ICONS + "menu.svg"),
-                    // SizedBox(
-                    //   height: 30,
-                    // ),
-                    (user.name == "")
-                      ? Text(
-                        "Hello, User",
-                        style: h1.apply(color: Colors.white),
-                      )
-                      : Text(
-                        "Hello, ${user.name}",
-                        style: h1.apply(color: Colors.white),
-                      ),
+                    Text(
+                      "Settings",
+                      style: h1.apply(color: Colors.white),
+                    )
                   ],
                 ),
               ),
@@ -65,59 +56,52 @@ class SettingsPage extends StatelessWidget with FostrTheme {
   }
 }
 
-
 class Settings extends StatelessWidget with FostrTheme {
   @override
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthProvider>(context);
     return Container(
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: Image.asset(IMAGES + "background.png").image,
-          fit: BoxFit.cover,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: Image.asset(IMAGES + "background.png").image,
+            fit: BoxFit.cover,
+          ),
+          borderRadius: BorderRadiusDirectional.only(
+            topStart: Radius.circular(32),
+            topEnd: Radius.circular(32),
+          ),
+          color: Colors.white,
         ),
-        borderRadius: BorderRadiusDirectional.only(
-          topStart: Radius.circular(32),
-          topEnd: Radius.circular(32),
-        ),
-        color: Colors.white,
-      ),
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            LightBtn(
-              text: "Privacy Policy",
-              url: "https://www.fostrreads.com/privacy"
-            ),
-            LightBtn(
-              text: "Terms and Conditions",
-              url: "https://www.fostrreads.com/terms"
-            ),
-            LightBtn(
-              text: "About Us",
-              url: "https://www.fostrreads.com/about"
-            ),
-            LightBtn(
-              text: "Contact Us",
-              url: "https://www.fostrreads.com/contact"
-            ),
-            SizedBox(height: 20.h),
-            PrimaryButton(
-              text: "Logout",
-              onTap: () async {
-                await auth.signOut();
-                FostrRouter.removeUntillAndGoto(
-                  context,
-                  Routes.userChoice,
-                  (route) => false,
-                );
-              },
-            ),
-          ],
-        ),
-      )
-    );
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              LightBtn(
+                  text: "Privacy Policy",
+                  url: "https://www.fostrreads.com/privacy"),
+              LightBtn(
+                  text: "Terms and Conditions",
+                  url: "https://www.fostrreads.com/terms"),
+              LightBtn(
+                  text: "About Us", url: "https://www.fostrreads.com/about"),
+              LightBtn(
+                  text: "Contact Us",
+                  url: "https://www.fostrreads.com/contact"),
+              SizedBox(height: 20.h),
+              PrimaryButton(
+                text: "Logout",
+                onTap: () async {
+                  await auth.signOut();
+                  FostrRouter.removeUntillAndGoto(
+                    context,
+                    Routes.userChoice,
+                    (route) => route.settings.name == Routes.entry,
+                  );
+                },
+              ),
+            ],
+          ),
+        ));
   }
 }

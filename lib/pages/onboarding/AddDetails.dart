@@ -87,6 +87,9 @@ class _AddDetailsState extends State<AddDetails> with FostrTheme {
                   child: Column(
                     children: [
                       InputField(
+                        onEditingCompleted: () {
+                          FocusScope.of(context).nextFocus();
+                        },
                         controller: nameController,
                         validator: (value) {
                           if (value!.isEmpty) {
@@ -107,6 +110,9 @@ class _AddDetailsState extends State<AddDetails> with FostrTheme {
                       ),
                       (auth.user!.userName.isEmpty)
                           ? InputField(
+                              onEditingCompleted: () {
+                                FocusScope.of(context).nextFocus();
+                              },
                               onChange: (value) => checkUsername(),
                               controller: usernameController,
                               validator: (value) {

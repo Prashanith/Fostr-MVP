@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/cupertino.dart';
@@ -112,6 +113,9 @@ class _SignupPageState extends State<SignupPage> with FostrTheme {
                 child: Column(
                   children: [
                     InputField(
+                      onEditingCompleted: () {
+                        FocusScope.of(context).nextFocus();
+                      },
                       controller: _controller,
                       validator: (value) {
                         if (isError) {
@@ -131,6 +135,9 @@ class _SignupPageState extends State<SignupPage> with FostrTheme {
                     ),
                     (isEmail)
                         ? InputField(
+                            onEditingCompleted: () {
+                              FocusScope.of(context).nextFocus();
+                            },
                             maxLine: 1,
                             controller: _passwordController,
                             hintText: "Password",
@@ -170,6 +177,11 @@ class _SignupPageState extends State<SignupPage> with FostrTheme {
                           return "You must agree to the terms and condition";
                         }
                       },
+                      onChanged: (value) {
+                        setState(() {
+                          isAgree = value ?? false;
+                        });
+                      },
                       title: Text(
                         "By registering you agree to the terms and conditions of this app.",
                         style: textFieldStyle.copyWith(
@@ -197,15 +209,22 @@ class _SignupPageState extends State<SignupPage> with FostrTheme {
                                     user.createdOn == user.lastLogin) {
                                   FostrRouter.goto(context, Routes.addDetails);
                                 } else if (user != null) {
-                                  if (auth.userType == UserType.USER) {
-                                    FostrRouter.removeUntillAndGoto(context,
-                                        Routes.userDashboard, (route) => false);
-                                  } else if (auth.userType ==
-                                      UserType.CLUBOWNER) {
-                                    Navigator.of(context).pushAndRemoveUntil(
-                                        CupertinoPageRoute(
-                                            builder: (_) => Dashboard()),
-                                        (route) => false);
+                                  final isOk = await confirmDialog(context, h2);
+                                  if (isOk != null && isOk) {
+                                    if (auth.userType == UserType.USER) {
+                                      FostrRouter.removeUntillAndGoto(
+                                          context,
+                                          Routes.userDashboard,
+                                          (route) => false);
+                                    } else if (auth.userType ==
+                                        UserType.CLUBOWNER) {
+                                      Navigator.of(context).pushAndRemoveUntil(
+                                          CupertinoPageRoute(
+                                              builder: (_) => Dashboard()),
+                                          (route) => false);
+                                    }
+                                  } else {
+                                    auth.signOut();
                                   }
                                 }
                               } catch (e) {
@@ -298,4 +317,79 @@ class _SignupPageState extends State<SignupPage> with FostrTheme {
     });
     signupForm.currentState!.validate();
   }
+}
+
+Future<bool?> confirmDialog(BuildContext context, TextStyle h2) async {
+  return showDialog<bool>(
+    context: context,
+    barrierDismissible: false,
+    builder: (context) {
+      final size = MediaQuery.of(context).size;
+      return Container(
+        height: size.height,
+        width: size.width,
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+          child: Align(
+            alignment: Alignment(0, 0),
+            child: Material(
+              color: Colors.transparent,
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                width: size.width * 0.9,
+                constraints: BoxConstraints(maxHeight: 240),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'An account by this name already exists. Would you like to be signed in instead?',
+                      style: h2.copyWith(
+                        fontSize: 17.sp,
+                        color: Colors.black.withOpacity(0.6),
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop(false);
+                          },
+                          child: Text(
+                            "CANCEL",
+                            style: h2.copyWith(
+                              fontSize: 17.sp,
+                              color: Colors.black.withOpacity(0.6),
+                            ),
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop(true);
+                          },
+                          child: Text(
+                            "SIGN IN",
+                            style: h2.copyWith(
+                              fontSize: 17.sp,
+                              color: Colors.black.withOpacity(0.6),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    },
+  );
 }

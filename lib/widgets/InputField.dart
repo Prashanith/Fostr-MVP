@@ -12,17 +12,21 @@ class InputField extends StatefulWidget {
   final String? Function(String? value)? validator;
   final TextInputType keyboardType;
   final Function(String value)? onChange;
-  InputField(
-      {Key? key,
-      this.hintText = "",
-      this.helperText,
-      this.keyboardType = TextInputType.text,
-      this.validator,
-      this.controller,
-      this.onChange,
-      this.isPassword = false,
-      this.maxLine = 1})
-      : super(key: key);
+  final VoidCallback? onEditingCompleted;
+  InputField({
+    Key? key,
+    this.hintText = "",
+    this.helperText,
+    this.keyboardType = TextInputType.text,
+    this.validator,
+    this.controller,
+    this.onChange,
+    this.isPassword = false,
+    this.maxLine = 1,
+    this.onEditingCompleted,
+  }) : super(
+          key: key,
+        );
 
   @override
   State<InputField> createState() => _InputFieldState();
@@ -63,6 +67,7 @@ class _InputFieldState extends State<InputField> with FostrTheme {
             child: SizedBox(
               width: 90.w,
               child: TextFormField(
+                onEditingComplete: widget.onEditingCompleted,
                 maxLines: widget.maxLine ?? 1,
                 onChanged: (e) {
                   if (widget.onChange != null) {

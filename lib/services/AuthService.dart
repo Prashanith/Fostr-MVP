@@ -89,20 +89,24 @@ class AuthService {
     };
 
     try {
-      await _auth.verifyPhoneNumber(
-          phoneNumber: number.trim(),
-          codeAutoRetrievalTimeout: (String verId) {
-            verificationId = verId;
-          },
-          codeSent: smsOTPSent,
-          timeout: const Duration(seconds: 20),
-          verificationCompleted: (AuthCredential phoneAuthCredential) {
-            print(phoneAuthCredential.toString() + "lets make this work");
-          },
-          verificationFailed: (FirebaseAuthException exception) {
-            print('${exception.message} + something is wrong');
-          });
-    } catch (e) {}
+      await _auth
+          .verifyPhoneNumber(
+              phoneNumber: number.trim(),
+              codeAutoRetrievalTimeout: (String verId) {
+                verificationId = verId;
+              },
+              codeSent: smsOTPSent,
+              timeout: const Duration(seconds: 20),
+              verificationCompleted: (AuthCredential phoneAuthCredential) {},
+              verificationFailed: (FirebaseAuthException exception) {
+                print('${exception.code} + something is wrong');
+              })
+          .catchError((e) {
+        throw e;
+      });
+    } catch (e) {
+      throw e;
+    }
   }
 
   Future<UserModel.User?> verifyOTP(

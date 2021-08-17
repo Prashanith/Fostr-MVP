@@ -2,7 +2,8 @@ class Validator {
   static bool isEmail(String email) => RegExp(
           r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
       .hasMatch(email);
-  static bool isPhone(String phone) => RegExp(r"^[0-9]").hasMatch(phone);
+  static bool isPhone(String phone) =>
+      phone.length >= 8 && phone.length <= 12 && int.tryParse(phone) != null;
 
   static bool isUsername(String username) =>
       RegExp(r"^(?=.{3,20}$)(?![_.])(?!.*[_.]{3})[a-z0-9._]+(?<![_.])$")

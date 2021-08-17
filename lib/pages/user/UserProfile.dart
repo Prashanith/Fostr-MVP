@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fostr/core/constants.dart';
 import 'package:fostr/models/UserModel/User.dart';
@@ -48,7 +49,8 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
 
   Future<void> showPopUp(String field, String uid, Function cb,
       {String? value, int? maxLine}) {
-    return displayTextInputDialog(context, field, maxLine: maxLine)
+    return displayTextInputDialog(context, field,
+            maxLine: maxLine, value: value)
         .then((shouldUpdate) {
       if (shouldUpdate[0]) {
         cb(shouldUpdate);
@@ -81,7 +83,8 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
           child: SingleChildScrollView(
             child: Container(
               width: double.infinity,
-              decoration: BoxDecoration(gradient: secondaryBackground),
+              color: Colors.white,
+              // decoration: BoxDecoration(gradient: secondaryBackground),
               child: Stack(
                 children: [
                   Positioned(
@@ -148,10 +151,14 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                                         });
                                       });
                                     } else {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(SnackBar(
-                                              content: Text(
-                                                  "Image must be less than 400KB")));
+                                      Fluttertoast.showToast(
+                                          msg: "Image must be less than 400KB",
+                                          toastLength: Toast.LENGTH_SHORT,
+                                          gravity: ToastGravity.CENTER,
+                                          timeInSecForIosWeb: 1,
+                                          backgroundColor: gradientBottom,
+                                          textColor: Colors.white,
+                                          fontSize: 16.0);
                                     }
                                   } catch (e) {
                                     print(e);
@@ -170,7 +177,7 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                                 children: [
                                   IconButton(
                                     icon: FaIcon(FontAwesomeIcons.twitter),
-                                    color: Colors.teal[800],
+                                    color: Color(0xB2476747),
                                     iconSize: 30,
                                     onPressed: () async {
                                       controller.text =
@@ -191,12 +198,14 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                                             "id": user.id
                                           });
                                         });
-                                      });
+                                      },
+                                          value:
+                                              user.userProfile?.twitter ?? "");
                                     },
                                   ),
                                   IconButton(
                                     icon: FaIcon(FontAwesomeIcons.instagram),
-                                    color: Colors.teal[800],
+                                    color: Color(0xB2476747),
                                     iconSize: 30,
                                     onPressed: () {
                                       controller.text =
@@ -216,12 +225,14 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                                             "id": user.id
                                           });
                                         });
-                                      });
+                                      },
+                                          value: user.userProfile?.instagram ??
+                                              "");
                                     },
                                   ),
                                   IconButton(
                                     icon: FaIcon(FontAwesomeIcons.linkedinIn),
-                                    color: Colors.teal[800],
+                                    color: Color(0xB2476747),
                                     iconSize: 30,
                                     onPressed: () {
                                       controller.text =
@@ -242,7 +253,9 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                                             "id": user.id
                                           });
                                         });
-                                      });
+                                      },
+                                          value:
+                                              user.userProfile?.linkedIn ?? "");
                                     },
                                   ),
                                 ],
@@ -286,6 +299,9 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                                             }
                                           });
                                         },
+                                        value: (isClub)
+                                            ? user.bookClubName
+                                            : user.name,
                                       );
                                     },
                                     child: (auth.userType == UserType.CLUBOWNER)
@@ -333,7 +349,7 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                             maxWidth: 90.w,
                           ),
                           decoration: BoxDecoration(
-                            color: Color(0xffEBFFEE),
+                            color: Colors.white,
                             borderRadius: BorderRadius.circular(13),
                             boxShadow: boxShadow,
                           ),
@@ -352,7 +368,7 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                                       fontWeight: FontWeight.w500,
                                       color: Colors.teal[900])),
                               IconButton(
-                                icon: FaIcon(FontAwesomeIcons.pen),
+                                icon: FaIcon(FontAwesomeIcons.edit),
                                 color: Colors.teal[800],
                                 iconSize: 16,
                                 onPressed: () {
@@ -372,7 +388,9 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                                         "id": user.id
                                       });
                                     });
-                                  }, maxLine: 5);
+                                  },
+                                      maxLine: 5,
+                                      value: user.userProfile?.bio ?? "");
                                 },
                               ),
                             ],
@@ -382,17 +400,7 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                           padding: EdgeInsets.symmetric(horizontal: 20),
                           height: 80,
                           decoration: ShapeDecoration(
-                            // gradient: LinearGradient(
-                            //   colors: [
-                            //     const Color(0xFF80CBC4),
-                            //     const Color(0xFFB2DFDB),
-                            //   ],
-                            //   begin: Alignment.bottomCenter,
-                            //   end: Alignment.center,
-                            //   stops: [0.0, 0.5],
-                            //   tileMode: TileMode.clamp,
-                            // ),
-                            color: Color(0xFFE6FAED),
+                            color: Colors.white,
                             shadows: [
                               BoxShadow(
                                 offset: Offset(-5, -4),
@@ -435,18 +443,21 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                               height: 10,
                             ),
                             Container(
-                              padding: const EdgeInsets.all(15),
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadiusDirectional.circular(34),
-                                color: Color(0xFFE6FAED),
+                              padding: const EdgeInsets.all(10),
+                              constraints: BoxConstraints(
+                                maxWidth: 90.w,
                               ),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(13),
+                                boxShadow: boxShadow,
+                              ),
+                              alignment: Alignment.center,
                               width: MediaQuery.of(context).size.width * 0.9,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: List.generate(
-                                  5,
+                                  3,
                                   (index) {
                                     return Padding(
                                       padding: const EdgeInsets.symmetric(
@@ -489,6 +500,10 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                                                     arr[index] = e[1];
                                                     user.userProfile!
                                                         .favouriteBooks = arr;
+                                                  } else {
+                                                    user.userProfile!
+                                                            .favouriteBooks![
+                                                        index] = e[1];
                                                   }
                                                 });
                                                 updateProfile({
@@ -572,7 +587,7 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                       Text(
                         'Enter your $field',
                         style: h2.copyWith(
-                          fontSize: 17.sp,
+                          fontSize: 15.sp,
                         ),
                       ),
                       SizedBox(
