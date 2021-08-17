@@ -33,9 +33,9 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
 
   UserService userServices = GetIt.I<UserService>();
   User user = User.fromJson({
-    "name": "dsd",
-    "userName": "ds",
-    "id": "dwad",
+    "name": "",
+    "userName": "",
+    "id": "",
     "userType": "USER",
     "createdOn": DateTime.now().toString(),
     "lastLogin": DateTime.now().toString(),

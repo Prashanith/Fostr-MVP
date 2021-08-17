@@ -222,8 +222,8 @@ class _OngoingRoomState extends State<OngoingRoom> with FostrTheme {
   }
 }
 
-class RoomList extends StatelessWidget {
-  const RoomList({
+class RoomList extends StatelessWidget with FostrTheme {
+  RoomList({
     Key? key,
     required this.id,
   }) : super(key: key);
@@ -236,7 +236,9 @@ class RoomList extends StatelessWidget {
       stream: roomCollection.doc(id).collection('rooms').snapshots(),
       builder: (BuildContext context, snapshot) {
         if (snapshot.hasData && snapshot.data!.docs.length == 0)
-          return Container();
+          return Center(
+            child: Text("No Ongoing Rooms 😔", style: h1),
+          );
 
         if (snapshot.hasData) {
           final roomList = snapshot.data!.docs;
@@ -262,7 +264,7 @@ class RoomList extends StatelessWidget {
                     ? OngoingRoomCard(
                       room: Room.fromJson(room),
                     )
-                    : Container()
+                    : Container(),
                 );
               },
             ).toList(),

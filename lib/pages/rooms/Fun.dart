@@ -205,7 +205,7 @@ class _FunState extends State<Fun> with FostrTheme {
                           ),
                           decoration: BoxDecoration(
                             image: new DecorationImage(
-                              image: new AssetImage(IMAGES + "fun-main.png"),
+                              image: new AssetImage(IMAGES + "bonfire.JPG"),
                               fit: BoxFit.fill,
                             ),
                             borderRadius: BorderRadius.only(
@@ -224,43 +224,25 @@ class _FunState extends State<Fun> with FostrTheme {
                                   .collection('speakers')
                                   .snapshots(),
                                 builder: (BuildContext context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
-                                  if (snapshot.hasData) {
+                                  if (snapshot.hasData && snapshot.data!.docs.length == 0) {
+                                    return Align(child: Text("No speakers yet!"), alignment: Alignment.topCenter,);
+                                  } else if (snapshot.hasData) {
                                     List<QueryDocumentSnapshot<Map<String, dynamic>>> map = snapshot.data!.docs;
-                                    return Stack(
-                                      children: [
-                                        map.length >= 1
-                                          ? DragProfile(user: User.fromJson(map[0].data()), 
-                                              offset: Offset(MediaQuery.of(context).size.width*0.05, MediaQuery.of(context).size.height*0.32), isSpeaker: true)
-                                          : Align(child: Text("No speakers yet!"), alignment: Alignment.topCenter,),
-                                        map.length >= 2
-                                          ? DragProfile(user: User.fromJson(map[1].data()),
-                                              offset: Offset(MediaQuery.of(context).size.width*0.4, MediaQuery.of(context).size.height*0.31), isSpeaker: true)
-                                          : Container(),
-                                        map.length >= 3
-                                          ? DragProfile(user: User.fromJson(map[2].data()),
-                                              offset: Offset(MediaQuery.of(context).size.width*0.12, MediaQuery.of(context).size.height*0.42), isSpeaker: true)
-                                          : Container(),
-                                        map.length >= 4
-                                          ? DragProfile(user: User.fromJson(map[3].data()),
-                                              offset: Offset(MediaQuery.of(context).size.width*0.6, MediaQuery.of(context).size.height*0.45), isSpeaker: true)
-                                          : Container(),
-                                        map.length >= 5
-                                          ? DragProfile(user: User.fromJson(map[4].data()), 
-                                              offset: Offset(MediaQuery.of(context).size.width*0.68, MediaQuery.of(context).size.height*0.35), isSpeaker: true)
-                                          : Container(),
-                                        map.length >= 6
-                                          ? DragProfile(user: User.fromJson(map[5].data()),
-                                              offset: Offset(MediaQuery.of(context).size.width*0.72, MediaQuery.of(context).size.height*0.43), isSpeaker: true)
-                                          : Container(),
-                                        map.length >= 7
-                                          ? DragProfile(user: User.fromJson(map[6].data()), 
-                                              offset: Offset(MediaQuery.of(context).size.width*0.55, MediaQuery.of(context).size.height*0.335), isSpeaker: true)
-                                          : Container(),
-                                        map.length == 8
-                                          ? DragProfile(user: User.fromJson(map[7].data()),
-                                            offset: Offset(MediaQuery.of(context).size.width*0.3, MediaQuery.of(context).size.height*0.45), isSpeaker: true)
-                                          : Container(),
-                                      ],
+                                    return Padding(
+                                      padding: const EdgeInsets.only(top: 25),
+                                      child: GridView.builder(
+                                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
+                                        itemCount: map.length,
+                                        padding: EdgeInsets.all(2.0),
+                                        itemBuilder: (BuildContext context, int index) {
+                                          return Profile(
+                                            user: User.fromJson(map[index].data()),
+                                            size: 50,
+                                            isMute: false,
+                                            isSpeaker: false,
+                                          );
+                                        },
+                                      ),
                                     );
                                   } else {
                                     return CircularProgressIndicator();
@@ -295,7 +277,7 @@ class _FunState extends State<Fun> with FostrTheme {
             },
             color: Color(0xffE8FCD9),
             icon: Image.asset(IMAGES + "close.png"),
-            iconSize: 15
+            iconSize: 40
           ),
           Spacer(),
           Visibility(
@@ -309,7 +291,7 @@ class _FunState extends State<Fun> with FostrTheme {
               },
               color: Color(0xffE8FCD9),
               icon: !isMicOn ? Image.asset(IMAGES + "mic.png") : Image.asset(IMAGES + "mic_off.png"),
-              iconSize: 25
+              iconSize: 40
             ),
           ),
         ],

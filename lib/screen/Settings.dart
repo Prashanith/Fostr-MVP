@@ -93,11 +93,10 @@ class Settings extends StatelessWidget with FostrTheme {
               onTap: () async {
                 if (await confirm(
                   context,
-                  title: Text('Confirm'),
-                  content: Text(
-                      'Are you sure you want to leave such amazing application?'),
-                  textOK: Text('Yes'),
-                  textCancel: Text('No'),
+                  title: Text('Warning ⚠️'),
+                  content: Text("Are you sure you want to quit this amazing experience?"),
+                  textOK: Text('Sadly Yes'),
+                  textCancel: Text('Oh No!'),
                 )) {
                   await auth.signOut();
                   FostrRouter.removeUntillAndGoto(
