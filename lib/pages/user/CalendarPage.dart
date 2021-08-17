@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:fostr/core/constants.dart';
 import 'package:fostr/core/data.dart';
 import 'package:fostr/models/RoomModel.dart';
 import 'package:fostr/providers/AuthProvider.dart';
@@ -17,67 +18,138 @@ class CalendarPage extends StatefulWidget {
 
 class _CalendarPageState extends State<CalendarPage> with FostrTheme {
   DateTime date = DateTime.now();
+  bool isEmpty = true;
 
   @override
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthProvider>(context);
     final user = auth.user;
-    return Layout(
-      child: SafeArea(
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "Calendar:",
-                  style: h1,
+    return Material(
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment(-0.6, -1),
+            end: Alignment(1, 0.6),
+            colors: [
+              Color.fromRGBO(148, 181, 172, 1),
+              Color.fromRGBO(229, 229, 229, 1),
+            ],
+          ),
+        ),
+        child: SafeArea(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: paddingH + const EdgeInsets.only(top: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Calendar",
+                      style: h1.apply(color: Colors.white),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-            SizedBox(
-              height: 2.h,
-            ),
-            Container(
-              margin: EdgeInsets.symmetric(vertical: 2.h, horizontal: 20),
-              height: 35.h,
-              width: 90.w,
-              decoration: BoxDecoration(
-                boxShadow: boxShadow,
-                color: Color(0xffEBFFEE),
-                borderRadius: BorderRadius.circular(36),
               ),
-              child: Theme(
-                data: ThemeData(
-                  colorScheme: ColorScheme.light(primary: h2.color!),
-                ),
-                child: DefaultTextStyle.merge(
-                  style: h1.copyWith(fontSize: 18.sp),
-                  child: CalendarDatePicker(
-                    firstDate: DateTime(2000),
-                    initialDate: DateTime.now(),
-                    lastDate: DateTime(2030),
-                    onDateChanged: (DateTime value) {
-                      setState(() {
-                        date = value;
-                      });
-                    },
+              SizedBox(
+                height: 40,
+              ),
+              Expanded(
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: MediaQuery.of(context).size.width * 0.03),
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: Image.asset(IMAGES + "background.png").image,
+                      fit: BoxFit.cover,
+                    ),
+                    borderRadius: BorderRadiusDirectional.only(
+                      topStart: Radius.circular(32),
+                      topEnd: Radius.circular(32),
+                    ),
+                    color: Colors.white,
+                  ),
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 2.h,
+                      ),
+                      Container(
+                        margin:
+                            EdgeInsets.symmetric(vertical: 2.h, horizontal: 20),
+                        height: 35.h,
+                        width: 90.w,
+                        decoration: BoxDecoration(
+                          boxShadow: boxShadow,
+                          color: Color(0xffEBFFEE),
+                          borderRadius: BorderRadius.circular(36),
+                        ),
+                        child: Theme(
+                          data: ThemeData(
+                            colorScheme: ColorScheme.light(primary: h2.color!),
+                          ),
+                          child: DefaultTextStyle.merge(
+                            style: h1.copyWith(fontSize: 18.sp),
+                            child: CalendarDatePicker(
+                              firstDate: DateTime(2000),
+                              initialDate: DateTime.now(),
+                              lastDate: DateTime(2030),
+                              onDateChanged: (DateTime value) {
+                                setState(() {
+                                  date = value;
+                                });
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: (user?.followings != null &&
+                                user?.followings?.length != 0)
+                            ? ListView.builder(
+                                itemCount: user?.followings?.length ?? 0,
+                                itemBuilder: (context, index) {
+                                  print(user?.followings?.length);
+                                  return RoomWidget(
+                                    id: user!.followings![index],
+                                    date: date,
+                                  );
+                                },
+                              )
+                            : Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "It's so quite here right?",
+                                      style: h1,
+                                    ),
+                                    SizedBox(
+                                      height: 30,
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 10.0),
+                                      child: Text(
+                                        "You should follow some greatness 😉",
+                                        style: h1,
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                      ),
+                    ],
                   ),
                 ),
               ),
-            ),
-            Expanded(
-              child: ListView.builder(
-                itemCount: user?.followings?.length ?? 0,
-                itemBuilder: (context, index) {
-                  return RoomWidget(
-                    id: user!.followings![index],
-                    date: date,
-                  );
-                },
-              ),
-            )
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -104,12 +176,15 @@ class RoomWidget extends StatelessWidget {
 
         if (snapshot.hasData) {
           final roomList = snapshot.data!.docs;
-
+          var roomListData = roomList.where((element) {
+            final room = Room.fromJson(element.data());
+            return room.dateTime?.substring(0, 10) ==
+                date.toString().substring(0, 10);
+          });
           return Column(
-            children: List.generate(
-              roomList.length,
-              (index) {
-                final room = Room.fromJson(roomList[index].data());
+            children: roomListData.map(
+              (element) {
+                final room = Room.fromJson(element.data());
                 if (room.dateTime?.substring(0, 10) ==
                     date.toString().substring(0, 10)) {
                   return GestureDetector(

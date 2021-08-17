@@ -5,7 +5,6 @@ import 'package:fostr/models/UserModel/User.dart';
 import 'package:fostr/providers/AuthProvider.dart';
 import 'package:fostr/services/UserService.dart';
 import 'package:fostr/utils/theme.dart';
-import 'package:fostr/widgets/Layout.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
@@ -19,11 +18,12 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> with FostrTheme {
   String query = "";
+  bool searched = false;
 
-  List<Map<String, dynamic>> clubs = [];
   List<Map<String, dynamic>> users = [];
 
   final UserService userService = GetIt.I<UserService>();
+  final searchForm = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -33,14 +33,8 @@ class _SearchPageState extends State<SearchPage> with FostrTheme {
   void searchUsers(String id) async {
     var res = await userService.searchUser(query);
     setState(() {
-      clubs = res
-          .where((element) =>
-              element['userType'] == 'CLUBOWNER' && element['id'] != id)
-          .toList();
-      users = res
-          .where(
-              (element) => element['userType'] == 'USER' && element['id'] != id)
-          .toList();
+      searched = true;
+      users = res;
     });
   }
 
@@ -48,148 +42,182 @@ class _SearchPageState extends State<SearchPage> with FostrTheme {
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthProvider>(context);
     return Scaffold(
-      body: Layout(
+        body: Material(
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment(-0.6, -1),
+            end: Alignment(1, 0.6),
+            colors: [
+              Color.fromRGBO(148, 181, 172, 1),
+              Color.fromRGBO(229, 229, 229, 1),
+            ],
+          ),
+        ),
         child: SafeArea(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 2.w),
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 30.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: paddingH + const EdgeInsets.only(top: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Search",
+                      style: h1.apply(color: Colors.white),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 40,
+              ),
+              Expanded(
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: MediaQuery.of(context).size.width * 0.03),
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: Image.asset(IMAGES + "background.png").image,
+                      fit: BoxFit.cover,
+                    ),
+                    borderRadius: BorderRadiusDirectional.only(
+                      topStart: Radius.circular(32),
+                      topEnd: Radius.circular(32),
+                    ),
+                    color: Colors.white,
+                  ),
+                  child: Column(
                     children: [
-                      Container(
-                        margin: const EdgeInsets.only(right: 20),
-                        width: 60.w,
-                        decoration: BoxDecoration(
-                            color: Color(0XFFEBFFEE),
-                            borderRadius: BorderRadius.circular(25),
-                            boxShadow: [
-                              BoxShadow(
-                                offset: Offset(0, 4),
-                                blurRadius: 16,
-                                color: Colors.black.withOpacity(0.25),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 30.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Container(
+                              margin: const EdgeInsets.only(right: 20),
+                              width: 60.w,
+                              decoration: BoxDecoration(
+                                  color: Color(0XFFEBFFEE),
+                                  borderRadius: BorderRadius.circular(25),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      offset: Offset(0, 4),
+                                      blurRadius: 16,
+                                      color: Colors.black.withOpacity(0.25),
+                                    ),
+                                  ]),
+                              child: Form(
+                                key: searchForm,
+                                child: TextFormField(
+                                  validator: (va) {
+                                    if (va!.isEmpty) {
+                                      return "Enter valid name or username";
+                                    }
+                                  },
+                                  style: h2.copyWith(fontSize: 14.sp),
+                                  onEditingComplete: () {
+                                    searchUsers(auth.user!.id);
+                                    FocusScope.of(context).unfocus();
+                                  },
+                                  onChanged: (value) {
+                                    setState(() {
+                                      query = value;
+                                    });
+                                  },
+                                  decoration: InputDecoration(
+                                    contentPadding: EdgeInsets.symmetric(
+                                        horizontal: 20, vertical: 2.h),
+                                    hintText: "Search",
+                                    hintStyle: h2.copyWith(fontSize: 14.sp),
+                                    border: InputBorder.none,
+                                  ),
+                                ),
                               ),
-                            ]),
-                        child: TextField(
-                          style: h2.copyWith(fontSize: 14.sp),
-                          onEditingComplete: () {
-                            searchUsers(auth.user!.id);
-                            FocusScope.of(context).unfocus();
-                          },
-                          onSubmitted: (e) {
-                            print(e);
-                          },
-                          onChanged: (value) {
-                            setState(() {
-                              query = value;
-                            });
-                          },
-                          decoration: InputDecoration(
-                            contentPadding: EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 2.h),
-                            hintText: "Search",
-                            hintStyle: h2.copyWith(fontSize: 14.sp),
-                            border: InputBorder.none,
-                          ),
+                            ),
+                            InkWell(
+                              onTap: () {
+                                if (searchForm.currentState!.validate()) {
+                                  searchUsers(auth.user!.id);
+                                }
+                              },
+                              child: Container(
+                                height: 7.h,
+                                width: 7.h,
+                                decoration: BoxDecoration(
+                                    color: Color(0xffEBFFEE),
+                                    shape: BoxShape.circle,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        offset: Offset(0, 4),
+                                        blurRadius: 16,
+                                        color: Colors.black.withOpacity(0.25),
+                                      )
+                                    ]),
+                                child: Icon(
+                                  Icons.search_rounded,
+                                  size: 20.sp,
+                                ),
+                              ),
+                            )
+                          ],
                         ),
                       ),
-                      InkWell(
-                        onTap: () => searchUsers(auth.user!.id),
-                        child: Container(
-                          height: 7.h,
-                          width: 7.h,
-                          decoration: BoxDecoration(
-                              color: Color(0xffEBFFEE),
-                              shape: BoxShape.circle,
-                              boxShadow: [
-                                BoxShadow(
-                                  offset: Offset(0, 4),
-                                  blurRadius: 16,
-                                  color: Colors.black.withOpacity(0.25),
-                                )
-                              ]),
-                          child: Icon(
-                            Icons.search_rounded,
-                            size: 20.sp,
-                          ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 40, bottom: 20),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Users",
+                              style: h1.copyWith(fontSize: 16.sp),
+                            ),
+                            SvgPicture.asset(
+                              ICONS + "menu.svg",
+                              color: h1.color,
+                            ),
+                          ],
                         ),
-                      )
+                      ),
+                      Divider(
+                        endIndent: 40,
+                        indent: 40,
+                        thickness: 2,
+                      ),
+                      Expanded(
+                        child: (users.length > 0)
+                            ? ListView.builder(
+                                itemCount: users.length,
+                                itemBuilder: (context, idx) {
+                                  var user = User.fromJson(users[idx]);
+                                  return UserCard(
+                                    user: user,
+                                  );
+                                },
+                              )
+                            : (searched)
+                                ? Center(child: Text("No Users or Book Club found"))
+                                : Center(child: Text("You can find someone try to search")),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 40, bottom: 20),
+                        child: Divider(
+                          endIndent: 40,
+                          indent: 40,
+                          thickness: 2,
+                        ),
+                      ),
                     ],
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 40, bottom: 20),
-                  child: Divider(
-                    endIndent: 40,
-                    indent: 40,
-                    thickness: 2,
-                  ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Clubs",
-                      style: h1.copyWith(fontSize: 16.sp),
-                    ),
-                    SvgPicture.asset(
-                      ICONS + "menu.svg",
-                      color: h1.color,
-                    ),
-                  ],
-                ),
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: clubs.length,
-                    itemBuilder: (context, idx) {
-                      var user = User.fromJson(clubs[idx]);
-                      return UserCard(
-                        user: user,
-                      );
-                    },
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 40, bottom: 20),
-                  child: Divider(
-                    endIndent: 40,
-                    indent: 40,
-                    thickness: 2,
-                  ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Users",
-                      style: h1.copyWith(fontSize: 16.sp),
-                    ),
-                    SvgPicture.asset(
-                      ICONS + "menu.svg",
-                      color: h1.color,
-                    ),
-                  ],
-                ),
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: users.length,
-                    itemBuilder: (context, idx) {
-                      var user = User.fromJson(users[idx]);
-                      return UserCard(
-                        user: user,
-                      );
-                    },
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
-    );
+    ));
   }
 }
 

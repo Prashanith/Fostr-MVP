@@ -6,6 +6,7 @@ import 'package:fostr/utils/theme.dart';
 import 'package:intl/intl.dart';
 
 import 'BookmarkContainer.dart';
+
 class OngoingRoomCard extends StatelessWidget with FostrTheme {
   final Room room;
 
@@ -56,7 +57,9 @@ class OngoingRoomCard extends StatelessWidget with FostrTheme {
                       width: 8,
                     ),
                     Text(
-                      (room.participantsCount! < 0 ? "0" : room.participantsCount.toString()),
+                      (room.participantsCount! < 0
+                          ? "0"
+                          : room.participantsCount.toString()),
                       style: h2.copyWith(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -73,7 +76,9 @@ class OngoingRoomCard extends StatelessWidget with FostrTheme {
                       width: 8,
                     ),
                     Text(
-                      (room.speakersCount! < 0 ? "0" : room.speakersCount.toString()),
+                      (room.speakersCount! < 0
+                          ? "0"
+                          : room.speakersCount.toString()),
                       style: h2.copyWith(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -112,7 +117,8 @@ class OngoingRoomCard extends StatelessWidget with FostrTheme {
                   height: 5,
                 ),
                 Text(
-                  DateFormat('dd-MMM-yy (KK:mm) aa').format(DateTime.parse(room.dateTime.toString())),
+                  DateFormat('dd-MMM-yy (KK:mm) aa')
+                      .format(DateTime.parse(room.dateTime.toString())),
                   style: TextStyle(
                       fontSize: 15,
                       color: Colors.white,
