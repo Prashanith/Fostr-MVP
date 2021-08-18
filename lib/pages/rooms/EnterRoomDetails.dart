@@ -176,7 +176,9 @@ class _EnterRoomDetailsState extends State<EnterRoomDetails> with FostrTheme {
                                                   await ImageCropper.cropImage(
                                                 sourcePath: file['file'].path,
                                                 maxHeight: 150,
-                                                maxWidth: 370,
+                                                maxWidth: 150,
+                                                aspectRatio: CropAspectRatio(
+                                                    ratioX: 1, ratioY: 1),
                                               );
 
                                               if (croppedFile != null) {

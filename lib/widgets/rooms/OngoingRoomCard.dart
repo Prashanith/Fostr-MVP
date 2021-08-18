@@ -60,7 +60,7 @@ class OngoingRoomCard extends StatelessWidget with FostrTheme {
               child: Stack(
                 children: [
                   Align(
-                    alignment: Alignment.centerRight,
+                    alignment: Alignment.topRight,
                     child: Container(
                       height: 100,
                       width: 100,
@@ -171,7 +171,7 @@ class OngoingRoomCard extends StatelessWidget with FostrTheme {
                 ((user.bookClubName == "") ? user.name : user.bookClubName)
             ? Positioned(
                 right: 5,
-                bottom: 5,
+                bottom: 0,
                 child: IconButton(
                     icon: Icon(Icons.delete_outline_rounded),
                     onPressed: () async {

@@ -36,7 +36,7 @@ class _SearchPageState extends State<SearchPage> with FostrTheme {
     var res = await userService.searchUser(query);
     setState(() {
       searched = true;
-      users = res;
+      users = res.where((element) => element['id'] != id).toList();
     });
   }
 

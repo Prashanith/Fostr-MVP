@@ -104,35 +104,25 @@ class UserService {
           .where("bookClubName", isGreaterThanOrEqualTo: query)
           .where("bookClubName", isLessThan: query + 'z')
           .get();
-      List ids = [];
-      var usernameData = rawUsername.docs.map((e) {
-        ids.add(e.data()['id']);
-        return e.data();
-      });
-      List<Map<String, dynamic>> nameData = [];
-      var name = rawNames.docs;
-      for (var i = 0; i < name.length; i++) {
-        if (!ids.contains(name[i].data()['id'])) {
-          ids.add(name[i].data()['id']);
-          nameData.add(name[i].data());
-        }
-      }
 
-      print(ids);
-      List<Map<String, dynamic>> bookNameData = [];
-      var book = rawBook.docs;
-      for (var i = 0; i < rawBook.docs.length; i++) {
-        if (!ids.contains(book[i].data()['id'])) {
-          ids.add(book[i].data()['id']);
-          nameData.add(book[i].data());
-        }
-      }
-      List<Map<String, dynamic>> userSet = [];
-      userSet.addAll(usernameData);
-      userSet.addAll(nameData);
-      userSet.addAll(bookNameData);
-      print(userSet.length);
-      return userSet.toList();
+      var usernames = rawUsername.docs.map((e) => e.data()).toList();
+      var names = rawNames.docs.map((e) => e.data()).toList();
+      var books = rawBook.docs.map((e) => e.data()).toList();
+
+
+      Map<String, Map<String, dynamic>> users = {};
+
+      usernames.forEach((element) {
+        users[element['id']] = element;
+      });
+      names.forEach((element) {
+        users[element['id']] = element;
+      });
+      books.forEach((element) {
+        users[element['id']] = element;
+      });
+
+      return users.values.toList();
     } catch (e) {
       print(e);
       throw e;
