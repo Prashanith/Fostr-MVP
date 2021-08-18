@@ -7,34 +7,18 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:559126256610:android:719f4602efc5af272337bb",
+        "mobilesdk_app_id": "1:559126256610:android:5d8308591b58b7562337bb",
         "android_client_info": {
           "package_name": "com.clubfostr.fostr"
         }
       },
       "oauth_client": [
         {
-          "client_id": "559126256610-2k1i4m5das31fe9trhm353hrqggs3kap.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.clubfostr.fostr",
-            "certificate_hash": "bc7a1d743afba3dbd2954b54d7d333a34931d6cf"
-          }
-        },
-        {
           "client_id": "559126256610-4afmr80g3ul2ns1a37mfevnfkmqq57ph.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.clubfostr.fostr",
             "certificate_hash": "85c62a72e39c0fe667df59f9ea91c85b7b5791ed"
-          }
-        },
-        {
-          "client_id": "559126256610-8e35fnuukc11h118n90l6ong9cv0d6oe.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.clubfostr.fostr",
-            "certificate_hash": "bea6bde9f8081ae0e3622d9f2acb5af03ce92846"
           }
         },
         {
@@ -67,7 +51,7 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:559126256610:android:2a76ea45609168cb2337bb",
+        "mobilesdk_app_id": "1:559126256610:android:b5c9325dadc24e192337bb",
         "android_client_info": {
           "package_name": "com.example.fostr"
         }

@@ -50,7 +50,6 @@ class UserService {
         return User.fromJson(rawUser.data()!);
       }
     } catch (e) {
-      print(e);
       throw e;
     }
   }
@@ -105,18 +104,35 @@ class UserService {
           .where("bookClubName", isGreaterThanOrEqualTo: query)
           .where("bookClubName", isLessThan: query + 'z')
           .get();
-      var usernameData = rawUsername.docs;
-      var nameData = rawNames.docs;
-      var bookNameData = rawBook.docs;
-      usernameData.addAll(nameData);
-      usernameData.addAll(bookNameData);
-      var res = usernameData.map(
-        (e) {
-          print(e);
-          return e.data();
-        },
-      ).toList();
-      return res;
+      List ids = [];
+      var usernameData = rawUsername.docs.map((e) {
+        ids.add(e.data()['id']);
+        return e.data();
+      });
+      List<Map<String, dynamic>> nameData = [];
+      var name = rawNames.docs;
+      for (var i = 0; i < name.length; i++) {
+        if (!ids.contains(name[i].data()['id'])) {
+          ids.add(name[i].data()['id']);
+          nameData.add(name[i].data());
+        }
+      }
+
+      print(ids);
+      List<Map<String, dynamic>> bookNameData = [];
+      var book = rawBook.docs;
+      for (var i = 0; i < rawBook.docs.length; i++) {
+        if (!ids.contains(book[i].data()['id'])) {
+          ids.add(book[i].data()['id']);
+          nameData.add(book[i].data());
+        }
+      }
+      List<Map<String, dynamic>> userSet = [];
+      userSet.addAll(usernameData);
+      userSet.addAll(nameData);
+      userSet.addAll(bookNameData);
+      print(userSet.length);
+      return userSet.toList();
     } catch (e) {
       print(e);
       throw e;

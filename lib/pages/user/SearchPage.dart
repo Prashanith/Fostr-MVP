@@ -171,9 +171,10 @@ class _SearchPageState extends State<SearchPage> with FostrTheme {
                             : (searched)
                                 ? Center(
                                     child: Text(
-                                    "No Users or Book Clubs found",
-                                    style: h2,
-                                  ))
+                                      "No Users or Book Clubs found",
+                                      style: h2,
+                                    ),
+                                  )
                                 : Center(
                                     child: Text(
                                       "You can follow some readers here",

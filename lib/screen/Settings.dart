@@ -93,9 +93,9 @@ class Settings extends StatelessWidget with FostrTheme {
               onTap: () async {
                 if (await confirm(
                   context,
-                  title: Text('Confirm'),
+                  title: Text('Alert'),
                   content: Text(
-                      'Are you sure you want to leave such amazing application?'),
+                      'Are you sure you want to leave such amazing experience?'),
                   textOK: Text('Yes'),
                   textCancel: Text('No'),
                 )) {

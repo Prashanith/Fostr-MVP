@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fostr/core/constants.dart';
 import 'package:fostr/pages/clubOwner/dashboard.dart';
@@ -38,41 +39,37 @@ class _OnboardingPageState extends State<OnboardingPage> with FostrTheme {
       }
     }
     return Material(
-      child: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: Image.asset(IMAGES + "background.png").image,
-            fit: BoxFit.cover,
-          ),
+        child: Container(
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: Image.asset(IMAGES + "background.png").image,
+          fit: BoxFit.cover,
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              height: 100,
-              width: 100,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                image: DecorationImage(
-                  image: Image.asset(IMAGES + "logo_black.png").image,
-                  fit: BoxFit.cover,
-                ),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            height: 100,
+            width: 100,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              image: DecorationImage(
+                image: Image.asset(IMAGES + "logo_black.png").image,
+                fit: BoxFit.cover,
               ),
             ),
-            SizedBox(height: 10),
-            SizedBox(
-              width: 50.w,
-              child: Image.asset(IMAGES + "fostreads.png")
-            ),
-            SizedBox(height: 25),
-            Text("Loading...", style: h1),
-            CircularProgressIndicator(
-              backgroundColor: Color(0xff47A389),
-              valueColor: AlwaysStoppedAnimation<Color>(gradientTop),
-            ),
-          ],
-        ),
-      )
-    );
+          ),
+          SizedBox(height: 10),
+          SizedBox(width: 50.w, child: Image.asset(IMAGES + "fostreads.png")),
+          SizedBox(height: 25),
+          Text("Loading...", style: h1),
+          CircularProgressIndicator(
+            backgroundColor: Color(0xff47A389),
+            valueColor: AlwaysStoppedAnimation<Color>(gradientTop),
+          ),
+        ],
+      ),
+    ));
   }
 }
