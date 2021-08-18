@@ -43,6 +43,11 @@ class _UserDashboardState extends State<UserDashboard> with FostrTheme {
   ];
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     // final auth = Provider.of<AuthProvider>(context);
     // final user = auth.user!;
@@ -168,23 +173,23 @@ class _OngoingRoomState extends State<OngoingRoom> with FostrTheme {
                             horizontal: 10, vertical: 10),
                         child:
                             StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                              stream: roomCollection.snapshots(),
-                              builder: (BuildContext context,
-                                  AsyncSnapshot<QuerySnapshot> outerData) {
-                                if (outerData.hasData) {
-                                  final docs = outerData.data!.docs;
-                                  return ListView.builder(
-                                    itemCount: docs.length,
-                                    itemBuilder: (context, index) {
-                                      final id = docs[index].id;
-                                      return RoomList(id: id);
-                                    },
-                                  );
-                                } else {
-                                  return Center(
-                                      child: CircularProgressIndicator());
-                                }
-                              }),
+                                stream: roomCollection.snapshots(),
+                                builder: (BuildContext context,
+                                    AsyncSnapshot<QuerySnapshot> outerData) {
+                                  if (outerData.hasData) {
+                                    final docs = outerData.data!.docs;
+                                    return ListView.builder(
+                                      itemCount: docs.length,
+                                      itemBuilder: (context, index) {
+                                        final id = docs[index].id;
+                                        return RoomList(id: id);
+                                      },
+                                    );
+                                  } else {
+                                    return Center(
+                                        child: CircularProgressIndicator());
+                                  }
+                                }),
                       ),
                     ),
                   ),
@@ -237,7 +242,7 @@ class RoomList extends StatelessWidget with FostrTheme {
       builder: (BuildContext context, snapshot) {
         if (snapshot.hasData && snapshot.data!.docs.length == 0)
           return Center(
-            child: Text("No Ongoing Rooms 😔", style: h1),
+            child: Text(""),
           );
 
         if (snapshot.hasData) {
@@ -259,12 +264,18 @@ class RoomList extends StatelessWidget with FostrTheme {
                       ),
                     );
                   },
-                  child: (DateTime.parse(Room.fromJson(room).dateTime.toString()).isAfter(DateTime.now().subtract(Duration(minutes: 90)))
-                        && DateTime.parse(Room.fromJson(room).dateTime.toString()).isBefore(DateTime.now().add(Duration(minutes: 10))))
-                    ? OngoingRoomCard(
-                      room: Room.fromJson(room),
-                    )
-                    : Container(),
+                  child: (DateTime.parse(
+                                  Room.fromJson(room).dateTime.toString())
+                              .isAfter(DateTime.now()
+                                  .subtract(Duration(minutes: 90))) &&
+                          DateTime.parse(
+                                  Room.fromJson(room).dateTime.toString())
+                              .isBefore(
+                                  DateTime.now().add(Duration(minutes: 10))))
+                      ? OngoingRoomCard(
+                          room: Room.fromJson(room),
+                        )
+                      : Container(),
                 );
               },
             ).toList(),

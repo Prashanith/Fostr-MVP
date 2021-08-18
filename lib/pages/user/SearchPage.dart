@@ -1,9 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:fostr/core/constants.dart';
 import 'package:fostr/models/UserModel/User.dart';
 import 'package:fostr/providers/AuthProvider.dart';
+import 'package:fostr/screen/ExternalUserProfile.dart';
 import 'package:fostr/services/UserService.dart';
 import 'package:fostr/utils/theme.dart';
 import 'package:get_it/get_it.dart';
@@ -263,35 +264,48 @@ class _UserCardState extends State<UserCard> with FostrTheme {
                       : Image.asset(IMAGES + "profile.png").image),
             ),
           ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              (widget.user.name.isNotEmpty)
-                  ? Text(
-                      widget.user.name,
-                      style: h1.copyWith(fontSize: 14.sp),
-                    )
-                  : SizedBox.shrink(),
-              SizedBox(
-                height: 5,
-              ),
-              (widget.user.bookClubName != null &&
-                      widget.user.bookClubName!.isNotEmpty)
-                  ? Text(
-                      widget.user.bookClubName!,
-                      style: h1.copyWith(
-                          fontSize: 14.sp, fontWeight: FontWeight.bold),
-                    )
-                  : SizedBox.shrink(),
-              Text(
-                "@" + widget.user.userName,
-                style: h2.copyWith(fontSize: 12.sp),
-              )
-            ],
+          InkWell(
+            onTap: () {
+              Navigator.push(
+                context,
+                CupertinoPageRoute(
+                  builder: (context) {
+                    return ExternalProfilePage(
+                      user: widget.user,
+                    );
+                  },
+                ),
+              );
+            },
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                (widget.user.name.isNotEmpty)
+                    ? Text(
+                        widget.user.name,
+                        style: h1.copyWith(fontSize: 14.sp),
+                      )
+                    : SizedBox.shrink(),
+                SizedBox(
+                  height: 5,
+                ),
+                (widget.user.bookClubName != null &&
+                        widget.user.bookClubName!.isNotEmpty)
+                    ? Text(
+                        widget.user.bookClubName!,
+                        style: h1.copyWith(
+                            fontSize: 14.sp, fontWeight: FontWeight.bold),
+                      )
+                    : SizedBox.shrink(),
+                Text(
+                  "@" + widget.user.userName,
+                  style: h2.copyWith(fontSize: 12.sp),
+                )
+              ],
+            ),
           ),
           InkWell(
             onTap: () async {
-              print(auth.user!.id);
               try {
                 if (!followed) {
                   var user =

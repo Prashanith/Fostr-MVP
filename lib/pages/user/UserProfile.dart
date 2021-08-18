@@ -87,18 +87,6 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
               // decoration: BoxDecoration(gradient: secondaryBackground),
               child: Stack(
                 children: [
-                  Positioned(
-                    top: -350,
-                    left: -230,
-                    child: Container(
-                      height: 600,
-                      width: 600,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Column(
@@ -427,7 +415,7 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                               child: Row(
                                 children: [
                                   Text(
-                                    'Favourite Books:',
+                                    'Top Reads:',
                                     style: TextStyle(
                                         fontWeight: FontWeight.w500,
                                         fontSize: 15,

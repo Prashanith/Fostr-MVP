@@ -275,7 +275,7 @@ class _MinimalState extends State<Minimal> with FostrTheme {
             icon: Image.asset(IMAGES + "close.png"),
             iconSize: 40
           ),
-          // Spacer(),
+          Spacer(),
           Padding(
             padding: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.2),
             child: Visibility(
