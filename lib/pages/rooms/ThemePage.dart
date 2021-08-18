@@ -60,17 +60,7 @@ class ThemePage extends StatelessWidget with FostrTheme {
                 height: 40,
               ),
               Expanded(
-                child: Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadiusDirectional.only(
-                      topStart: Radius.circular(32),
-                      topEnd: Radius.circular(32),
-                    ),
-                    color: Colors.white,
-                  ),
-                  child: SelectTheme(room: room),
-                ),
+                child: SelectTheme(room: room),
               ),
             ],
           ),

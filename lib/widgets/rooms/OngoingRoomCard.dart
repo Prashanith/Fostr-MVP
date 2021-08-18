@@ -33,8 +33,8 @@ class OngoingRoomCard extends StatelessWidget with FostrTheme {
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  Color(0xffAAC8B1),
-                  Color(0xffA5C5BD),
+                  gradientBottom,
+                  gradientTop,
                 ],
               ),
               // image: DecorationImage(

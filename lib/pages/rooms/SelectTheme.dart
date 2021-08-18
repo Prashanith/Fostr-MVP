@@ -43,308 +43,183 @@ class _SelectThemeState extends State<SelectTheme> {
     return Material(
       color: gradientBottom,
       child: Container(
+        padding: EdgeInsets.symmetric(
+            horizontal: MediaQuery.of(context).size.width * 0.03),
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [gradientTop, gradientBottom]),
-          borderRadius: BorderRadiusDirectional.only(
-            topStart: Radius.circular(32),
-            topEnd: Radius.circular(32),
-          ),
-        ),
-        child: ListView(
-          children: [
-            Column(
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    GestureDetector(
-                      onTap: () => setState(() {
-                        img = "minimalistbg.png";
-                        roomTheme = "Minimalist";
-                      }),
-                      child: Container(
-                          decoration: BoxDecoration(
-                            image: new DecorationImage(
-                              image: new AssetImage(IMAGES + "minimalist.png"),
-                              fit: BoxFit.fill,
-                            ),
-                            borderRadius: BorderRadius.circular(35),
-                            //color: Colors.black38
-                          ),
-                          alignment: Alignment.center,
-                          height: MediaQuery.of(context).size.height * 0.15,
-                          width: MediaQuery.of(context).size.width * 0.4,
-                          //color: Colors.blue,
-                          margin: EdgeInsets.all(15.0),
-                          //color: Colors.black38
-                          child: Text(
-                            'Minimalist',
-                            style: TextStyle(color: Colors.white, fontSize: 20),
-                          )),
-                    ),
-                    GestureDetector(
-                      onTap: () => setState(() {
-                        img = "cafebg.png";
-                        roomTheme = "Cafe";
-                      }),
-                      child: Container(
-                          decoration: BoxDecoration(
-                              image: new DecorationImage(
-                                image: new AssetImage(IMAGES + "cafe.png"),
-                                fit: BoxFit.fill,
-                              ),
-                              borderRadius: BorderRadius.circular(35),
-                              color: Colors.pink[200]),
-                          alignment: Alignment.center,
-                          height: MediaQuery.of(context).size.height * 0.15,
-                          width: MediaQuery.of(context).size.width * 0.4,
-                          //color: Colors.blue,
-                          margin: EdgeInsets.all(15.0),
-                          //color: Colors.black38
-                          child: Text(
-                            'Cafe',
-                            style: TextStyle(color: Colors.white, fontSize: 20),
-                          )),
-                    ),
-                  ],
-                ),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    GestureDetector(
-                      onTap: () => setState(() {
-                        img = "librarybg.png";
-                        roomTheme = "Library";
-                      }),
-                      child: Container(
-                          decoration: BoxDecoration(
-                              image: new DecorationImage(
-                                image: new AssetImage(IMAGES + "library.png"),
-                                fit: BoxFit.fill,
-                              ),
-                              borderRadius: BorderRadius.circular(35),
-                              color: Colors.blue[200]),
-                          alignment: Alignment.center,
-                          height: MediaQuery.of(context).size.height * 0.15,
-                          width: MediaQuery.of(context).size.width * 0.4,
-                          //color: Colors.blue,
-                          margin: EdgeInsets.all(15.0),
-                          //color: Colors.black38
-                          child: Text(
-                            'Library',
-                            style: TextStyle(color: Colors.white, fontSize: 20),
-                          )),
-                    ),
-                    GestureDetector(
-                      onTap: () => setState(() {
-                        img = "funbg.png";
-                        roomTheme = "Fun";
-                      }),
-                      child: Container(
-                        decoration: BoxDecoration(
-                            image: new DecorationImage(
-                              image: new AssetImage(IMAGES + "fun.png"),
-                              fit: BoxFit.fill,
-                            ),
-                            borderRadius: BorderRadius.circular(35),
-                            color: Colors.red[200]),
-                        alignment: Alignment.center,
-                        height: MediaQuery.of(context).size.height * 0.15,
-                        width: MediaQuery.of(context).size.width * 0.4,
-                        //color: Colors.blue,
-                        margin: EdgeInsets.all(15.0),
-                        //color: Colors.black38
-                        child: Text(
-                          'Fun',
-                          style: TextStyle(color: Colors.white, fontSize: 20),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+            image: DecorationImage(
+              image: Image.asset(IMAGES + "background.png").image,
+              fit: BoxFit.cover,
             ),
-            Container(
-              width: MediaQuery.of(context).size.width,
-              padding: EdgeInsets.symmetric(
-                  horizontal: MediaQuery.of(context).size.height * 0.02),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                image: new DecorationImage(
-                  image: new AssetImage(IMAGES + img),
-                  fit: BoxFit.cover,
-                ),
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(40),
-                  topLeft: Radius.circular(40),
-                ),
+            borderRadius: BorderRadiusDirectional.only(
+              topStart: Radius.circular(32),
+              topEnd: Radius.circular(32),
+            ),
+            color: Colors.white,
+          ),
+        child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.33,
+                child: Image.asset(IMAGES + "logo.png")
               ),
-              child: Column(
+              Text('You can join a room either as: ',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.teal.shade800,
+                    fontFamily: "Lato",
+                  )),
+              SizedBox(
+                height: 15,
+              ),
+              Row(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  SizedBox(
-                    height: 5,
-                  ),
-                  Text('You can join room either as: ',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.teal.shade800,
-                        fontFamily: "Lato",
-                      )),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      SizedBox(height: 20),
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              userKind = "participant";
-                              role = ClientRole.Audience;
-                              msg = 'Participants can only listen :)';
-                            });
-                          },
-                          child: Container(
-                            alignment: Alignment.center,
-                            width: MediaQuery.of(context).size.width,
-                            padding: EdgeInsets.all(
-                              20,
-                            ),
-                            decoration: BoxDecoration(
-                              color: userKind == "participant"
-                                  ? gradientBottom
-                                  : gradientTop,
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                            child: Text(
-                              "Participant",
-                              style: TextStyle(
-                                color: userKind == "participant"
-                                    ? Colors.white
-                                    : Colors.teal.shade800,
-                                fontSize: 16,
-                              ),
-                            ),
+                  SizedBox(height: 20),
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          userKind = "participant";
+                          role = ClientRole.Audience;
+                          msg = 'Participants can only listen :)';
+                        });
+                      },
+                      child: Container(
+                        alignment: Alignment.center,
+                        width: MediaQuery.of(context).size.width,
+                        padding: EdgeInsets.all(
+                          20,
+                        ),
+                        decoration: BoxDecoration(
+                          color: userKind == "participant"
+                              ? gradientBottom
+                              : gradientTop,
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        child: Text(
+                          "Participant",
+                          style: TextStyle(
+                            color: userKind == "participant"
+                                ? Colors.white
+                                : Colors.teal.shade800,
+                            fontSize: 16,
                           ),
                         ),
                       ),
-                      (speakersCount < 8)
-                          ? Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 10),
-                              child: Text("OR",
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: Color(0xB2476747),
-                                    fontFamily: "Lato",
-                                  )),
-                            )
-                          : Container(),
-                      (speakersCount < 8)
-                          ? Expanded(
-                              child: GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    userKind = "speaker";
-                                    role = ClientRole.Broadcaster;
-                                    msg = 'Only Speakers can talk :)';
-                                  });
-                                },
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  width: MediaQuery.of(context).size.width,
-                                  padding: EdgeInsets.all(
-                                    20,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: userKind == "speaker"
-                                        ? gradientBottom
-                                        : gradientTop,
-                                    borderRadius: BorderRadius.circular(30),
-                                  ),
-                                  child: Text(
-                                    "Speaker",
-                                    style: TextStyle(
-                                      color: userKind == "speaker"
-                                          ? Colors.white
-                                          : Colors.teal.shade800,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                ),
+                    ),
+                  ),
+                  (speakersCount < 8)
+                      ? Padding(
+                          padding:
+                              const EdgeInsets.symmetric(horizontal: 10),
+                          child: Text("OR",
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Color(0xB2476747),
+                                fontFamily: "Lato",
+                              )),
+                        )
+                      : Container(),
+                  (speakersCount < 8)
+                      ? Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                userKind = "speaker";
+                                role = ClientRole.Broadcaster;
+                                msg = 'Only Speakers can talk :)';
+                              });
+                            },
+                            child: Container(
+                              alignment: Alignment.center,
+                              width: MediaQuery.of(context).size.width,
+                              padding: EdgeInsets.all(
+                                20,
                               ),
-                            )
-                          : Container()
-                    ],
-                  ),
-                  SizedBox(height: 20),
-                  Text(
-                    '$msg',
-                    style: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 16,
-                        color: Colors.teal.shade800),
-                  ),
-                  SizedBox(height: 20),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      "Theme Selected: $roomTheme",
-                      style: TextStyle(
-                        color: Colors.teal.shade800,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      "Participants: $participantsCount",
-                      style: TextStyle(
-                        color: Colors.teal.shade800,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      "Speakers: $speakersCount",
-                      style: TextStyle(
-                        color: Colors.teal.shade800,
-                      ),
-                    ),
-                  ),
-                  Divider(
-                    color: Colors.teal.shade500,
-                  ),
-                  isLoading
-                      ? CircularProgressIndicator()
-                      : ElevatedButton(
-                          child: Text('Join Room'),
-                          onPressed: () {
-                            updateRoom(user);
-                          },
-                          style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.all(Color(0xff94B5AC)),
-                            shape: MaterialStateProperty.all<OutlinedBorder>(
-                              RoundedRectangleBorder(
+                              decoration: BoxDecoration(
+                                color: userKind == "speaker"
+                                    ? gradientBottom
+                                    : gradientTop,
                                 borderRadius: BorderRadius.circular(30),
                               ),
+                              child: Text(
+                                "Speaker",
+                                style: TextStyle(
+                                  color: userKind == "speaker"
+                                      ? Colors.white
+                                      : Colors.teal.shade800,
+                                  fontSize: 16,
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.05)
+                        )
+                      : Container()
                 ],
               ),
-            ),
-          ],
+              SizedBox(height: 20),
+              Text(
+                '$msg',
+                style: TextStyle(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 16,
+                    color: Colors.teal.shade800),
+              ),
+              SizedBox(height: 20),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "Participants: $participantsCount",
+                  style: TextStyle(
+                    color: Colors.teal.shade800,
+                  ),
+                ),
+              ),
+              SizedBox(height: 20),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "Speakers: $speakersCount",
+                  style: TextStyle(
+                    color: Colors.teal.shade800,
+                  ),
+                ),
+              ),
+              Divider(
+                color: Colors.teal.shade500,
+              ),
+              isLoading
+                  ? CircularProgressIndicator()
+                  : ElevatedButton(
+                      child: Text('Join Room'),
+                      onPressed: () {
+                        updateRoom(user);
+                      },
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all(Color(0xff94B5AC)),
+                        shape: MaterialStateProperty.all<OutlinedBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                        ),
+                      ),
+                    ),
+              SizedBox(height: 20),
+              Align(
+                alignment: Alignment.center,
+                child: Text(
+                  "Maximum of 8 Speakers are allowed...",
+                  style: TextStyle(
+                    color: Colors.teal.shade800,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

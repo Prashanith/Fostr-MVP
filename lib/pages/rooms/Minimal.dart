@@ -233,7 +233,7 @@ class _MinimalState extends State<Minimal> with FostrTheme {
                                       itemBuilder: (BuildContext context, int index) {
                                         return Profile(
                                           user: User.fromJson(map[index].data()),
-                                          size: 50,
+                                          size: 60,
                                           isMute: false,
                                           isSpeaker: false,
                                         );
@@ -273,21 +273,24 @@ class _MinimalState extends State<Minimal> with FostrTheme {
             },
             color: Color(0xffE8FCD9),
             icon: Image.asset(IMAGES + "close.png"),
-            iconSize: 25
+            iconSize: 40
           ),
-          Spacer(),
-          Visibility(
-            visible: widget.role == ClientRole.Broadcaster,
-            child: IconButton(
-              onPressed: () {
-                setState(() {
-                  isMicOn = !isMicOn;
-                });
-                _engine.muteLocalAudioStream(isMicOn);
-              },
-              color: Color(0xffE8FCD9),
-              icon: !isMicOn ? Image.asset(IMAGES + "mic.png") : Image.asset(IMAGES + "mic_off.png"),
-              iconSize: 25
+          // Spacer(),
+          Padding(
+            padding: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.2),
+            child: Visibility(
+              visible: widget.role == ClientRole.Broadcaster,
+              child: IconButton(
+                onPressed: () {
+                  setState(() {
+                    isMicOn = !isMicOn;
+                  });
+                  _engine.muteLocalAudioStream(isMicOn);
+                },
+                color: Color(0xffE8FCD9),
+                icon: !isMicOn ? Image.asset(IMAGES + "mic.png") : Image.asset(IMAGES + "mic_off.png"),
+                iconSize: 50
+              ),
             ),
           ),
         ],
