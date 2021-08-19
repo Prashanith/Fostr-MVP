@@ -121,7 +121,7 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                                 onTap: () async {
                                   try {
                                     final file = await Files.getFile();
-                                    if (file['size'] < 400000) {
+                                    
                                       final url =
                                           await Storage.saveFile(file, user.id);
                                       setState(() {
@@ -138,16 +138,16 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                                           "id": user.id
                                         });
                                       });
-                                    } else {
-                                      Fluttertoast.showToast(
-                                          msg: "Image must be less than 400KB",
-                                          toastLength: Toast.LENGTH_SHORT,
-                                          gravity: ToastGravity.BOTTOM,
-                                          timeInSecForIosWeb: 1,
-                                          backgroundColor: gradientBottom,
-                                          textColor: Colors.white,
-                                          fontSize: 16.0);
-                                    }
+                                    // } else {
+                                    //   Fluttertoast.showToast(
+                                    //       msg: "Image must be less than 400KB",
+                                    //       toastLength: Toast.LENGTH_SHORT,
+                                    //       gravity: ToastGravity.BOTTOM,
+                                    //       timeInSecForIosWeb: 1,
+                                    //       backgroundColor: gradientBottom,
+                                    //       textColor: Colors.white,
+                                    //       fontSize: 16.0);
+                                    // }
                                   } catch (e) {
                                     print(e);
                                   }
@@ -169,7 +169,7 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                                     iconSize: 30,
                                     onPressed: () async {
                                       controller.text =
-                                          user.userProfile?.twitter ?? "";
+                                          "@${user.userProfile?.twitter ?? ""}";
                                       await showPopUp("Twitter", user.id, (e) {
                                         setState(() {
                                           if (user.userProfile == null) {
@@ -187,7 +187,7 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                                         });
                                       },
                                           value:
-                                              user.userProfile?.twitter ?? "");
+                                              "@${user.userProfile?.twitter ?? ""}");
                                     },
                                   ),
                                   IconButton(
@@ -196,7 +196,7 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                                     iconSize: 30,
                                     onPressed: () {
                                       controller.text =
-                                          user.userProfile?.instagram ?? "";
+                                          "@${user.userProfile?.instagram ?? ""}";
                                       showPopUp("Instagram", user.id, (e) {
                                         setState(() {
                                           if (user.userProfile == null) {
@@ -212,8 +212,8 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                                           });
                                         });
                                       },
-                                          value: user.userProfile?.instagram ??
-                                              "");
+                                          value:
+                                              "@${user.userProfile?.instagram ?? ""}");
                                     },
                                   ),
                                   IconButton(
@@ -222,7 +222,7 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                                     iconSize: 30,
                                     onPressed: () {
                                       controller.text =
-                                          user.userProfile?.linkedIn ?? "";
+                                          "@${user.userProfile?.linkedIn ?? ""}";
                                       showPopUp("linkedIn", user.id, (e) {
                                         setState(() {
                                           if (user.userProfile == null) {
@@ -240,7 +240,7 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                                         });
                                       },
                                           value:
-                                              user.userProfile?.linkedIn ?? "");
+                                              "@${user.userProfile?.linkedIn ?? ""}");
                                     },
                                   ),
                                 ],

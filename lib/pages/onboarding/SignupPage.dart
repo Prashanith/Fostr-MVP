@@ -30,7 +30,7 @@ class SignupPage extends StatefulWidget {
 class _SignupPageState extends State<SignupPage> with FostrTheme {
   final signupForm = GlobalKey<FormState>();
 
-  bool isEmail = false;
+  bool isEmail = true;
   bool isNumber = false;
   bool isError = false;
   bool isAgree = false;
@@ -41,22 +41,22 @@ class _SignupPageState extends State<SignupPage> with FostrTheme {
   TextEditingController _passwordController = TextEditingController();
 
   void handlePasswordField() {
-    if (Validator.isEmail(_controller.text)) {
-      setState(() {
-        isNumber = false;
-        isEmail = true;
-      });
-    } else if (Validator.isPhone(_controller.text)) {
-      setState(() {
-        isEmail = false;
-        isNumber = true;
-      });
-    } else {
-      setState(() {
-        isEmail = false;
-        isNumber = false;
-      });
-    }
+    // if (Validator.isEmail(_controller.text)) {
+    //   setState(() {
+    //     isNumber = false;
+    //     isEmail = true;
+    //   });
+    // } else if (Validator.isPhone(_controller.text)) {
+    //   setState(() {
+    //     isEmail = false;
+    //     isNumber = true;
+    //   });
+    // } else {
+    //   setState(() {
+    //     isEmail = false;
+    //     isNumber = false;
+    //   });
+    // }
   }
 
   @override
@@ -124,52 +124,50 @@ class _SignupPageState extends State<SignupPage> with FostrTheme {
                         }
                         if (!Validator.isEmail(value!) &&
                             !Validator.isPhone(value)) {
-                          return "Please provide correct values";
+                          return "Invalid email address";
                         }
                         return null;
                       },
-                      hintText: "Email or Mobile Number",
+                      hintText: "Enter your email",
                     ),
                     SizedBox(
                       height: 2.h,
                     ),
-                    (isEmail)
-                        ? InputField(
-                            onEditingCompleted: () {
-                              FocusScope.of(context).nextFocus();
-                            },
-                            maxLine: 1,
-                            controller: _passwordController,
-                            hintText: "Password",
-                            isPassword: true,
-                          )
-                        : Container(),
-                    (isNumber)
-                        ? Opacity(
-                            opacity: 0.6,
-                            child: Container(
-                              height: 60,
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                color: Color.fromRGBO(102, 163, 153, 1),
-                                borderRadius: BorderRadius.circular(15),
-                                boxShadow: boxShadow,
-                              ),
-                              child: CountryCodePicker(
-                                dialogSize: Size(350, 300),
-                                onChanged: (e) {
-                                  setState(() {
-                                    countryCode = e.dialCode.toString();
-                                  });
-                                },
-                                initialSelection: 'IN',
-                                textStyle: actionTextStyle,
-                                // showCountryOnly: true,
-                                alignLeft: true,
-                              ),
-                            ),
-                          )
-                        : Container(),
+                    InputField(
+                      onEditingCompleted: () {
+                        FocusScope.of(context).nextFocus();
+                      },
+                      maxLine: 1,
+                      controller: _passwordController,
+                      hintText: "Password",
+                      isPassword: true,
+                    ),
+                    // (isNumber)
+                    //     ? Opacity(
+                    //         opacity: 0.6,
+                    //         child: Container(
+                    //           height: 60,
+                    //           width: double.infinity,
+                    //           decoration: BoxDecoration(
+                    //             color: Color.fromRGBO(102, 163, 153, 1),
+                    //             borderRadius: BorderRadius.circular(15),
+                    //             boxShadow: boxShadow,
+                    //           ),
+                    //           child: CountryCodePicker(
+                    //             dialogSize: Size(350, 300),
+                    //             onChanged: (e) {
+                    //               setState(() {
+                    //                 countryCode = e.dialCode.toString();
+                    //               });
+                    //             },
+                    //             initialSelection: 'IN',
+                    //             textStyle: actionTextStyle,
+                    //             // showCountryOnly: true,
+                    //             alignLeft: true,
+                    //           ),
+                    //         ),
+                    //       )
+                    //     : Container(),
                     CheckboxFormField(
                       initialValue: false,
                       validator: (value) {
@@ -198,41 +196,37 @@ class _SignupPageState extends State<SignupPage> with FostrTheme {
                 padding: const EdgeInsets.only(bottom: 60),
                 child: Column(
                   children: [
-                    (_controller.text.isEmpty)
-                        ? SigninWithGoogle(
-                            text: "Signup With Google",
-                            onTap: () async {
-                              try {
-                                var user =
-                                    await auth.signInWithGoogle(auth.userType!);
-                                if (user != null &&
-                                    user.createdOn == user.lastLogin) {
-                                  FostrRouter.goto(context, Routes.addDetails);
-                                } else if (user != null) {
-                                  final isOk = await confirmDialog(context, h2);
-                                  if (isOk != null && isOk) {
-                                    if (auth.userType == UserType.USER) {
-                                      FostrRouter.removeUntillAndGoto(
-                                          context,
-                                          Routes.userDashboard,
-                                          (route) => false);
-                                    } else if (auth.userType ==
-                                        UserType.CLUBOWNER) {
-                                      Navigator.of(context).pushAndRemoveUntil(
-                                          CupertinoPageRoute(
-                                              builder: (_) => Dashboard()),
-                                          (route) => false);
-                                    }
-                                  } else {
-                                    auth.signOut();
-                                  }
+                    SigninWithGoogle(
+                        text: "Signup With Google",
+                        onTap: () async {
+                          try {
+                            var user =
+                                await auth.signInWithGoogle(auth.userType!);
+                            if (user != null &&
+                                user.createdOn == user.lastLogin) {
+                              FostrRouter.goto(context, Routes.addDetails);
+                            } else if (user != null) {
+                              final isOk = await confirmDialog(context, h2);
+                              if (isOk != null && isOk) {
+                                if (auth.userType == UserType.USER) {
+                                  FostrRouter.removeUntillAndGoto(context,
+                                      Routes.userDashboard, (route) => false);
+                                } else if (auth.userType ==
+                                    UserType.CLUBOWNER) {
+                                  Navigator.of(context).pushAndRemoveUntil(
+                                      CupertinoPageRoute(
+                                          builder: (_) => Dashboard()),
+                                      (route) => false);
                                 }
-                              } catch (e) {
-                                print(e);
-                                handleError(e);
+                              } else {
+                                auth.signOut();
                               }
-                            })
-                        : SizedBox.shrink(),
+                            }
+                          } catch (e) {
+                            print(e);
+                            handleError(e);
+                          }
+                        }),
                     SizedBox(
                       height: 20,
                     ),
@@ -250,21 +244,22 @@ class _SignupPageState extends State<SignupPage> with FostrTheme {
                             } catch (error) {
                               handleError(error);
                             }
-                          } else if (Validator.isPhone(_controller.text)) {
-                            if (!auth.isLoading) {
-                              try {
-                                auth.signInWithPhone(
-                                    context,
-                                    countryCode.trim() +
-                                        _controller.text.trim());
-
-                                FostrRouter.goto(
-                                    context, Routes.otpVerification);
-                              } catch (e) {
-                                handleError(e);
-                              }
-                            }
                           }
+                          // else if (Validator.isPhone(_controller.text)) {
+                          //   if (!auth.isLoading) {
+                          //     try {
+                          //       auth.signInWithPhone(
+                          //           context,
+                          //           countryCode.trim() +
+                          //               _controller.text.trim());
+
+                          //       FostrRouter.goto(
+                          //           context, Routes.otpVerification);
+                          //     } catch (e) {
+                          //       handleError(e);
+                          //     }
+                          //   }
+                          // }
                         }
                       },
                     ),

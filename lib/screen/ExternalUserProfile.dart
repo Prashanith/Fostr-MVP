@@ -206,9 +206,13 @@ class _ExternalProfilePageState extends State<ExternalProfilePage>
                                   InkWell(
                                     onTap: () async {},
                                     child: Text(
-                                      (widget.user.name.isEmpty)
-                                          ? ""
-                                          : widget.user.name,
+                                      (widget.user.bookClubName != null &&
+                                              widget.user.bookClubName!
+                                                  .isNotEmpty)
+                                          ? widget.user.bookClubName!
+                                          : (widget.user.name.isEmpty)
+                                              ? ""
+                                              : widget.user.name,
                                       // overflow: TextOverflow.ellipsis,
                                       style: h1.copyWith(
                                           fontWeight: FontWeight.bold,
@@ -233,14 +237,13 @@ class _ExternalProfilePageState extends State<ExternalProfilePage>
                               });
                               auth.refreshUser(newUser);
                               Fluttertoast.showToast(
-                                msg: "Followed Successfully!",
-                                toastLength: Toast.LENGTH_SHORT,
-                                gravity: ToastGravity.BOTTOM,
-                                timeInSecForIosWeb: 1,
-                                backgroundColor: gradientBottom,
-                                textColor: Colors.white,
-                                fontSize: 16.0
-                              );
+                                  msg: "Followed Successfully!",
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.BOTTOM,
+                                  timeInSecForIosWeb: 1,
+                                  backgroundColor: gradientBottom,
+                                  textColor: Colors.white,
+                                  fontSize: 16.0);
                             } else {
                               var newUser = await userService.unfollowUser(
                                   auth.user!, widget.user);
@@ -249,14 +252,13 @@ class _ExternalProfilePageState extends State<ExternalProfilePage>
                               });
                               auth.refreshUser(newUser);
                               Fluttertoast.showToast(
-                                msg: "Unfollowed Successfully!",
-                                toastLength: Toast.LENGTH_SHORT,
-                                gravity: ToastGravity.BOTTOM,
-                                timeInSecForIosWeb: 1,
-                                backgroundColor: gradientBottom,
-                                textColor: Colors.white,
-                                fontSize: 16.0
-                              );
+                                  msg: "Unfollowed Successfully!",
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.BOTTOM,
+                                  timeInSecForIosWeb: 1,
+                                  backgroundColor: gradientBottom,
+                                  textColor: Colors.white,
+                                  fontSize: 16.0);
                             }
                           },
                           child: Container(
@@ -339,7 +341,7 @@ class _ExternalProfilePageState extends State<ExternalProfilePage>
                               child: Row(
                                 children: [
                                   Text(
-                                    'Favourite Books:',
+                                    'Tops Reads:',
                                     style: TextStyle(
                                         fontWeight: FontWeight.w500,
                                         fontSize: 15,
@@ -387,16 +389,15 @@ class _ExternalProfilePageState extends State<ExternalProfilePage>
                     ),
                   ),
                   Positioned(
-                    top: 10,
-                    right: 10,
-                    child: Tooltip(
-                      message: "Report User",
-                      child: IconButton(
-                        icon: Icon(Icons.report),
-                        onPressed: () => launch("https://www.fostrreads.com/contact")
-                      ),
-                    )
-                  ),
+                      top: 10,
+                      right: 10,
+                      child: Tooltip(
+                        message: "Report User",
+                        child: IconButton(
+                            icon: Icon(Icons.report),
+                            onPressed: () =>
+                                launch("https://www.fostrreads.com/contact")),
+                      )),
                 ],
               ),
             ),

@@ -225,65 +225,51 @@ class _UserCardState extends State<UserCard> with FostrTheme {
 
   @override
   Widget build(BuildContext context) {
-    final auth = Provider.of<AuthProvider>(context);
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 20),
-      width: 60.w,
-      constraints: BoxConstraints(minHeight: 65),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(29),
-        color: Color(0xffEBFFEE),
-        boxShadow: [
-          BoxShadow(
-            offset: Offset(0, 4),
-            blurRadius: 16,
-            color: Colors.black.withOpacity(0.25),
-          )
-        ],
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Container(
-            height: 9.w,
-            width: 9.w,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              image: DecorationImage(
-                  fit: BoxFit.cover,
-                  image: (widget.user.userProfile != null)
-                      ? (widget.user.userProfile?.profileImage != null)
-                          ? Image.network(
-                              widget.user.userProfile!.profileImage!,
-                              height: 30,
-                              width: 25,
-                            ).image
-                          : Image.asset(IMAGES + "profile.png").image
-                      : Image.asset(IMAGES + "profile.png").image),
-            ),
-          ),
-          InkWell(
-            onTap: () {
-              Navigator.push(
-                context,
-                CupertinoPageRoute(
-                  builder: (context) {
-                    return ExternalProfilePage(
-                      user: widget.user,
-                    );
-                  },
-                ),
+    // final auth = Provider.of<AuthProvider>(context);
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+          context,
+          CupertinoPageRoute(
+            builder: (context) {
+              return ExternalProfilePage(
+                user: widget.user,
               );
             },
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+          ),
+        );
+      },
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 20),
+        width: 60.w,
+        constraints: BoxConstraints(minHeight: 100),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(29),
+          color: Color(0xffffffff),
+          boxShadow: [
+            BoxShadow(
+              offset: Offset(0, 4),
+              blurRadius: 16,
+              color: Colors.black.withOpacity(0.25),
+            )
+          ],
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 (widget.user.name.isNotEmpty)
-                    ? Text(
-                        widget.user.name,
-                        style: h1.copyWith(fontSize: 14.sp),
+                    ? SizedBox(
+                        width: 200,
+                        child: Text(
+                          widget.user.name,
+                          style: h1.copyWith(fontSize: 14.sp),
+                        ),
                       )
                     : SizedBox.shrink(),
                 SizedBox(
@@ -291,58 +277,85 @@ class _UserCardState extends State<UserCard> with FostrTheme {
                 ),
                 (widget.user.bookClubName != null &&
                         widget.user.bookClubName!.isNotEmpty)
-                    ? Text(
-                        widget.user.bookClubName!,
-                        style: h1.copyWith(
-                            fontSize: 14.sp, fontWeight: FontWeight.bold),
+                    ? SizedBox(
+                        width: 200,
+                        child: Text(
+                          widget.user.bookClubName!,
+                          overflow: TextOverflow.ellipsis,
+                          style: h1.copyWith(fontSize: 14.sp),
+                        ),
                       )
                     : SizedBox.shrink(),
+                SizedBox(
+                  height: 5,
+                ),
                 Text(
                   "@" + widget.user.userName,
                   style: h2.copyWith(fontSize: 12.sp),
                 )
               ],
             ),
-          ),
-          InkWell(
-            onTap: () async {
-              try {
-                if (!followed) {
-                  var user =
-                      await userService.followUser(auth.user!, widget.user);
-                  auth.refreshUser(user);
-                  setState(() {
-                    followed = true;
-                  });
-                  Fluttertoast.showToast(
-                      msg: "Followed Successfully!",
-                      toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.BOTTOM,
-                      timeInSecForIosWeb: 1,
-                      backgroundColor: gradientBottom,
-                      textColor: Colors.white,
-                      fontSize: 16.0);
-                }
-              } catch (e) {
-                print(e);
-              }
-            },
-            child: Container(
-              alignment: Alignment.center,
+            Container(
+              height: 15.w,
+              width: 15.w,
               decoration: BoxDecoration(
-                border: Border.all(width: 2, color: h1.color!),
                 shape: BoxShape.circle,
-              ),
-              child: Icon(
-                (followed) ? Icons.check : Icons.add,
-                color: h1.color,
-                size: 28.sp,
-                // size: 30,
+                image: DecorationImage(
+                    fit: BoxFit.cover,
+                    image: (widget.user.userProfile != null)
+                        ? (widget.user.userProfile?.profileImage != null)
+                            ? Image.network(
+                                widget.user.userProfile!.profileImage!,
+                                height: 30,
+                                width: 25,
+                              ).image
+                            : Image.asset(IMAGES + "profile.png").image
+                        : Image.asset(IMAGES + "profile.png").image),
               ),
             ),
-          )
-        ],
+          ],
+        ),
       ),
     );
   }
 }
+
+
+
+// InkWell(
+//             onTap: () async {
+//               try {
+//                 if (!followed) {
+//                   var user =
+//                       await userService.followUser(auth.user!, widget.user);
+//                   auth.refreshUser(user);
+//                   setState(() {
+//                     followed = true;
+//                   });
+//                   Fluttertoast.showToast(
+//                       msg: "Followed Successfully!",
+//                       toastLength: Toast.LENGTH_SHORT,
+//                       gravity: ToastGravity.BOTTOM,
+//                       timeInSecForIosWeb: 1,
+//                       backgroundColor: gradientBottom,
+//                       textColor: Colors.white,
+//                       fontSize: 16.0);
+//                 }
+//               } catch (e) {
+//                 print(e);
+//               }
+//             },
+//             child: Container(
+//               alignment: Alignment.center,
+//               decoration: BoxDecoration(
+//                 border: Border.all(width: 2, color: h1.color!),
+//                 shape: BoxShape.circle,
+//               ),
+//               child: Icon(
+//                 (followed) ? Icons.check : Icons.add,
+//                 color: h1.color,
+//                 size: 28.sp,
+//                 // size: 30,
+//               ),
+//             ),
+//           )

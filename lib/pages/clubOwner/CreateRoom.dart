@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fostr/core/constants.dart';
 import 'package:fostr/core/data.dart';
 import 'package:fostr/models/UserModel/User.dart';
@@ -71,7 +72,7 @@ class _CreateRoomState extends State<CreateRoom> with FostrTheme {
               Padding(
                 padding: paddingH + const EdgeInsets.only(top: 20),
                 child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     (user.bookClubName == "")
                         ? Text(
@@ -85,7 +86,7 @@ class _CreateRoomState extends State<CreateRoom> with FostrTheme {
                     Spacer(),
                     IconButton(
                         icon: Icon(
-                          LineIcons.userFriends,
+                          FontAwesomeIcons.bookReader,
                           color: Colors.white,
                         ),
                         onPressed: () =>

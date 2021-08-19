@@ -6,7 +6,7 @@ class Validator {
       phone.length >= 8 && phone.length <= 12 && int.tryParse(phone) != null;
 
   static bool isUsername(String username) =>
-      RegExp(r"^(?=.{3,20}$)(?![_.])(?!.*[_.]{3})[a-z0-9._]+(?<![_.])$")
+      RegExp(r"^(?=.{3,20}$)(?![_.])(?!.*[_.]{3})[A-Za-z0-9._]+(?<![_.])$")
           .hasMatch(username);
 
   static bool isNumber(String value) => RegExp(r"^[0-9]{6}").hasMatch(value);

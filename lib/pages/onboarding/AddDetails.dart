@@ -194,8 +194,8 @@ class _AddDetailsState extends State<AddDetails> with FostrTheme {
       isExists = false;
     });
     if (usernameController.text.isNotEmpty) {
-      var isExists =
-          await _userService.checkUserName(usernameController.text.trim());
+      var isExists = await _userService
+          .checkUserName(usernameController.text.trim().toLowerCase());
       setState(() {
         this.isExists = isExists;
       });

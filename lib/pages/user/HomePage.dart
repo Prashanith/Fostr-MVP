@@ -139,15 +139,26 @@ class _OngoingRoomState extends State<OngoingRoom> with FostrTheme {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        (user.name == "")
-                            ? Text(
-                                "Hello, User",
-                                style: h1.apply(color: Colors.white),
-                              )
-                            : Text(
-                                "Hello, ${user.name}",
-                                style: h1.apply(color: Colors.white),
-                              ),
+                        (auth.userType == UserType.CLUBOWNER)
+                            ? (user.bookClubName == "" ||
+                                    user.bookClubName == null)
+                                ? Text(
+                                    "Hello, ${user.userName}",
+                                    style: h1.apply(color: Colors.white),
+                                  )
+                                : Text(
+                                    "Hello, ${user.bookClubName}",
+                                    style: h1.apply(color: Colors.white),
+                                  )
+                            : (user.name.isEmpty)
+                                ? Text(
+                                    "Hello, ${user.userName}",
+                                    style: h1.apply(color: Colors.white),
+                                  )
+                                : Text(
+                                    "Hello, ${user.name}",
+                                    style: h1.apply(color: Colors.white),
+                                  ),
                       ],
                     ),
                   ),

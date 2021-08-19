@@ -169,8 +169,7 @@ class _EnterRoomDetailsState extends State<EnterRoomDetails> with FostrTheme {
                                         try {
                                           final file = await Files.getFile();
 
-                                          if (file['file'] != null &&
-                                              file['size'] < 700000) {
+                                          if (file['file'] != null) {
                                             try {
                                               final croppedFile =
                                                   await ImageCropper.cropImage(

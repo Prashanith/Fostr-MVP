@@ -144,10 +144,11 @@ class _UserCardState extends State<UserCard> with FostrTheme {
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 10),
         // height: 65,
+        constraints: BoxConstraints(minHeight: 100),
         width: 80.w,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(29),
-          color: Color(0xffEBFFEE),
+          color: Color(0xffffffff),
           boxShadow: [
             BoxShadow(
               offset: Offset(0, 4),
@@ -156,32 +157,11 @@ class _UserCardState extends State<UserCard> with FostrTheme {
             )
           ],
         ),
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Container(
-              height: 45,
-              width: 45,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                image: DecorationImage(
-                    fit: BoxFit.cover,
-                    image: (user.userProfile != null)
-                        ? (user.userProfile?.profileImage != null)
-                            ? Image.network(
-                                user.userProfile!.profileImage!,
-                                height: 30,
-                                width: 25,
-                              ).image
-                            : Image.asset(IMAGES + "profile.png").image
-                        : Image.asset(IMAGES + "profile.png").image),
-              ),
-            ),
-            SizedBox(
-              width: 20,
-            ),
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -212,72 +192,88 @@ class _UserCardState extends State<UserCard> with FostrTheme {
                 )
               ],
             ),
-            Spacer(),
-            (!widget.isFollower)
-                ? InkWell(
-                    onTap: () async {
-                      try {
-                        if (!widget.isFollower) {
-                          if (!followed) {
-                            var newUser =
-                                await userService.followUser(auth.user!, user);
-                            setState(() {
-                              followed = true;
-                            });
-                            auth.refreshUser(newUser);
-                            Fluttertoast.showToast(
-                              msg: "Followed Successfully!",
-                              toastLength: Toast.LENGTH_SHORT,
-                              gravity: ToastGravity.BOTTOM,
-                              timeInSecForIosWeb: 1,
-                              backgroundColor: gradientBottom,
-                              textColor: Colors.white,
-                              fontSize: 16.0
-                            );
-                          } else {
-                            var newUser = await userService.unfollowUser(
-                                auth.user!, user);
-                            setState(() {
-                              followed = false;
-                            });
-                            auth.refreshUser(newUser);
-                            Fluttertoast.showToast(
-                              msg: "Unfollowed Successfully!",
-                              toastLength: Toast.LENGTH_SHORT,
-                              gravity: ToastGravity.BOTTOM,
-                              timeInSecForIosWeb: 1,
-                              backgroundColor: gradientBottom,
-                              textColor: Colors.white,
-                              fontSize: 16.0
-                            );
-                          }
-                        }
-                      } catch (e) {
-                        print(e);
-                      }
-                    },
-                    child: Container(
-                      margin: const EdgeInsets.all(10),
-                      padding: const EdgeInsets.all(10),
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: h2.color,
-                      ),
-                      child: Text(
-                        (widget.isFollower)
-                            ? ""
-                            : (followed)
-                                ? "Unfollow"
-                                : "Follow",
-                        style: h2.copyWith(color: Colors.white),
-                      ),
-                    ),
-                  )
-                : Container()
+            Container(
+              height: 15.w,
+                                width: 15.w,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                image: DecorationImage(
+                    fit: BoxFit.cover,
+                    image: (user.userProfile != null)
+                        ? (user.userProfile?.profileImage != null)
+                            ? Image.network(
+                                user.userProfile!.profileImage!,
+                              ).image
+                            : Image.asset(IMAGES + "profile.png").image
+                        : Image.asset(IMAGES + "profile.png").image),
+              ),
+            ),
           ],
         ),
       ),
     );
   }
 }
+
+
+
+// (!widget.isFollower)
+//                 ? InkWell(
+//                     onTap: () async {
+//                       try {
+//                         if (!widget.isFollower) {
+//                           if (!followed) {
+//                             var newUser =
+//                                 await userService.followUser(auth.user!, user);
+//                             setState(() {
+//                               followed = true;
+//                             });
+//                             auth.refreshUser(newUser);
+//                             Fluttertoast.showToast(
+//                                 msg: "Followed Successfully!",
+//                                 toastLength: Toast.LENGTH_SHORT,
+//                                 gravity: ToastGravity.BOTTOM,
+//                                 timeInSecForIosWeb: 1,
+//                                 backgroundColor: gradientBottom,
+//                                 textColor: Colors.white,
+//                                 fontSize: 16.0);
+//                           } else {
+//                             var newUser = await userService.unfollowUser(
+//                                 auth.user!, user);
+//                             setState(() {
+//                               followed = false;
+//                             });
+//                             auth.refreshUser(newUser);
+//                             Fluttertoast.showToast(
+//                                 msg: "Unfollowed Successfully!",
+//                                 toastLength: Toast.LENGTH_SHORT,
+//                                 gravity: ToastGravity.BOTTOM,
+//                                 timeInSecForIosWeb: 1,
+//                                 backgroundColor: gradientBottom,
+//                                 textColor: Colors.white,
+//                                 fontSize: 16.0);
+//                           }
+//                         }
+//                       } catch (e) {
+//                         print(e);
+//                       }
+//                     },
+//                     child: Container(
+//                       margin: const EdgeInsets.all(10),
+//                       padding: const EdgeInsets.all(10),
+//                       alignment: Alignment.center,
+//                       decoration: BoxDecoration(
+//                         borderRadius: BorderRadius.circular(20),
+//                         color: h2.color,
+//                       ),
+//                       child: Text(
+//                         (widget.isFollower)
+//                             ? ""
+//                             : (followed)
+//                                 ? "Unfollow"
+//                                 : "Follow",
+//                         style: h2.copyWith(color: Colors.white),
+//                       ),
+//                     ),
+//                   )
+//                 : Container()
