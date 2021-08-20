@@ -12,8 +12,6 @@ import 'package:provider/provider.dart';
 class RoomDetails extends StatelessWidget with FostrTheme {
   @override
   Widget build(BuildContext context) {
-    final auth = Provider.of<AuthProvider>(context);
-    final user = auth.user!;
     return Material(
       child: Container(
         decoration: BoxDecoration(

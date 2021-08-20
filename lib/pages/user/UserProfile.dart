@@ -121,23 +121,23 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                                 onTap: () async {
                                   try {
                                     final file = await Files.getFile();
-                                    
-                                      final url =
-                                          await Storage.saveFile(file, user.id);
-                                      setState(() {
-                                        if (user.userProfile == null) {
-                                          var userProfile = UserProfile();
-                                          userProfile.profileImage = url;
-                                          user.userProfile = userProfile;
-                                        } else {
-                                          user.userProfile!.profileImage = url;
-                                        }
-                                        updateProfile({
-                                          "userProfile":
-                                              user.userProfile!.toJson(),
-                                          "id": user.id
-                                        });
+
+                                    final url =
+                                        await Storage.saveFile(file, user.id);
+                                    setState(() {
+                                      if (user.userProfile == null) {
+                                        var userProfile = UserProfile();
+                                        userProfile.profileImage = url;
+                                        user.userProfile = userProfile;
+                                      } else {
+                                        user.userProfile!.profileImage = url;
+                                      }
+                                      updateProfile({
+                                        "userProfile":
+                                            user.userProfile!.toJson(),
+                                        "id": user.id
                                       });
+                                    });
                                     // } else {
                                     //   Fluttertoast.showToast(
                                     //       msg: "Image must be less than 400KB",
@@ -170,24 +170,32 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                                     onPressed: () async {
                                       controller.text =
                                           "@${user.userProfile?.twitter ?? ""}";
-                                      await showPopUp("Twitter", user.id, (e) {
-                                        setState(() {
-                                          if (user.userProfile == null) {
-                                            var userProfile = UserProfile();
-                                            userProfile.twitter = e[1];
-                                            user.userProfile = userProfile;
-                                          } else {
-                                            user.userProfile!.twitter = e[1];
-                                          }
-                                          updateProfile({
-                                            "userProfile":
-                                                user.userProfile!.toJson(),
-                                            "id": user.id
+                                      await showPopUp(
+                                        "Twitter",
+                                        user.id,
+                                        (e) {
+                                          setState(() {
+                                            var link = e[1] as String;
+                                            if (link[0] == '@') {
+                                              link = link.substring(1);
+                                            }
+                                            if (user.userProfile == null) {
+                                              var userProfile = UserProfile();
+                                              userProfile.twitter = link;
+                                              user.userProfile = userProfile;
+                                            } else {
+                                              user.userProfile!.twitter = link;
+                                            }
+                                            updateProfile({
+                                              "userProfile":
+                                                  user.userProfile!.toJson(),
+                                              "id": user.id
+                                            });
                                           });
-                                        });
-                                      },
-                                          value:
-                                              "@${user.userProfile?.twitter ?? ""}");
+                                        },
+                                        value:
+                                            "@${user.userProfile?.twitter ?? ""}",
+                                      );
                                     },
                                   ),
                                   IconButton(
@@ -199,15 +207,20 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                                           "@${user.userProfile?.instagram ?? ""}";
                                       showPopUp("Instagram", user.id, (e) {
                                         setState(() {
+                                          var link = e[1] as String;
+                                          if (link[0] == '@') {
+                                            link = link.substring(1);
+                                          }
+
                                           if (user.userProfile == null) {
                                             var userProfile = UserProfile();
-                                            userProfile.instagram = e[1];
+                                            userProfile.instagram = link;
                                             user.userProfile = userProfile;
                                           } else {
-                                            user.userProfile!.instagram = e[1];
+                                            user.userProfile!.instagram = link;
                                           }
                                           updateProfile({
-                                            "userProfile.instagram": e[1],
+                                            "userProfile.instagram": link,
                                             "id": user.id
                                           });
                                         });
@@ -225,12 +238,17 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                                           "@${user.userProfile?.linkedIn ?? ""}";
                                       showPopUp("linkedIn", user.id, (e) {
                                         setState(() {
+                                          var link = e[1] as String;
+                                          if (link[0] == '@') {
+                                            link = link.substring(1);
+                                          }
+
                                           if (user.userProfile == null) {
                                             var userProfile = UserProfile();
-                                            userProfile.linkedIn = e[1];
+                                            userProfile.linkedIn = link;
                                             user.userProfile = userProfile;
                                           } else {
-                                            user.userProfile!.linkedIn = e[1];
+                                            user.userProfile!.linkedIn = link;
                                           }
                                           updateProfile({
                                             "userProfile":
@@ -314,13 +332,16 @@ class _UserProfilePageState extends State<UserProfilePage> with FostrTheme {
                                   SizedBox(
                                     height: 5,
                                   ),
-                                  Text(
-                                    (user.userName.isEmpty)
-                                        ? ""
-                                        : '@' + user.userName,
-                                    style: h1.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 14.sp,
+                                  SizedBox(
+                                    width: 250,
+                                    child: Text(
+                                      (user.userName.isEmpty)
+                                          ? ""
+                                          : '@' + user.userName,
+                                      style: h1.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14.sp,
+                                      ),
                                     ),
                                   ),
                                 ],

@@ -85,9 +85,13 @@ class _ExternalProfilePageState extends State<ExternalProfilePage>
                               SizedBox(
                                 width: 4.w,
                               ),
-                              Text(
-                                widget.user.userName,
-                                style: h1.copyWith(fontWeight: FontWeight.bold),
+                              SizedBox(
+                                width: 250,
+                                child: Text(
+                                  widget.user.userName,
+                                  style:
+                                      h1.copyWith(fontWeight: FontWeight.bold),
+                                ),
                               ),
                             ],
                           ),

@@ -12,7 +12,7 @@ void main() async {
   setupLocators();
   runApp(
     DevicePreview(
-      enabled: false,
+      enabled: true,
       builder: (context) => MyApp(),
     ),
   );
@@ -35,6 +35,7 @@ class _MyAppState extends State<MyApp> {
       child: Sizer(
         builder: (context, orientation, deviceType) {
           return MaterialApp(
+            debugShowCheckedModeBanner: false,
             theme: ThemeData(
               colorScheme: ColorScheme.light(
                 secondary: Colors.white,

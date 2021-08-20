@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
@@ -55,7 +57,7 @@ class _UserDashboardState extends State<UserDashboard> with FostrTheme {
       body: _children[_currentindex],
       bottomNavigationBar: CurvedNavigationBar(
         backgroundColor: gradientBottom,
-        height: MediaQuery.of(context).size.height * 0.075,
+        height: min(MediaQuery.of(context).size.height * 0.075, 75),
         index: _currentindex,
         items: <Widget>[
           Icon(

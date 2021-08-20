@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:fostr/pages/clubOwner/CreateRoom.dart';
@@ -31,7 +33,7 @@ class _DashboardState extends State<Dashboard> {
       body: _children[_currentindex],
       bottomNavigationBar: CurvedNavigationBar(
         backgroundColor: gradientBottom,
-        height: MediaQuery.of(context).size.height * 0.075,
+        height: min(MediaQuery.of(context).size.height * 0.075, 75),
         index: _currentindex,
         items: <Widget>[
           Icon(
