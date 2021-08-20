@@ -54,7 +54,7 @@ dependencies:
   image_cropper: ^1.4.1
   json_annotation: ^4.0.0
   line_icons: ^2.0.1
-  location: ^4.3.0
+  # location: ^4.3.0
   permission_handler: ^8.1.4+2
   provider: ^5.0.0
   pull_to_refresh: ^2.0.0

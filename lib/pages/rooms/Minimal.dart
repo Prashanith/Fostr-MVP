@@ -202,11 +202,11 @@ class _MinimalState extends State<Minimal> with FostrTheme {
                           decoration: BoxDecoration(
                             image: new DecorationImage(
                               image: new AssetImage(IMAGES + "minimalist-main.png"),
-                              fit: BoxFit.fill,
+                              fit: BoxFit.cover,
                             ),
                             borderRadius: BorderRadius.only(
-                              topRight: Radius.circular(30),
-                              topLeft: Radius.circular(30),
+                              topRight: Radius.circular(32),
+                              topLeft: Radius.circular(32),
                             ),
                           ),
                         child: Stack(

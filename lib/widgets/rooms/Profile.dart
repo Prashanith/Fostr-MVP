@@ -58,15 +58,18 @@ class Profile extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             // moderator(isSpeaker),
-            Text(
-              user.userName,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-                decoration: TextDecoration.none,
+            SizedBox(
+              width: 100,
+              child: Text(
+                user.userName,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                  decoration: TextDecoration.none,
+                ),
               ),
             ),
           ],

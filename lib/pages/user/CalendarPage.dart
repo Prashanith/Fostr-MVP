@@ -260,7 +260,7 @@ class EventCard extends StatelessWidget with FostrTheme {
       margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
       constraints: BoxConstraints(
         minHeight: 65,
-        maxHeight: 90,
+        maxHeight: 150,
       ),
       width: 90.w,
       decoration: BoxDecoration(

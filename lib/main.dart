@@ -1,5 +1,6 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fostr/providers/IndexProvider.dart';
 import 'package:fostr/router/router.dart';
@@ -12,7 +13,7 @@ void main() async {
   setupLocators();
   runApp(
     DevicePreview(
-      enabled: false,
+      enabled: kDebugMode,
       builder: (context) => MyApp(),
     ),
   );
@@ -35,6 +36,7 @@ class _MyAppState extends State<MyApp> {
       child: Sizer(
         builder: (context, orientation, deviceType) {
           return MaterialApp(
+            debugShowCheckedModeBanner: false,
             theme: ThemeData(
               colorScheme: ColorScheme.light(
                 secondary: Colors.white,
