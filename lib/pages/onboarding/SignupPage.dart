@@ -30,7 +30,7 @@ class SignupPage extends StatefulWidget {
 class _SignupPageState extends State<SignupPage> with FostrTheme {
   final signupForm = GlobalKey<FormState>();
 
-  bool isEmail = true;
+  bool isEmail = false;
   bool isNumber = false;
   bool isError = false;
   bool isAgree = false;
@@ -84,7 +84,7 @@ class _SignupPageState extends State<SignupPage> with FostrTheme {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(
-                height: 14.h,
+                height: 10.h,
               ),
               Container(
                 alignment: Alignment.center,
@@ -106,7 +106,7 @@ class _SignupPageState extends State<SignupPage> with FostrTheme {
                 ),
               ),
               SizedBox(
-                height: 9.h,
+                height: 7.h,
               ),
               Form(
                 key: signupForm,
@@ -122,13 +122,16 @@ class _SignupPageState extends State<SignupPage> with FostrTheme {
                           isError = false;
                           return error;
                         }
-                        if (!Validator.isEmail(value!) &&
+                        if (value!.isEmpty) {
+                          return "enter your email or phone";
+                        }
+                        if (!Validator.isEmail(value) &&
                             !Validator.isPhone(value)) {
-                          return "Invalid email address";
+                          return "Invalid Credentials";
                         }
                         return null;
                       },
-                      hintText: "Enter your email",
+                      hintText: "Enter your email or phone",
                     ),
                     SizedBox(
                       height: 2.h,
@@ -158,7 +161,9 @@ class _SignupPageState extends State<SignupPage> with FostrTheme {
                               ),
                             ),
                           )
-                        : InputField(
+                        : SizedBox.shrink(),
+                    (isEmail)
+                        ? InputField(
                             onEditingCompleted: () {
                               FocusScope.of(context).nextFocus();
                             },
@@ -166,7 +171,8 @@ class _SignupPageState extends State<SignupPage> with FostrTheme {
                             controller: _passwordController,
                             hintText: "Password",
                             isPassword: true,
-                          ),
+                          )
+                        : SizedBox.shrink(),
                     CheckboxFormField(
                       initialValue: false,
                       validator: (value) {

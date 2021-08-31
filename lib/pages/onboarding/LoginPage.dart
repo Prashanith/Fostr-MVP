@@ -31,7 +31,7 @@ class _LoginPageState extends State<LoginPage> with FostrTheme {
 
   TextEditingController idController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  bool isEmail = true;
+  bool isEmail = false;
   bool isNumber = false;
   bool isError = false;
   String error = "";
@@ -83,10 +83,10 @@ class _LoginPageState extends State<LoginPage> with FostrTheme {
 
   @override
   void dispose() {
-    super.dispose();
     idController.removeListener(handlePasswordField);
     idController.dispose();
     passwordController.dispose();
+    super.dispose();
   }
 
   @override
@@ -105,7 +105,7 @@ class _LoginPageState extends State<LoginPage> with FostrTheme {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   SizedBox(
-                    height: 14.h,
+                    height: 10.h,
                   ),
                   Container(
                     alignment: Alignment.center,
@@ -142,15 +142,17 @@ class _LoginPageState extends State<LoginPage> with FostrTheme {
                               isError = false;
                               return error;
                             }
-
-                            if (!Validator.isEmail(value!) &&
+                            if (value!.isEmpty) {
+                              return "enter your email or phone";
+                            }
+                            if (!Validator.isEmail(value) &&
                                 !Validator.isPhone(value)) {
-                              return "Invalid email address";
+                              return "Invalid credential";
                             }
                             return null;
                           },
                           controller: idController,
-                          hintText: "Enter your email",
+                          hintText: "Enter your email or phone",
                         ),
                         SizedBox(
                           height: 2.h,
@@ -180,7 +182,9 @@ class _LoginPageState extends State<LoginPage> with FostrTheme {
                                   ),
                                 ),
                               )
-                            : InputField(
+                            : SizedBox.shrink(),
+                        (isEmail)
+                            ? InputField(
                                 maxLine: 1,
                                 isPassword: true,
                                 validator: (value) {
@@ -194,7 +198,8 @@ class _LoginPageState extends State<LoginPage> with FostrTheme {
                                 },
                                 controller: passwordController,
                                 hintText: "Password",
-                              ),
+                              )
+                            : SizedBox.shrink(),
                       ],
                     ),
                   ),
