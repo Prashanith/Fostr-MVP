@@ -1,18 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:fostr/core/constants.dart';
-import 'package:fostr/models/RoomModel.dart';
 import 'package:fostr/pages/rooms/EnterClubRoomDetails.dart';
-import 'package:fostr/pages/rooms/SelectTheme.dart';
-import 'package:fostr/providers/AuthProvider.dart';
 import 'package:fostr/utils/Theme.dart';
-import 'package:provider/provider.dart';
 
 class ClubRoomDetails extends StatelessWidget with FostrTheme {
   @override
   Widget build(BuildContext context) {
-    final auth = Provider.of<AuthProvider>(context);
-    final user = auth.user!;
+  
     return Material(
       child: Container(
         decoration: BoxDecoration(
