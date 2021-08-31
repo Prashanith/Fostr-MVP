@@ -41,22 +41,22 @@ class _SignupPageState extends State<SignupPage> with FostrTheme {
   TextEditingController _passwordController = TextEditingController();
 
   void handlePasswordField() {
-    // if (Validator.isEmail(_controller.text)) {
-    //   setState(() {
-    //     isNumber = false;
-    //     isEmail = true;
-    //   });
-    // } else if (Validator.isPhone(_controller.text)) {
-    //   setState(() {
-    //     isEmail = false;
-    //     isNumber = true;
-    //   });
-    // } else {
-    //   setState(() {
-    //     isEmail = false;
-    //     isNumber = false;
-    //   });
-    // }
+    if (Validator.isEmail(_controller.text)) {
+      setState(() {
+        isNumber = false;
+        isEmail = true;
+      });
+    } else if (Validator.isPhone(_controller.text)) {
+      setState(() {
+        isEmail = false;
+        isNumber = true;
+      });
+    } else {
+      setState(() {
+        isEmail = false;
+        isNumber = false;
+      });
+    }
   }
 
   @override
@@ -133,41 +133,40 @@ class _SignupPageState extends State<SignupPage> with FostrTheme {
                     SizedBox(
                       height: 2.h,
                     ),
-                    InputField(
-                      onEditingCompleted: () {
-                        FocusScope.of(context).nextFocus();
-                      },
-                      maxLine: 1,
-                      controller: _passwordController,
-                      hintText: "Password",
-                      isPassword: true,
-                    ),
-                    // (isNumber)
-                    //     ? Opacity(
-                    //         opacity: 0.6,
-                    //         child: Container(
-                    //           height: 60,
-                    //           width: double.infinity,
-                    //           decoration: BoxDecoration(
-                    //             color: Color.fromRGBO(102, 163, 153, 1),
-                    //             borderRadius: BorderRadius.circular(15),
-                    //             boxShadow: boxShadow,
-                    //           ),
-                    //           child: CountryCodePicker(
-                    //             dialogSize: Size(350, 300),
-                    //             onChanged: (e) {
-                    //               setState(() {
-                    //                 countryCode = e.dialCode.toString();
-                    //               });
-                    //             },
-                    //             initialSelection: 'IN',
-                    //             textStyle: actionTextStyle,
-                    //             // showCountryOnly: true,
-                    //             alignLeft: true,
-                    //           ),
-                    //         ),
-                    //       )
-                    //     : Container(),
+                    (isNumber)
+                        ? Opacity(
+                            opacity: 0.6,
+                            child: Container(
+                              height: 60,
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                color: Color.fromRGBO(102, 163, 153, 1),
+                                borderRadius: BorderRadius.circular(15),
+                                boxShadow: boxShadow,
+                              ),
+                              child: CountryCodePicker(
+                                dialogSize: Size(350, 300),
+                                onChanged: (e) {
+                                  setState(() {
+                                    countryCode = e.dialCode.toString();
+                                  });
+                                },
+                                initialSelection: 'IN',
+                                textStyle: actionTextStyle,
+                                // showCountryOnly: true,
+                                alignLeft: true,
+                              ),
+                            ),
+                          )
+                        : InputField(
+                            onEditingCompleted: () {
+                              FocusScope.of(context).nextFocus();
+                            },
+                            maxLine: 1,
+                            controller: _passwordController,
+                            hintText: "Password",
+                            isPassword: true,
+                          ),
                     CheckboxFormField(
                       initialValue: false,
                       validator: (value) {
@@ -244,22 +243,21 @@ class _SignupPageState extends State<SignupPage> with FostrTheme {
                             } catch (error) {
                               handleError(error);
                             }
-                          }
-                          // else if (Validator.isPhone(_controller.text)) {
-                          //   if (!auth.isLoading) {
-                          //     try {
-                          //       auth.signInWithPhone(
-                          //           context,
-                          //           countryCode.trim() +
-                          //               _controller.text.trim());
+                          } else if (Validator.isPhone(_controller.text)) {
+                            if (!auth.isLoading) {
+                              try {
+                                auth.signInWithPhone(
+                                    context,
+                                    countryCode.trim() +
+                                        _controller.text.trim());
 
-                          //       FostrRouter.goto(
-                          //           context, Routes.otpVerification);
-                          //     } catch (e) {
-                          //       handleError(e);
-                          //     }
-                          //   }
-                          // }
+                                FostrRouter.goto(
+                                    context, Routes.otpVerification);
+                              } catch (e) {
+                                handleError(e);
+                              }
+                            }
+                          }
                         }
                       },
                     ),

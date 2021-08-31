@@ -37,7 +37,24 @@ class _LoginPageState extends State<LoginPage> with FostrTheme {
   String error = "";
   String countryCode = "+91";
 
-  void handlePasswordField() {}
+  void handlePasswordField() {
+    if (Validator.isEmail(idController.text)) {
+      setState(() {
+        isNumber = false;
+        isEmail = true;
+      });
+    } else if (Validator.isPhone(idController.text)) {
+      setState(() {
+        isEmail = false;
+        isNumber = true;
+      });
+    } else {
+      setState(() {
+        isEmail = false;
+        isNumber = false;
+      });
+    }
+  }
 
   void handleRoute(User? user, UserType userType) {
     if ((user!.name.isEmpty || user.userName.isEmpty) &&
@@ -75,7 +92,6 @@ class _LoginPageState extends State<LoginPage> with FostrTheme {
   @override
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthProvider>(context);
-
     return Layout(
       child: Stack(
         children: [
@@ -127,7 +143,8 @@ class _LoginPageState extends State<LoginPage> with FostrTheme {
                               return error;
                             }
 
-                            if (!Validator.isEmail(value!)) {
+                            if (!Validator.isEmail(value!) &&
+                                !Validator.isPhone(value)) {
                               return "Invalid email address";
                             }
                             return null;
@@ -138,47 +155,46 @@ class _LoginPageState extends State<LoginPage> with FostrTheme {
                         SizedBox(
                           height: 2.h,
                         ),
-
-                        InputField(
-                          maxLine: 1,
-                          isPassword: true,
-                          validator: (value) {
-                            if (passwordController.text.length < 6) {
-                              return "Password dose not match";
-                            } else if (isError && error == "Wrong password") {
-                              isError = false;
-                              return error;
-                            }
-                          },
-                          controller: passwordController,
-                          hintText: "Password",
-                        )
-                        // : (isNumber)
-                        //     ? Opacity(
-                        //         opacity: 0.6,
-                        //         child: Container(
-                        //           height: 60,
-                        //           width: double.infinity,
-                        //           decoration: BoxDecoration(
-                        //             color: Color.fromRGBO(102, 163, 153, 1),
-                        //             borderRadius: BorderRadius.circular(15),
-                        //             boxShadow: boxShadow,
-                        //           ),
-                        //           child: CountryCodePicker(
-                        //             dialogSize: Size(350, 300),
-                        //             onChanged: (e) {
-                        //               setState(() {
-                        //                 countryCode = e.dialCode.toString();
-                        //               });
-                        //             },
-                        //             initialSelection: 'IN',
-                        //             textStyle: actionTextStyle,
-                        //             // showCountryOnly: true,
-                        //             alignLeft: true,
-                        //           ),
-                        //         ),
-                        //       )
-                        //     : Container(),
+                        (isNumber)
+                            ? Opacity(
+                                opacity: 1,
+                                child: Container(
+                                  height: 60,
+                                  width: double.infinity,
+                                  decoration: BoxDecoration(
+                                    color: Color.fromRGBO(102, 163, 153, 1),
+                                    borderRadius: BorderRadius.circular(15),
+                                    boxShadow: boxShadow,
+                                  ),
+                                  child: CountryCodePicker(
+                                    dialogSize: Size(350, 300),
+                                    onChanged: (e) {
+                                      setState(() {
+                                        countryCode = e.dialCode.toString();
+                                      });
+                                    },
+                                    initialSelection: 'IN',
+                                    textStyle: actionTextStyle,
+                                    // showCountryOnly: true,
+                                    alignLeft: true,
+                                  ),
+                                ),
+                              )
+                            : InputField(
+                                maxLine: 1,
+                                isPassword: true,
+                                validator: (value) {
+                                  if (passwordController.text.length < 6) {
+                                    return "Password dose not match";
+                                  } else if (isError &&
+                                      error == "Wrong password") {
+                                    isError = false;
+                                    return error;
+                                  }
+                                },
+                                controller: passwordController,
+                                hintText: "Password",
+                              ),
                       ],
                     ),
                   ),
@@ -220,22 +236,21 @@ class _LoginPageState extends State<LoginPage> with FostrTheme {
                                 } catch (e) {
                                   handleError(e);
                                 }
-                              }
-                              //  else if (Validator.isPhone(
-                              //         idController.text.trim()) &&
-                              //     !auth.isLoading) {
-                              //   try {
-                              //     await auth.signInWithPhone(
-                              //         context,
-                              //         countryCode.trim() +
-                              //             idController.text.trim());
+                              } else if (Validator.isPhone(
+                                      idController.text.trim()) &&
+                                  !auth.isLoading) {
+                                try {
+                                  await auth.signInWithPhone(
+                                      context,
+                                      countryCode.trim() +
+                                          idController.text.trim());
 
-                              //     FostrRouter.goto(
-                              //         context, Routes.otpVerification);
-                              //   } catch (e) {
-                              //     handleError(e);
-                              //   }
-                              // }
+                                  FostrRouter.goto(
+                                      context, Routes.otpVerification);
+                                } catch (e) {
+                                  handleError(e);
+                                }
+                              }
                             }
                           },
                         ),

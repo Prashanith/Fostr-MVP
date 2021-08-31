@@ -143,10 +143,11 @@ class OngoingRoomCard extends StatelessWidget with FostrTheme {
                       Text(
                         room.agenda.toString(),
                         style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.black87,
-                            fontFamily: "Lato",
-                            overflow: TextOverflow.ellipsis),
+                          fontSize: 12,
+                          color: Colors.black87,
+                          fontFamily: "Lato",
+                        ),
+                        overflow: TextOverflow.ellipsis,
                       ),
                       SizedBox(
                         height: 5,
@@ -155,10 +156,11 @@ class OngoingRoomCard extends StatelessWidget with FostrTheme {
                         DateFormat('dd-MMM-yy (KK:mm) aa')
                             .format(DateTime.parse(room.dateTime.toString())),
                         style: TextStyle(
-                            fontSize: 15,
-                            color: Colors.black87,
-                            fontFamily: "Lato",
-                            overflow: TextOverflow.ellipsis),
+                          fontSize: 15,
+                          color: Colors.black87,
+                          fontFamily: "Lato",
+                        ),
+                        overflow: TextOverflow.ellipsis,
                       )
                     ],
                   ),
