@@ -38,7 +38,6 @@ class _EnterRoomDetailsState extends State<EnterRoomDetails> with FostrTheme {
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthProvider>(context);
     final user = auth.user!;
-    print(user.userName);
     return Material(
       color: gradientBottom,
       child: Container(
@@ -61,13 +60,6 @@ class _EnterRoomDetailsState extends State<EnterRoomDetails> with FostrTheme {
               alignment: Alignment.topCenter,
               child: Column(
                 children: [
-                  // SizedBox(
-                  //   height: MediaQuery.of(context).size.height*0.03,
-                  // ),
-                  // Text(
-                  //   'Schedule a Room',
-                  //   style: h1
-                  // ),
                   SizedBox(
                     height: MediaQuery.of(context).size.height * 0.05,
                   ),
@@ -258,7 +250,6 @@ class _EnterRoomDetailsState extends State<EnterRoomDetails> with FostrTheme {
                   SizedBox(
                     height: MediaQuery.of(context).size.height * 0.03,
                   ),
-
                   SizedBox(
                     height: MediaQuery.of(context).size.height * 0.03,
                   ),

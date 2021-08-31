@@ -167,8 +167,8 @@ class OngoingRoomCard extends StatelessWidget with FostrTheme {
             ),
           ),
         ),
-        room.roomCreator ==
-                ((user.bookClubName == "") ? user.name : user.bookClubName)
+        (room.id ==
+                user.id)
             ? Positioned(
                 right: 5,
                 bottom: 0,

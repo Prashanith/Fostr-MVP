@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:agora_rtc_engine/rtc_engine.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fostr/core/constants.dart';
@@ -29,23 +32,29 @@ class _SelectThemeState extends State<SelectTheme> {
   ClientRole role = ClientRole.Audience;
   bool isLoading = false;
   String msg = 'Participants can only listen :)';
-
+  StreamSubscription<DocumentSnapshot<Map<String, dynamic>>>? roomStream;
   @override
   void initState() {
     initRoom();
     super.initState();
+  }
+  @override
+  void dispose() {
+    roomStream?.cancel();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthProvider>(context);
     final user = auth.user!;
-    return Material(
-      color: gradientBottom,
-      child: Container(
-        padding: EdgeInsets.symmetric(
-            horizontal: MediaQuery.of(context).size.width * 0.03),
-        decoration: BoxDecoration(
+    return Scaffold(
+      body: Material(
+        color: gradientBottom,
+        child: Container(
+          padding: EdgeInsets.symmetric(
+              horizontal: MediaQuery.of(context).size.width * 0.03),
+          decoration: BoxDecoration(
             image: DecorationImage(
               image: Image.asset(IMAGES + "background.png").image,
               fit: BoxFit.cover,
@@ -56,169 +65,169 @@ class _SelectThemeState extends State<SelectTheme> {
             ),
             color: Colors.white,
           ),
-        child: Padding(
-          padding: const EdgeInsets.all(10),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.33,
-                child: Image.asset(IMAGES + "logo.png")
-              ),
-              Text('You can join a room either as: ',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.teal.shade800,
-                    fontFamily: "Lato",
-                  )),
-              SizedBox(
-                height: 15,
-              ),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  SizedBox(height: 20),
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          userKind = "participant";
-                          role = ClientRole.Audience;
-                          msg = 'Participants can only listen :)';
-                        });
-                      },
-                      child: Container(
-                        alignment: Alignment.center,
-                        width: MediaQuery.of(context).size.width,
-                        padding: EdgeInsets.all(
-                          20,
-                        ),
-                        decoration: BoxDecoration(
-                          color: userKind == "participant"
-                              ? gradientBottom
-                              : gradientTop,
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        child: Text(
-                          "Participant",
-                          style: TextStyle(
+          child: Padding(
+            padding: const EdgeInsets.all(10),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.33,
+                    child: Image.asset(IMAGES + "logo.png")),
+                Text('You can join a room either as: ',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.teal.shade800,
+                      fontFamily: "Lato",
+                    )),
+                SizedBox(
+                  height: 15,
+                ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBox(height: 20),
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            userKind = "participant";
+                            role = ClientRole.Audience;
+                            msg = 'Participants can only listen :)';
+                          });
+                        },
+                        child: Container(
+                          alignment: Alignment.center,
+                          width: MediaQuery.of(context).size.width,
+                          padding: EdgeInsets.all(
+                            20,
+                          ),
+                          decoration: BoxDecoration(
                             color: userKind == "participant"
-                                ? Colors.white
-                                : Colors.teal.shade800,
-                            fontSize: 16,
+                                ? gradientBottom
+                                : gradientTop,
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          child: Text(
+                            "Participant",
+                            style: TextStyle(
+                              color: userKind == "participant"
+                                  ? Colors.white
+                                  : Colors.teal.shade800,
+                              fontSize: 16,
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                  (speakersCount < 8)
-                      ? Padding(
-                          padding:
-                              const EdgeInsets.symmetric(horizontal: 10),
-                          child: Text("OR",
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Color(0xB2476747),
-                                fontFamily: "Lato",
-                              )),
-                        )
-                      : Container(),
-                  (speakersCount < 8)
-                      ? Expanded(
-                          child: GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                userKind = "speaker";
-                                role = ClientRole.Broadcaster;
-                                msg = 'Only Speakers can talk :)';
-                              });
-                            },
-                            child: Container(
-                              alignment: Alignment.center,
-                              width: MediaQuery.of(context).size.width,
-                              padding: EdgeInsets.all(
-                                20,
-                              ),
-                              decoration: BoxDecoration(
-                                color: userKind == "speaker"
-                                    ? gradientBottom
-                                    : gradientTop,
-                                borderRadius: BorderRadius.circular(30),
-                              ),
-                              child: Text(
-                                "Speaker",
+                    (speakersCount < 8)
+                        ? Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            child: Text("OR",
                                 style: TextStyle(
-                                  color: userKind == "speaker"
-                                      ? Colors.white
-                                      : Colors.teal.shade800,
                                   fontSize: 16,
+                                  color: Color(0xB2476747),
+                                  fontFamily: "Lato",
+                                )),
+                          )
+                        : Container(),
+                    (speakersCount < 8)
+                        ? Expanded(
+                            child: GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  userKind = "speaker";
+                                  role = ClientRole.Broadcaster;
+                                  msg = 'Only Speakers can talk :)';
+                                });
+                              },
+                              child: Container(
+                                alignment: Alignment.center,
+                                width: MediaQuery.of(context).size.width,
+                                padding: EdgeInsets.all(
+                                  20,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: userKind == "speaker"
+                                      ? gradientBottom
+                                      : gradientTop,
+                                  borderRadius: BorderRadius.circular(30),
+                                ),
+                                child: Text(
+                                  "Speaker",
+                                  style: TextStyle(
+                                    color: userKind == "speaker"
+                                        ? Colors.white
+                                        : Colors.teal.shade800,
+                                    fontSize: 16,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        )
-                      : Container()
-                ],
-              ),
-              SizedBox(height: 20),
-              Text(
-                '$msg',
-                style: TextStyle(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 16,
-                    color: Colors.teal.shade800),
-              ),
-              SizedBox(height: 20),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  "Participants: $participantsCount",
+                          )
+                        : Container()
+                  ],
+                ),
+                SizedBox(height: 20),
+                Text(
+                  '$msg',
                   style: TextStyle(
-                    color: Colors.teal.shade800,
+                      fontWeight: FontWeight.w400,
+                      fontSize: 16,
+                      color: Colors.teal.shade800),
+                ),
+                SizedBox(height: 20),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "Participants: $participantsCount",
+                    style: TextStyle(
+                      color: Colors.teal.shade800,
+                    ),
                   ),
                 ),
-              ),
-              SizedBox(height: 20),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  "Speakers: $speakersCount",
-                  style: TextStyle(
-                    color: Colors.teal.shade800,
+                SizedBox(height: 20),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "Speakers: $speakersCount",
+                    style: TextStyle(
+                      color: Colors.teal.shade800,
+                    ),
                   ),
                 ),
-              ),
-              Divider(
-                color: Colors.teal.shade500,
-              ),
-              isLoading
-                  ? CircularProgressIndicator()
-                  : ElevatedButton(
-                      child: Text('Join Room'),
-                      onPressed: () {
-                        updateRoom(user);
-                      },
-                      style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all(Color(0xff94B5AC)),
-                        shape: MaterialStateProperty.all<OutlinedBorder>(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30),
+                Divider(
+                  color: Colors.teal.shade500,
+                ),
+                isLoading
+                    ? CircularProgressIndicator()
+                    : ElevatedButton(
+                        child: Text('Join Room'),
+                        onPressed: () async {
+                          await updateRoom(user);
+                          navigateToRoom();
+                        },
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(Color(0xff94B5AC)),
+                          shape: MaterialStateProperty.all<OutlinedBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
                           ),
                         ),
                       ),
+                SizedBox(height: 20),
+                Align(
+                  alignment: Alignment.center,
+                  child: Text(
+                    "Maximum of 8 Speakers are allowed...",
+                    style: TextStyle(
+                      color: Colors.teal.shade800,
                     ),
-              SizedBox(height: 20),
-              Align(
-                alignment: Alignment.center,
-                child: Text(
-                  "Maximum of 8 Speakers are allowed...",
-                  style: TextStyle(
-                    color: Colors.teal.shade800,
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -227,7 +236,7 @@ class _SelectThemeState extends State<SelectTheme> {
 
   initRoom() async {
     // get the details of room
-    roomCollection
+    roomStream = roomCollection
         .doc(widget.room.id)
         .collection("rooms")
         .doc(widget.room.title)
@@ -326,8 +335,9 @@ class _SelectThemeState extends State<SelectTheme> {
         });
       }
     }
-
-    navigateToRoom();
+    setState(() {
+      isLoading = false;
+    });
   }
 
   navigateToRoom() {
@@ -336,10 +346,12 @@ class _SelectThemeState extends State<SelectTheme> {
       Navigator.pushReplacement(
           context,
           CupertinoPageRoute(
-              builder: (context) => Minimal(
-                    room: widget.room,
-                    role: role,
-                  )));
+              builder: (context) => Scaffold(
+                body: Minimal(
+                      room: widget.room,
+                      role: role,
+                    ),
+              )));
     } else if (roomTheme == "Cafe") {
       Navigator.pushReplacement(
           context,

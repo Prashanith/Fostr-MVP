@@ -44,7 +44,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 height: 20,
               ),
               Text(
-                "Wheather we create history or not\nwe are a part of history",
+                "Whether we create history or not\nwe are a part of history",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 18,

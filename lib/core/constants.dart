@@ -11,4 +11,5 @@ const FIRST_OPEN = 'fostr-firstOpen';
 const LOGGED_IN = 'fostr-loggedin';
 const USER_TYPE = "fostr-userType";
 
-enum AuthError { E }
+// agora_rtc
+const AGORA_APP_ID = '647ac7a7c4a34180a54c34342c5312a5';

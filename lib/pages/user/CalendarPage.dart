@@ -1,3 +1,5 @@
+
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fostr/core/constants.dart';
@@ -18,7 +20,8 @@ class CalendarPage extends StatefulWidget {
 class _CalendarPageState extends State<CalendarPage> with FostrTheme {
   DateTime date = DateTime.now();
   bool isEmpty = true;
-
+  List<Map<String, dynamic>> rooms = [];
+  List<Map<String, dynamic>> allRooms = [];
   Future<List<Map<String, dynamic>>> getRooms(List<String> followings) async {
     List<Map<String, dynamic>> rooms = [];
     followings.forEach((id) async {
@@ -27,14 +30,39 @@ class _CalendarPageState extends State<CalendarPage> with FostrTheme {
         rooms.addAll(rawRooms);
       });
     });
-
     return rooms;
+  }
+
+  List<Map<String, dynamic>> filterRooms(
+      List<Map<String, dynamic>> data, DateTime date) {
+    print(date);
+    return data.where((element) {
+      return element["dateTime"]!.substring(0, 10) ==
+          date.toString().substring(0, 10);
+    }).toList();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    final auth = Provider.of<AuthProvider>(context, listen: false);
+    getRooms(auth.user!.followings!).then((value) {
+      setState(() {
+        allRooms = value;
+        print(value);
+        rooms = filterRooms(value, date);
+      });
+    });
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+      Future.delayed(Duration(seconds: 1), () {
+        setState(() {});
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthProvider>(context);
-    final user = auth.user;
     return Material(
       child: Container(
         decoration: BoxDecoration(
@@ -107,75 +135,86 @@ class _CalendarPageState extends State<CalendarPage> with FostrTheme {
                               initialDate: DateTime.now(),
                               lastDate: DateTime(2030),
                               onDateChanged: (DateTime value) {
-                                setState(() {
-                                  date = value;
-                                });
+                                if (date != value) {
+                                  setState(() {
+                                    date = value;
+                                    rooms = filterRooms(allRooms, value);
+                                  });
+                                }
                               },
                             ),
                           ),
                         ),
                       ),
                       Expanded(
-                        child: FutureBuilder<List<Map<String, dynamic>>>(
-                          future: getRooms(user?.followings ?? []),
-                          initialData: [],
-                          builder: (BuildContext context,
-                              AsyncSnapshot<List<Map<String, dynamic>>>
-                                  snapshot) {
-                            if (snapshot.hasData &&
-                                snapshot.data!.length == 0) {
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    "No schedules currently",
-                                    style: h2.copyWith(fontSize: 14.sp),
-                                  ),
-                                  Text(
-                                    "You can follow some readers here",
-                                    style: h2.copyWith(fontSize: 14.sp),
-                                  ),
-                                ],
-                              );
-                            } else if (snapshot.hasData) {
-                              var roomListData =
-                                  snapshot.data!.where((element) {
-                                final room = Room.fromJson(element);
-                                return room.dateTime?.substring(0, 10) ==
-                                    date.toString().substring(0, 10);
-                              });
-                              if (roomListData.length == 0) {
-                                return Center(
-                                  child: Text(
-                                    "No schedules currently",
-                                    style: h2.copyWith(fontSize: 14.sp),
-                                  ),
-                                );
-                              }
-                              return ListView(
-                                children: roomListData.map(
-                                  (element) {
-                                    final room = Room.fromJson(element);
+                        // child: FutureBuilder<List<Map<String, dynamic>>>(
+                        //   future: getRooms(user?.followings ?? []),
+                        //   initialData: [],
+                        //   builder: (BuildContext context,
+                        //       AsyncSnapshot<List<Map<String, dynamic>>>
+                        //           snapshot) {
+                        //     if (snapshot.hasData) {
+                        //       var roomListData =
+                        //           snapshot.data!.where((element) {
+                        //         var x = element["dateTime"]!.substring(0, 10) ==
+                        //             date.toString().substring(0, 10);
+                        //         log(x.toString());
+                        //         return x;
+                        //       }).toList();
 
-                                    return GestureDetector(
-                                      onTap: () async {},
-                                      child: EventCard(
-                                        room: room,
-                                      ),
-                                    );
-                                  },
-                                ).toList(),
-                              );
-                            }
-                            return Center(
-                              child: Text(
-                                "Getting fresh rooms",
-                                style: h2.copyWith(fontSize: 14.sp),
+                        //       if (roomListData.length == 0) {
+                        //         return Center(
+                        //           child: Text(
+                        //             "No schedules currently",
+                        //             style: h2.copyWith(fontSize: 14.sp),
+                        //           ),
+                        //         );
+                        //       }
+                        //       return
+                        //     } else if (snapshot.hasData &&
+                        //         snapshot.data!.length == 0) {
+                        //       return Column(
+                        //         crossAxisAlignment: CrossAxisAlignment.center,
+                        //         mainAxisAlignment: MainAxisAlignment.center,
+                        //         children: [
+                        //           Text(
+                        //             "No schedules currently",
+                        //             style: h2.copyWith(fontSize: 14.sp),
+                        //           ),
+                        //           // Text(
+                        //           //   "You can follow some readers here",
+                        //           //   style: h2.copyWith(fontSize: 14.sp),
+                        //           // ),
+                        //         ],
+                        //       );
+                        //     }
+                        // return Center(
+                        //   child: Text(
+                        //     "Getting fresh rooms",
+                        //     style: h2.copyWith(fontSize: 14.sp),
+                        //   ),
+                        // );
+                        //   },
+                        // ),
+                        child: (rooms.isNotEmpty)
+                            ? ListView.builder(
+                                itemCount: rooms.length,
+                                itemBuilder: (context, idx) {
+                                  final room = Room.fromJson(rooms[idx]);
+                                  return GestureDetector(
+                                    onTap: () async {},
+                                    child: EventCard(
+                                      room: room,
+                                    ),
+                                  );
+                                },
+                              )
+                            : Center(
+                                child: Text(
+                                  "No schedules currently",
+                                  style: h2.copyWith(fontSize: 14.sp),
+                                ),
                               ),
-                            );
-                          },
-                        ),
                       ),
                     ],
                   ),
@@ -311,7 +350,6 @@ class EventCard extends StatelessWidget with FostrTheme {
     );
   }
 }
-
 
 // (user?.followings != null &&
 //                                 user?.followings?.length != 0)

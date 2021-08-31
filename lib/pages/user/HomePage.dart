@@ -118,8 +118,8 @@ class _OngoingRoomState extends State<OngoingRoom> with FostrTheme {
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthProvider>(context);
     final user = auth.user!;
-    return Material(
-      child: Container(
+    return Scaffold(
+      body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment(-0.6, -1),
