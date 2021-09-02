@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:fostr/pages/rooms/EnterClubRoomDetails.dart';
-import 'package:fostr/utils/Theme.dart';
+import 'package:fostr/utils/theme.dart';
 
 class ClubRoomDetails extends StatelessWidget with FostrTheme {
   @override
   Widget build(BuildContext context) {
-  
     return Material(
       child: Container(
         decoration: BoxDecoration(
