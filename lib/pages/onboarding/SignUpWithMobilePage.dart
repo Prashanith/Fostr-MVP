@@ -20,22 +20,22 @@ import 'package:fostr/widgets/SigninWithGoogle.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
-class SignupPage extends StatefulWidget {
-  const SignupPage({Key? key}) : super(key: key);
+class SignupWithMobilePage extends StatefulWidget {
+  const SignupWithMobilePage({Key? key}) : super(key: key);
 
   @override
-  _SignupPageState createState() => _SignupPageState();
+  _SignupWithMobilePageState createState() => _SignupWithMobilePageState();
 }
 
-class _SignupPageState extends State<SignupPage> with FostrTheme {
+class _SignupWithMobilePageState extends State<SignupWithMobilePage>
+    with FostrTheme {
   final signupForm = GlobalKey<FormState>();
-
   bool isError = false;
   bool isAgree = false;
+  String countryCode = "+91";
   String error = "";
 
   TextEditingController _controller = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -77,7 +77,35 @@ class _SignupPageState extends State<SignupPage> with FostrTheme {
                 key: signupForm,
                 child: Column(
                   children: [
+                    Opacity(
+                      opacity: 0.6,
+                      child: Container(
+                        height: 70,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: Color.fromRGBO(102, 163, 153, 1),
+                          borderRadius: BorderRadius.circular(15),
+                          boxShadow: boxShadow,
+                        ),
+                        child: CountryCodePicker(
+                          dialogSize: Size(350, 300),
+                          onChanged: (e) {
+                            setState(() {
+                              countryCode = e.dialCode.toString();
+                            });
+                          },
+                          initialSelection: 'IN',
+                          textStyle: actionTextStyle,
+                          // showCountryOnly: true,
+                          alignLeft: true,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 2.h,
+                    ),
                     InputField(
+                      keyboardType: TextInputType.phone,
                       onEditingCompleted: () {
                         FocusScope.of(context).nextFocus();
                       },
@@ -88,26 +116,17 @@ class _SignupPageState extends State<SignupPage> with FostrTheme {
                           return error;
                         }
                         if (value!.isEmpty) {
-                          return "Enter your emai";
+                          return "enter your phone";
                         }
-                        if (!Validator.isEmail(value)) {
-                          return "Invalid Credentials";
+                        if (!Validator.isPhone(value)) {
+                          return "Enter Valid Mobile Number";
                         }
                         return null;
                       },
-                      hintText: "Enter your email",
+                      hintText: "Enter your phone",
                     ),
                     SizedBox(
                       height: 2.h,
-                    ),
-                    InputField(
-                      onEditingCompleted: () {
-                        FocusScope.of(context).nextFocus();
-                      },
-                      maxLine: 1,
-                      controller: _passwordController,
-                      hintText: "Password",
-                      isPassword: true,
                     ),
                     CheckboxFormField(
                       initialValue: false,
@@ -137,10 +156,10 @@ class _SignupPageState extends State<SignupPage> with FostrTheme {
                       children: [
                         TextButton(
                           onPressed: () {
-                            FostrRouter.goto(context, Routes.signupWithMobile);
+                            FostrRouter.goto(context, Routes.singup);
                           },
                           child: Text(
-                            "Signup With Mobile Instead",
+                            "Signup With Email Instead",
                             style: TextStyle(
                               fontFamily: "Lato",
                               color: Color(0xff476747),
@@ -193,18 +212,22 @@ class _SignupPageState extends State<SignupPage> with FostrTheme {
                       height: 20,
                     ),
                     PrimaryButton(
-                      text: "Register",
+                      text: "Send OTP",
                       onTap: () async {
                         if (signupForm.currentState!.validate()) {
-                          if (Validator.isEmail(_controller.text)) {
-                            try {
-                              await auth.signupWithEmailPassword(
-                                  _controller.text.trim(),
-                                  _passwordController.text.trim(),
-                                  auth.userType!);
-                              FostrRouter.goto(context, Routes.addDetails);
-                            } catch (error) {
-                              handleError(error);
+                          if (Validator.isPhone(_controller.text)) {
+                            if (!auth.isLoading) {
+                              try {
+                                auth.signInWithPhone(
+                                    context,
+                                    countryCode.trim() +
+                                        _controller.text.trim());
+
+                                FostrRouter.goto(
+                                    context, Routes.otpVerification);
+                              } catch (e) {
+                                handleError(e);
+                              }
                             }
                           }
                         }

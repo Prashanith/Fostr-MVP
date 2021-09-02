@@ -4,8 +4,10 @@ import 'package:fostr/models/RoomModel.dart';
 import 'package:fostr/pages/clubOwner/dashboard.dart';
 import 'package:fostr/pages/onboarding/AddDetails.dart';
 import 'package:fostr/pages/onboarding/LoginPage.dart';
+import 'package:fostr/pages/onboarding/LoginWithMobilePage.dart';
 import 'package:fostr/pages/onboarding/Onboardingpage.dart';
 import 'package:fostr/pages/onboarding/OtpVerification.dart';
+import 'package:fostr/pages/onboarding/SignUpWithMobilePage.dart';
 import 'package:fostr/pages/onboarding/SignupPage.dart';
 import 'package:fostr/pages/onboarding/SplashScreen.dart';
 import 'package:fostr/pages/onboarding/UserChoice.dart';
@@ -62,6 +64,12 @@ class FostrRouter {
       case Routes.login:
         return LoginPage();
 
+      case Routes.loginWithMobile:
+        return LoginWithMobilePage();
+
+      case Routes.signupWithMobile:
+        return SignupWithMobilePage();
+
       case Routes.otpVerification:
         return OtpVerification();
 
@@ -84,14 +92,14 @@ class FostrRouter {
         return BookSuggestionPage();
 
       case Routes.ongoingRoom:
-        return OngoingRoom();      
+        return OngoingRoom();
 
       case Routes.userDashboard:
         return UserDashboard();
 
       case Routes.dashboard:
         return Dashboard();
-      
+
       case Routes.roomDetails:
         return RoomDetails();
 

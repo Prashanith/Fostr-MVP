@@ -19,20 +19,21 @@ import 'package:fostr/widgets/SigninWithGoogle.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+class LoginWithMobilePage extends StatefulWidget {
+  const LoginWithMobilePage({Key? key}) : super(key: key);
 
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _LoginWithMobilePageState createState() => _LoginWithMobilePageState();
 }
 
-class _LoginPageState extends State<LoginPage> with FostrTheme {
+class _LoginWithMobilePageState extends State<LoginWithMobilePage>
+    with FostrTheme {
   final loginForm = GlobalKey<FormState>();
 
   TextEditingController idController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
   bool isError = false;
   String error = "";
+  String countryCode = "+91";
 
   void handleRoute(User? user, UserType userType) {
     if ((user!.name.isEmpty || user.userName.isEmpty) &&
@@ -96,43 +97,51 @@ class _LoginPageState extends State<LoginPage> with FostrTheme {
                   Form(
                     key: loginForm,
                     child: Column(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        InputField(
-                          onEditingCompleted: () {
-                            FocusScope.of(context).nextFocus();
-                          },
-                          validator: (value) {
-                            if (isError && error != "Wrong password") {
-                              isError = false;
-                              return error;
-                            }
-                            if (value!.isEmpty) {
-                              return "enter your email";
-                            }
-                            if (!Validator.isEmail(value)) {
-                              return "Invalid credential";
-                            }
-                            return null;
-                          },
-                          controller: idController,
-                          hintText: "Enter your email",
+                        Opacity(
+                          opacity: 0.6,
+                          child: Container(
+                            height: 70,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              color: Color.fromRGBO(102, 163, 153, 1),
+                              borderRadius: BorderRadius.circular(15),
+                              boxShadow: boxShadow,
+                            ),
+                            child: CountryCodePicker(
+                              dialogSize: Size(350, 300),
+                              onChanged: (e) {
+                                setState(() {
+                                  countryCode = e.dialCode.toString();
+                                });
+                              },
+                              initialSelection: 'IN',
+                              textStyle: actionTextStyle,
+                              // showCountryOnly: true,
+                              alignLeft: true,
+                            ),
+                          ),
                         ),
                         SizedBox(
                           height: 2.h,
                         ),
                         InputField(
-                          maxLine: 1,
-                          isPassword: true,
-                          validator: (value) {
-                            if (passwordController.text.length < 6) {
-                              return "Password dose not match";
-                            } else if (isError && error == "Wrong password") {
-                              isError = false;
-                              return error;
-                            }
+                          keyboardType: TextInputType.phone,
+                          onEditingCompleted: () {
+                            FocusScope.of(context).nextFocus();
                           },
-                          controller: passwordController,
-                          hintText: "Password",
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return "Enter your mobile number";
+                            }
+                            if (!Validator.isPhone(value)) {
+                              return "Enter Valid Mobile Number";
+                            }
+                            return null;
+                          },
+                          controller: idController,
+                          hintText: "Enter your mobile number",
                         ),
                         SizedBox(
                           height: 2.h,
@@ -142,11 +151,10 @@ class _LoginPageState extends State<LoginPage> with FostrTheme {
                           children: [
                             TextButton(
                               onPressed: () {
-                                FostrRouter.goto(
-                                    context, Routes.loginWithMobile);
+                                FostrRouter.goto(context, Routes.login);
                               },
                               child: Text(
-                                "Login With Mobile Instead",
+                                "Login With Email Instead",
                                 style: TextStyle(
                                   fontFamily: "Lato",
                                   color: Color(0xff476747),
@@ -182,18 +190,20 @@ class _LoginPageState extends State<LoginPage> with FostrTheme {
                           height: 20,
                         ),
                         PrimaryButton(
-                          text: "Login",
+                          text: "Send OTP",
                           onTap: () async {
                             if (loginForm.currentState!.validate() &&
                                 !auth.isLoading) {
-                              if (Validator.isEmail(idController.text.trim())) {
+                              if (Validator.isPhone(idController.text.trim()) &&
+                                  !auth.isLoading) {
                                 try {
-                                  var user = await auth.signInWithEmailPassword(
-                                    idController.text.trim(),
-                                    passwordController.text.trim(),
-                                    auth.userType!,
-                                  );
-                                  handleRoute(user, auth.userType!);
+                                  await auth.signInWithPhone(
+                                      context,
+                                      countryCode.trim() +
+                                          idController.text.trim());
+
+                                  FostrRouter.goto(
+                                      context, Routes.otpVerification);
                                 } catch (e) {
                                   handleError(e);
                                 }
