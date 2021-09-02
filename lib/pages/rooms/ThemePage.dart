@@ -4,12 +4,12 @@ import 'package:fostr/core/constants.dart';
 import 'package:fostr/models/RoomModel.dart';
 import 'package:fostr/pages/rooms/SelectTheme.dart';
 import 'package:fostr/providers/AuthProvider.dart';
-import 'package:fostr/utils/Theme.dart';
+import 'package:fostr/utils/theme.dart';
 import 'package:provider/provider.dart';
 
 class ThemePage extends StatelessWidget with FostrTheme {
   final Room room;
-  ThemePage({ Key? key, required this.room }) : super(key: key);
+  ThemePage({Key? key, required this.room}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -45,14 +45,14 @@ class ThemePage extends StatelessWidget with FostrTheme {
                     //   height: 30,
                     // ),
                     (user.name == "")
-                      ? Text(
-                        "Hello, User",
-                        style: h1.apply(color: Colors.white),
-                      )
-                      : Text(
-                        "Hello, ${user.name}",
-                        style: h1.apply(color: Colors.white),
-                      ),
+                        ? Text(
+                            "Hello, User",
+                            style: h1.apply(color: Colors.white),
+                          )
+                        : Text(
+                            "Hello, ${user.name}",
+                            style: h1.apply(color: Colors.white),
+                          ),
                   ],
                 ),
               ),

@@ -4,7 +4,7 @@ import 'package:fostr/core/constants.dart';
 import 'package:fostr/providers/AuthProvider.dart';
 import 'package:fostr/router/router.dart';
 import 'package:fostr/router/routes.dart';
-import 'package:fostr/utils/Theme.dart';
+import 'package:fostr/utils/theme.dart';
 import 'package:fostr/widgets/Buttons.dart';
 import 'package:fostr/widgets/LightBtn.dart';
 import 'package:provider/provider.dart';
@@ -111,7 +111,6 @@ class Settings extends StatelessWidget with FostrTheme {
             ),
           ],
         ),
-        
       ),
     );
   }
