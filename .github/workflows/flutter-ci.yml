@@ -24,8 +24,9 @@ jobs:
       uses: subosito/flutter-action@v1
       with:
         flutter-version: '2.2.3'
-    - name: Build Apk
+    - name: Get Dependencies
       run: flutter pub get
+    - name: Build Apk
       run: flutter build apk
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v2.2.4
