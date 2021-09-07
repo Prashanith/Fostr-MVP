@@ -19,8 +19,10 @@ import 'package:fostr/pages/user/UserProfile.dart';
 import 'package:fostr/providers/AuthProvider.dart';
 import 'package:fostr/router/router.dart';
 import 'package:fostr/router/routes.dart';
+import 'package:fostr/services/MethodeChannels.dart';
 import 'package:fostr/utils/theme.dart';
 import 'package:fostr/widgets/rooms/OngoingRoomCard.dart';
+import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -44,9 +46,12 @@ class _UserDashboardState extends State<UserDashboard> with FostrTheme {
     UserProfilePage(),
   ];
 
+  final AgoraChannel agoraChannel = GetIt.I<AgoraChannel>();
+
   @override
   void initState() {
     super.initState();
+    agoraChannel.setAgoraUserId("haha", "myroom", "user", "4");
   }
 
   @override
@@ -110,8 +115,9 @@ class _OngoingRoomState extends State<OngoingRoom> with FostrTheme {
   }
 
   askPermission() async {
-    await Permission.microphone.request();
-    await Permission.storage.request();
+    await Permission.microphone.request().then(
+          (value) => Permission.storage.request(),
+        );
   }
 
   @override
