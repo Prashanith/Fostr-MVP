@@ -12,8 +12,10 @@ import 'package:fostr/models/RoomModel.dart';
 import 'package:fostr/models/UserModel/User.dart';
 import 'package:fostr/providers/AuthProvider.dart';
 import 'package:fostr/screen/ParticipantsList.dart';
+import 'package:fostr/services/RoomService.dart';
 import 'package:fostr/utils/theme.dart';
 import 'package:fostr/widgets/rooms/Profile.dart';
+import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
 class Minimal extends StatefulWidget {
@@ -28,79 +30,36 @@ class Minimal extends StatefulWidget {
 
 class _MinimalState extends State<Minimal> with FostrTheme {
   int speakersCount = 0, participantsCount = 0;
-
+  String roompass = "";
   bool muted = false, isMicOn = false;
   late RtcEngine _engine;
-
-  StreamSubscription<DocumentSnapshot<Map<String, dynamic>>>? roomStream;
 
   @override
   void initState() {
     super.initState();
     final auth = Provider.of<AuthProvider>(context, listen: false);
-    initRoom();
+    GetIt.I<RoomService>().initRoom(widget.room,
+        (participantsC, speakersC, tokenC, channelNameC, roompassC) {
+      setState(() {
+        participantsCount = participantsC;
+        speakersCount = speakersC;
+        token = tokenC;
+        channelName = channelNameC;
+        roompass = roompassC;
+      });
+    });
     initialize(auth.user!);
   }
 
   @override
   void dispose() {
-    roomStream?.cancel();
+    GetIt.I<RoomService>().dispose();
     super.dispose();
   }
 
-  initRoom() async {
-    roomStream = roomCollection
-        .doc(widget.room.id)
-        .collection("rooms")
-        .doc(widget.room.title)
-        .snapshots()
-        .listen((result) {
-      print(result.data()?['speakersCount']);
-      setState(() {
-        participantsCount = (result.data()!['participantsCount'] < 0
-            ? 0
-            : result.data()!['participantsCount']);
-        speakersCount = (result.data()!['speakersCount'] < 0
-            ? 0
-            : result.data()!['speakersCount']);
-      });
-    });
-  }
-
   Future<void> removeUser(User user) async {
-    if (widget.role == ClientRole.Broadcaster) {
-      // update the list of speakers
-      await roomCollection
-          .doc(widget.room.id)
-          .collection("rooms")
-          .doc(widget.room.title)
-          .update({
-        'speakersCount': speakersCount - 1,
-      });
-      await roomCollection
-          .doc(widget.room.id)
-          .collection('rooms')
-          .doc(widget.room.title)
-          .collection("speakers")
-          .doc(user.userName)
-          .delete();
-    } else {
-      // update the list of participants
-      await roomCollection
-          .doc(widget.room.id)
-          .collection("rooms")
-          .doc(widget.room.title)
-          .update({
-        'participantsCount': participantsCount - 1,
-      });
-      await roomCollection
-          .doc(widget.room.id)
-          .collection("rooms")
-          .doc(widget.room.title)
-          .collection("participants")
-          .doc(user.userName)
-          .delete();
-    }
+    await GetIt.I<RoomService>().leaveRoom(
+        widget.room, user, widget.role, speakersCount, participantsCount);
   }
 
   /// Create Agora SDK instance and initialize
