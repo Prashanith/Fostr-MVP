@@ -38,6 +38,7 @@ class _SelectThemeState extends State<SelectTheme> {
     initRoom();
     super.initState();
   }
+
   @override
   void dispose() {
     roomStream?.cancel();
@@ -344,14 +345,17 @@ class _SelectThemeState extends State<SelectTheme> {
     // navigate to the room
     if (roomTheme == "Minimalist") {
       Navigator.pushReplacement(
-          context,
-          CupertinoPageRoute(
-              builder: (context) => Scaffold(
-                body: Minimal(
-                      room: widget.room,
-                      role: role,
-                    ),
-              )));
+        context,
+        CupertinoPageRoute(
+          settings: RouteSettings(name: "minimal"),
+          builder: (context) => Scaffold(
+            body: Minimal(
+              room: widget.room,
+              role: role,
+            ),
+          ),
+        ),
+      );
     } else if (roomTheme == "Cafe") {
       Navigator.pushReplacement(
           context,

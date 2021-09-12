@@ -12,8 +12,10 @@ import 'package:fostr/models/RoomModel.dart';
 import 'package:fostr/models/UserModel/User.dart';
 import 'package:fostr/providers/AuthProvider.dart';
 import 'package:fostr/screen/ParticipantsList.dart';
+import 'package:fostr/services/RatingsService.dart';
 import 'package:fostr/utils/theme.dart';
 import 'package:fostr/widgets/rooms/Profile.dart';
+import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
 class Minimal extends StatefulWidget {
@@ -32,6 +34,7 @@ class _MinimalState extends State<Minimal> with FostrTheme {
   bool muted = false, isMicOn = false;
   late RtcEngine _engine;
 
+  final RatingService _ratingService = GetIt.I<RatingService>();
   StreamSubscription<DocumentSnapshot<Map<String, dynamic>>>? roomStream;
 
   @override
@@ -365,6 +368,8 @@ class _MinimalState extends State<Minimal> with FostrTheme {
         children: [
           IconButton(
               onPressed: () async {
+                _ratingService.setCurrentRoom(
+                    widget.room.title!, widget.room.id!, user.id);
                 await _engine.leaveChannel();
                 await removeUser(user);
                 Navigator.pop(context);
