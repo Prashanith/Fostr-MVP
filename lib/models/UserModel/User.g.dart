@@ -23,9 +23,10 @@ User _$UserFromJson(Map<String, dynamic> json) {
     ..notificationToken = json['notificationToken'] as String?
     ..followers =
         (json['followers'] as List<dynamic>?)?.map((e) => e as String).toList()
-    ..followings = (json['followings'] as List<dynamic>?)
-        ?.map((e) => e as String)
-        .toList();
+    ..followings =
+        (json['followings'] as List<dynamic>?)?.map((e) => e as String).toList()
+    ..totalRooms = json['totalRooms'] as int?
+    ..totlaHours = (json['totlaHours'] as num?)?.toDouble();
 }
 
 Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
@@ -41,6 +42,8 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'userProfile': instance.userProfile?.toJson(),
       'followers': instance.followers,
       'followings': instance.followings,
+      'totalRooms': instance.totalRooms,
+      'totlaHours': instance.totlaHours,
     };
 
 K _$enumDecode<K, V>(

@@ -37,9 +37,13 @@ class _SelectThemeState extends State<SelectTheme> {
   String enteredpass = "";
   String roompass = "";
   String msg = 'Participants can only listen :)';
+
+  final RoomService roomService = GetIt.I<RoomService>();
+
   @override
   void initState() {
-    GetIt.I<RoomService>().initRoom(widget.room,
+    super.initState();
+    roomService.initRoom(widget.room,
         (participantsC, speakersC, tokenC, channelNameC, roompassC) {
       setState(() {
         participantsCount = participantsC;
@@ -49,13 +53,6 @@ class _SelectThemeState extends State<SelectTheme> {
         roompass = roompassC;
       });
     });
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    GetIt.I<RoomService>().dispose();
-    super.dispose();
   }
 
   @override
@@ -372,8 +369,9 @@ class _SelectThemeState extends State<SelectTheme> {
     return true;
   }
 
-  navigateToRoom() {
+  navigateToRoom() async {
     // navigate to the room
+    await roomService.dispose();
     if (roomTheme == "Minimalist") {
       Navigator.pushReplacement(
           context,

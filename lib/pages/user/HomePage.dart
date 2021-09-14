@@ -1,17 +1,11 @@
 import 'dart:math';
-
-import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:fostr/core/constants.dart';
 import 'package:fostr/core/data.dart';
-import 'package:fostr/core/functions.dart';
-import 'package:fostr/core/settings.dart';
 import 'package:fostr/models/RoomModel.dart';
-import 'package:fostr/pages/rooms/Minimal.dart';
 import 'package:fostr/pages/rooms/RoomDetails.dart';
 import 'package:fostr/pages/rooms/ThemePage.dart';
 import 'package:fostr/pages/user/CalendarPage.dart';

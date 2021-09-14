@@ -1,11 +1,18 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fostr/core/data.dart';
 import 'package:fostr/core/functions.dart';
+import 'package:fostr/models/RoomModel.dart';
+import 'package:fostr/models/UserModel/User.dart';
+import 'package:fostr/services/UserService.dart';
+import 'package:get_it/get_it.dart';
 
 class RoomService {
+  final UserService _userService = GetIt.I<UserService>();
+
   StreamSubscription<DocumentSnapshot<Map<String, dynamic>>>? roomStream;
   initRoom(room, Function details) async {
     // get the details of room
@@ -31,7 +38,8 @@ class RoomService {
     });
   }
 
-  Future createRoom(user, eventname, agenda, imageUrl, password, now) async {
+  Future<User> createRoom(User user, String eventname, String agenda,
+      String imageUrl, String password, String now) async {
     var roomToken = await getToken(eventname);
     // Add new data to Firestore collection
     await roomCollection.doc(user.id).set({'id': user.id});
@@ -42,28 +50,21 @@ class RoomService {
         .set({
       'participantsCount': 0,
       'speakersCount': 0,
-      'title': '${eventname}',
-      'agenda': '${agenda}',
+      'title': '$eventname',
+      'agenda': '$agenda',
       'image': imageUrl,
-      'password': '${password}',
+      'password': '$password',
       'dateTime': '$now',
-      // 'dateTime': dateTextEditingController.text + " " + timeTextEditingController.text,
+      'lastTime': '$now',
       'roomCreator': (user.bookClubName == "") ? user.name : user.bookClubName,
       'token': roomToken.toString(),
       'id': user.id
-      // });
-      // await roomCollection
-      //   .doc(user.id)
-      //   .collection("rooms")
-      //   .doc(eventNameTextEditingController.text)
-      //   .collection("speakers")
-      //   .doc(user.userName)
-      //   .set({
-      //     'username': user.userName,
-      //     'name': user.name,
-      //     'profileImage': user.userProfile?.profileImage ?? "image",
     });
-    return result;
+
+    user.totalRooms = user.totalRooms ?? 0;
+    user.totalRooms = user.totalRooms! + 1;
+    _userService.updateUserField(user.toJson());
+    return user;
   }
 
   getRooms(id) async {
@@ -111,7 +112,6 @@ class RoomService {
   }
 
   Future joinRoomAsParticipant(room, user, participantsCount) async {
-    ClientRole role = ClientRole.Audience;
     // update the list of participants
     var rawParticipants = await roomCollection
         .doc(room.id)
@@ -151,7 +151,27 @@ class RoomService {
     return participantsCount;
   }
 
-  Future leaveRoom(room, user, role, speakersCount, participantsCount) async {
+  Future leaveRoom(Room room, User user, ClientRole role, int speakersCount,
+      int participantsCount) async {
+    double hours = 0;
+    String now = DateTime.now().toString();
+
+    if (speakersCount == 1) {
+      DateTime? lastDate = DateTime.tryParse(now);
+      DateTime? startDate = DateTime.tryParse(room.dateTime!);
+
+      final diff = lastDate!.difference(startDate!);
+      hours =
+          double.parse((diff.inSeconds.toDouble() / 3600).toStringAsFixed(2));
+      final roomOwner = await _userService.getUserById(room.id!);
+      if (roomOwner != null) {
+        double totalHours = roomOwner.totlaHours ?? 0;
+        totalHours += hours;
+        roomOwner.totlaHours = totalHours;
+        user = roomOwner;
+        _userService.updateUser(roomOwner);
+      }
+    }
     if (role == ClientRole.Broadcaster) {
       // update the list of speakers
       await roomCollection
@@ -159,6 +179,7 @@ class RoomService {
           .collection("rooms")
           .doc(room.title)
           .update({
+        'lastTime': now,
         'speakersCount': speakersCount - 1,
       });
       await roomCollection
@@ -185,9 +206,17 @@ class RoomService {
           .doc(user.userName)
           .delete();
     }
+    return user;
+    // if (participantsCount == 0 && speakersCount == 1) {
+    //   deletRoom(room.id!, room.title!);
+    // }
   }
 
-  void dispose() {
-    roomStream?.cancel();
+  void deletRoom(String roomCreator, String roomTitle) {
+    roomCollection.doc(roomCreator).collection('rooms').doc(roomTitle).delete();
+  }
+
+  Future<void> dispose() async {
+    await roomStream?.cancel();
   }
 }

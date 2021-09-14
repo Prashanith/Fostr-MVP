@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:developer';
-
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +12,7 @@ import 'package:fostr/models/UserModel/User.dart';
 import 'package:fostr/providers/AuthProvider.dart';
 import 'package:fostr/screen/ParticipantsList.dart';
 import 'package:fostr/services/RoomService.dart';
+import 'package:fostr/services/UserService.dart';
 import 'package:fostr/utils/theme.dart';
 import 'package:fostr/widgets/rooms/Profile.dart';
 import 'package:get_it/get_it.dart';
@@ -33,7 +33,8 @@ class _MinimalState extends State<Minimal> with FostrTheme {
   String roompass = "";
   bool muted = false, isMicOn = false;
   late RtcEngine _engine;
-
+  final UserService _userService = GetIt.I<UserService>();
+  final RoomService _roomService = GetIt.I<RoomService>();
   @override
   void initState() {
     super.initState();
@@ -51,32 +52,15 @@ class _MinimalState extends State<Minimal> with FostrTheme {
     initialize(auth.user!);
   }
 
-  @override
-  void dispose() {
-    GetIt.I<RoomService>().dispose();
-    super.dispose();
-  }
-
-  Future<void> removeUser(User user) async {
-    await GetIt.I<RoomService>().leaveRoom(
-        widget.room, user, widget.role, speakersCount, participantsCount);
-  }
-
   /// Create Agora SDK instance and initialize
   Future<void> initialize(User user) async {
     await _initAgoraRtcEngine();
     _addAgoraEventHandlers(user);
     print(channelName);
-    // await getToken();
     print(token);
     print(baseUrl);
     print("got: " + widget.room.token.toString());
-    // await _engine.joinChannel(hitoken, channelName, null, 0);
     await _engine.joinChannel(widget.room.token, channelName, null, 0);
-
-    // await _engine.joinChannel(newToken, channelName, null, 0);
-    // await _engine.joinChannel(newToken, channelName, null, 0);
-    print("joined");
   }
 
   Future<void> _initAgoraRtcEngine() async {
@@ -125,6 +109,7 @@ class _MinimalState extends State<Minimal> with FostrTheme {
         },
         userOffline: (id, reason) async {
           log(id.toString() + "---" + reason.toString());
+
           if (reason == UserOfflineReason.Dropped) {
             int particpants = participantsCount;
             int speakers = speakersCount;
@@ -164,10 +149,13 @@ class _MinimalState extends State<Minimal> with FostrTheme {
                 .doc(widget.room.id)
                 .collection("rooms")
                 .doc(widget.room.title)
-                .update({
-              'speakersCount': speakersCount,
-              'participantsCount': participantsCount,
-            });
+                .update(
+              {
+                'lastTime': DateTime.now().toString(),
+                'speakersCount': speakersCount,
+                'participantsCount': participantsCount,
+              },
+            );
           }
         },
       ),
@@ -303,7 +291,9 @@ class _MinimalState extends State<Minimal> with FostrTheme {
                                   return CircularProgressIndicator();
                                 }
                               }),
-                          bottom(context, user),
+                          bottom(context, user, (newUser) {
+                            auth.refreshUser(newUser);
+                          }),
                         ],
                       ),
                     ))
@@ -317,7 +307,7 @@ class _MinimalState extends State<Minimal> with FostrTheme {
     );
   }
 
-  Widget bottom(BuildContext context, User user) {
+  Widget bottom(BuildContext context, User user, Function(User user) cb) {
     return Align(
       alignment: Alignment.bottomCenter,
       child: Row(
@@ -325,7 +315,11 @@ class _MinimalState extends State<Minimal> with FostrTheme {
           IconButton(
               onPressed: () async {
                 await _engine.leaveChannel();
-                await removeUser(user);
+                final newUser = await _roomService.leaveRoom(widget.room, user,
+                    widget.role, speakersCount, participantsCount);
+                if (widget.room.id == user.id) {
+                  cb(newUser);
+                }
                 Navigator.pop(context);
               },
               color: Color(0xffE8FCD9),

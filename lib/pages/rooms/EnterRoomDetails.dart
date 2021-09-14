@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:fostr/core/constants.dart';
-import 'package:fostr/core/data.dart';
-import 'package:fostr/core/functions.dart';
-import 'package:fostr/models/UserModel/User.dart';
 import 'package:fostr/pages/user/HomePage.dart';
 import 'package:fostr/providers/AuthProvider.dart';
 import 'package:fostr/services/FilePicker.dart';
@@ -278,7 +275,7 @@ class _EnterRoomDetailsState extends State<EnterRoomDetails> with FostrTheme {
                       ? CircularProgressIndicator()
                       : ElevatedButton(
                           child: Text('Schedule Room'),
-                          onPressed: () {
+                          onPressed: () async {
                             if (eventNameTextEditingController.text.isEmpty) {
                               Fluttertoast.showToast(
                                   msg: "Event Name is required!",
@@ -289,7 +286,22 @@ class _EnterRoomDetailsState extends State<EnterRoomDetails> with FostrTheme {
                                   textColor: Colors.white,
                                   fontSize: 16.0);
                             } else {
-                              _createChannel(context, user);
+                              setState(() {
+                                scheduling = true;
+                              });
+                              final newUser = await GetIt.I<RoomService>()
+                                  .createRoom(
+                                      user,
+                                      eventNameTextEditingController.text,
+                                      agendaTextEditingController.text,
+                                      imageUrl,
+                                      passController.text,
+                                      now);
+                              auth.refreshUser(newUser);
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => UserDashboard()));
                             }
                           },
                           style: ButtonStyle(
@@ -309,20 +321,5 @@ class _EnterRoomDetailsState extends State<EnterRoomDetails> with FostrTheme {
         ),
       ),
     );
-  }
-
-  _createChannel(context, User user) async {
-    setState(() {
-      scheduling = true;
-    });
-    await GetIt.I<RoomService>().createRoom(
-        user,
-        eventNameTextEditingController.text,
-        agendaTextEditingController.text,
-        imageUrl,
-        passController.text,
-        now);
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => UserDashboard()));
   }
 }

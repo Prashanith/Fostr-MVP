@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fostr/core/constants.dart';
 import 'package:fostr/pages/clubOwner/dashboard.dart';
@@ -6,7 +5,6 @@ import 'package:fostr/pages/onboarding/SplashScreen.dart';
 import 'package:fostr/pages/user/HomePage.dart';
 import 'package:fostr/providers/AuthProvider.dart';
 import 'package:fostr/utils/theme.dart';
-import 'package:fostr/widgets/RoundedImage.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
@@ -16,12 +14,7 @@ class OnboardingPage extends StatefulWidget {
 }
 
 class _OnboardingPageState extends State<OnboardingPage> with FostrTheme {
-  @override
-  void initState() {
-    super.initState();
-    // WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {});
-  }
-
+ 
   @override
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthProvider>(context);
