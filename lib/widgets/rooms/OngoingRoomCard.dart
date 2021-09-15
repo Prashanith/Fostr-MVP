@@ -169,29 +169,76 @@ class OngoingRoomCard extends StatelessWidget with FostrTheme {
             ),
           ),
         ),
-        (room.id ==
-                user.id)
+        (room.id == user.id)
             ? Positioned(
                 right: 5,
                 bottom: 0,
                 child: IconButton(
                     icon: Icon(Icons.delete_outline_rounded),
                     onPressed: () async {
-                      if (await confirm(
-                        context,
-                        title: Text('Confirm'),
-                        content:
-                            Text('Are you sure you want to delete this room?'),
-                        textOK: Text('Yes'),
-                        textCancel: Text('No'),
-                      )) {
-                        roomCollection
-                            .doc(user.id)
-                            .collection('rooms')
-                            .doc(room.title)
-                            .delete();
-                      }
-                      return;
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return Dialog(
+                              child: Container(
+                                padding: const EdgeInsets.all(20),
+                                height: 150,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(15)),
+                                child: Material(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        "Do you really want to delete this room?",
+                                        style: h1,
+                                      ),
+                                      Spacer(),
+                                      Row(
+                                        crossAxisAlignment: CrossAxisAlignment.end,
+                                        children: [
+                                          GestureDetector(
+                                            onTap: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: Text(
+                                              "No",
+                                              style: h2.copyWith(
+                                                color: Colors.black,
+                                                fontSize: 18,
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: 40,
+                                          ),
+                                          
+                                          GestureDetector(
+                                            onTap: () async {
+                                              await roomCollection
+                                                  .doc(user.id)
+                                                  .collection('rooms')
+                                                  .doc(room.title)
+                                                  .delete();
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: Text(
+                                              "Yes",
+                                              style: h2.copyWith(
+                                                color: Colors.black,
+                                                fontSize: 18,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          });
                     }),
               )
             : Container(),

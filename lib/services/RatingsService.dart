@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fostr/core/data.dart';
 
@@ -21,6 +23,7 @@ class RatingService {
   }
 
   Future<void> addRating(double ratings) async {
+    log(_isSet.toString());
     if (_isSet) {
       try {
         final doc = await ratingCollection.doc(_currentRoomCreator!).get();
@@ -48,11 +51,16 @@ class RatingService {
 
   Future<bool> isAlreadyRated() async {
     try {
-      final doc = await roomCollection
+      if (_currentRoomCreator == _currentUser) {
+        return true;
+      }
+
+      final doc = await ratingCollection
           .doc(_currentRoomCreator!)
           .collection('users')
           .doc(_currentUser!)
           .get();
+
       return doc.exists;
     } catch (e) {
       return false;

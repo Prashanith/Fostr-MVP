@@ -4,6 +4,7 @@ import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:fostr/core/constants.dart';
 import 'package:fostr/core/data.dart';
 import 'package:fostr/core/settings.dart';
@@ -14,7 +15,9 @@ import 'package:fostr/pages/rooms/Fun.dart';
 import 'package:fostr/pages/rooms/Library.dart';
 import 'package:fostr/pages/rooms/Minimal.dart';
 import 'package:fostr/providers/AuthProvider.dart';
+import 'package:fostr/services/RoomService.dart';
 import 'package:fostr/utils/theme.dart';
+import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
 class SelectTheme extends StatefulWidget {
@@ -31,18 +34,25 @@ class _SelectThemeState extends State<SelectTheme> {
   int speakersCount = 0, participantsCount = 0;
   ClientRole role = ClientRole.Audience;
   bool isLoading = false;
+  String enteredpass = "";
+  String roompass = "";
   String msg = 'Participants can only listen :)';
-  StreamSubscription<DocumentSnapshot<Map<String, dynamic>>>? roomStream;
-  @override
-  void initState() {
-    initRoom();
-    super.initState();
-  }
+
+  final RoomService roomService = GetIt.I<RoomService>();
 
   @override
-  void dispose() {
-    roomStream?.cancel();
-    super.dispose();
+  void initState() {
+    super.initState();
+    roomService.initRoom(widget.room,
+        (participantsC, speakersC, tokenC, channelNameC, roompassC) {
+      setState(() {
+        participantsCount = participantsC;
+        speakersCount = speakersC;
+        token = tokenC;
+        channelName = channelNameC;
+        roompass = roompassC;
+      });
+    });
   }
 
   @override
@@ -68,166 +78,171 @@ class _SelectThemeState extends State<SelectTheme> {
           ),
           child: Padding(
             padding: const EdgeInsets.all(10),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.33,
-                    child: Image.asset(IMAGES + "logo.png")),
-                Text('You can join a room either as: ',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.teal.shade800,
-                      fontFamily: "Lato",
-                    )),
-                SizedBox(
-                  height: 15,
-                ),
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    SizedBox(height: 20),
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            userKind = "participant";
-                            role = ClientRole.Audience;
-                            msg = 'Participants can only listen :)';
-                          });
-                        },
-                        child: Container(
-                          alignment: Alignment.center,
-                          width: MediaQuery.of(context).size.width,
-                          padding: EdgeInsets.all(
-                            20,
-                          ),
-                          decoration: BoxDecoration(
-                            color: userKind == "participant"
-                                ? gradientBottom
-                                : gradientTop,
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          child: Text(
-                            "Participant",
-                            style: TextStyle(
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.33,
+                      child: Image.asset(IMAGES + "logo.png")),
+                  Text('You can join a room either as: ',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.teal.shade800,
+                        fontFamily: "Lato",
+                      )),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SizedBox(height: 20),
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              userKind = "participant";
+                              role = ClientRole.Audience;
+                              msg = 'Participants can only listen :)';
+                            });
+                          },
+                          child: Container(
+                            alignment: Alignment.center,
+                            width: MediaQuery.of(context).size.width,
+                            padding: EdgeInsets.all(
+                              20,
+                            ),
+                            decoration: BoxDecoration(
                               color: userKind == "participant"
-                                  ? Colors.white
-                                  : Colors.teal.shade800,
-                              fontSize: 16,
+                                  ? gradientBottom
+                                  : gradientTop,
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            child: Text(
+                              "Participant",
+                              style: TextStyle(
+                                color: userKind == "participant"
+                                    ? Colors.white
+                                    : Colors.teal.shade800,
+                                fontSize: 16,
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                    (speakersCount < 8)
-                        ? Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 10),
-                            child: Text("OR",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: Color(0xB2476747),
-                                  fontFamily: "Lato",
-                                )),
-                          )
-                        : Container(),
-                    (speakersCount < 8)
-                        ? Expanded(
-                            child: GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  userKind = "speaker";
-                                  role = ClientRole.Broadcaster;
-                                  msg = 'Only Speakers can talk :)';
-                                });
-                              },
-                              child: Container(
-                                alignment: Alignment.center,
-                                width: MediaQuery.of(context).size.width,
-                                padding: EdgeInsets.all(
-                                  20,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: userKind == "speaker"
-                                      ? gradientBottom
-                                      : gradientTop,
-                                  borderRadius: BorderRadius.circular(30),
-                                ),
-                                child: Text(
-                                  "Speaker",
+                      (speakersCount < 8)
+                          ? Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 10),
+                              child: Text("OR",
                                   style: TextStyle(
-                                    color: userKind == "speaker"
-                                        ? Colors.white
-                                        : Colors.teal.shade800,
                                     fontSize: 16,
+                                    color: Color(0xB2476747),
+                                    fontFamily: "Lato",
+                                  )),
+                            )
+                          : Container(),
+                      (speakersCount < 8)
+                          ? Expanded(
+                              child: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    userKind = "speaker";
+                                    role = ClientRole.Broadcaster;
+                                    msg = 'Only Speakers can talk :)';
+                                  });
+                                },
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  width: MediaQuery.of(context).size.width,
+                                  padding: EdgeInsets.all(
+                                    20,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: userKind == "speaker"
+                                        ? gradientBottom
+                                        : gradientTop,
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                  child: Text(
+                                    "Speaker",
+                                    style: TextStyle(
+                                      color: userKind == "speaker"
+                                          ? Colors.white
+                                          : Colors.teal.shade800,
+                                      fontSize: 16,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          )
-                        : Container()
-                  ],
-                ),
-                SizedBox(height: 20),
-                Text(
-                  '$msg',
-                  style: TextStyle(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 16,
-                      color: Colors.teal.shade800),
-                ),
-                SizedBox(height: 20),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    "Participants: $participantsCount",
+                            )
+                          : Container()
+                    ],
+                  ),
+                  SizedBox(height: 20),
+                  Text(
+                    '$msg',
                     style: TextStyle(
-                      color: Colors.teal.shade800,
+                        fontWeight: FontWeight.w400,
+                        fontSize: 16,
+                        color: Colors.teal.shade800),
+                  ),
+                  SizedBox(height: 20),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "Participants: $participantsCount",
+                      style: TextStyle(
+                        color: Colors.teal.shade800,
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(height: 20),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    "Speakers: $speakersCount",
-                    style: TextStyle(
-                      color: Colors.teal.shade800,
+                  SizedBox(height: 20),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "Speakers: $speakersCount",
+                      style: TextStyle(
+                        color: Colors.teal.shade800,
+                      ),
                     ),
                   ),
-                ),
-                Divider(
-                  color: Colors.teal.shade500,
-                ),
-                isLoading
-                    ? CircularProgressIndicator()
-                    : ElevatedButton(
-                        child: Text('Join Room'),
-                        onPressed: () async {
-                          await updateRoom(user);
-                          navigateToRoom();
-                        },
-                        style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all(Color(0xff94B5AC)),
-                          shape: MaterialStateProperty.all<OutlinedBorder>(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30),
+                  Divider(
+                    color: Colors.teal.shade500,
+                  ),
+                  isLoading
+                      ? CircularProgressIndicator()
+                      : ElevatedButton(
+                          child: Text('Join Room'),
+                          onPressed: () async {
+                            var result = await updateRoom(user, context);
+                            if (result == true) {
+                              navigateToRoom();
+                            }
+                          },
+                          style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.all(Color(0xff94B5AC)),
+                            shape: MaterialStateProperty.all<OutlinedBorder>(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30),
+                              ),
                             ),
                           ),
                         ),
+                  SizedBox(height: 20),
+                  Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      "Maximum of 8 Speakers are allowed...",
+                      style: TextStyle(
+                        color: Colors.teal.shade800,
                       ),
-                SizedBox(height: 20),
-                Align(
-                  alignment: Alignment.center,
-                  child: Text(
-                    "Maximum of 8 Speakers are allowed...",
-                    style: TextStyle(
-                      color: Colors.teal.shade800,
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
@@ -235,119 +250,133 @@ class _SelectThemeState extends State<SelectTheme> {
     );
   }
 
-  initRoom() async {
-    // get the details of room
-    roomStream = roomCollection
-        .doc(widget.room.id)
-        .collection("rooms")
-        .doc(widget.room.title)
-        .snapshots()
-        .listen((result) {
-      print(result.data()!['speakersCount']);
-      setState(() {
-        participantsCount = (result.data()!['participantsCount'] < 0
-            ? 0
-            : result.data()!['participantsCount']);
-        speakersCount = (result.data()!['speakersCount'] < 0
-            ? 0
-            : result.data()!['speakersCount']);
-        token = result.data()!['token'];
-        channelName = widget.room.title!;
-      });
-      print("set");
-    });
-  }
+  // initRoom() async {
+  //   // get the details of room
+  //   roomStream = roomCollection
+  //       .doc(widget.room.id)
+  //       .collection("rooms")
+  //       .doc(widget.room.title)
+  //       .snapshots()
+  //       .listen((result) {
+  //     print(result.data()!['speakersCount']);
+  //     setState(() {
+  //       participantsCount = (result.data()!['participantsCount'] < 0
+  //           ? 0
+  //           : result.data()!['participantsCount']);
+  //       speakersCount = (result.data()!['speakersCount'] < 0
+  //           ? 0
+  //           : result.data()!['speakersCount']);
+  //       token = result.data()!['token'];
+  //       channelName = widget.room.title!;
+  //       roompass = result.data()!['password'];
+  //     });
+  //     print("set");
+  //   });
+  // }
 
-  updateRoom(User user) async {
+  Future updateRoom(User user, BuildContext context) async {
     setState(() {
       isLoading = true;
     });
 
     if (userKind == "speaker") {
       // update the list of speakers
-      var rawSpeakers = await roomCollection
-          .doc(widget.room.id)
-          .collection("rooms")
-          .doc(widget.room.title)
-          .collection("speakers")
-          .get();
-      var speakers = rawSpeakers.docs.map((e) => e.data()).toList();
-      bool isThere = false;
-      speakers.forEach((element) {
-        if (element['id'] == user.id && !isThere) {
-          isThere = true;
-        }
-      });
-      if (!isThere) {
-        await roomCollection
-            .doc(widget.room.id)
-            .collection("rooms")
-            .doc(widget.room.title)
-            .update({
-          'speakersCount': speakersCount + 1,
-        });
-        await roomCollection
-            .doc(widget.room.id)
-            .collection("rooms")
-            .doc(widget.room.title)
-            .collection("speakers")
-            .doc(user.userName)
-            .set(user.toJson());
+      if (roompass != "") {
+        await showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('This Room Is Password Protected'),
+              content: TextFormField(
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Color(0xB2476747),
+                  fontFamily: "Lato",
+                ),
+                decoration: InputDecoration(
+                  hintText: "Password",
+                  hintStyle: TextStyle(
+                    color: Color(0xff476747),
+                  ),
+                  border: InputBorder.none,
+                ),
+                textInputAction: TextInputAction.next,
+                onChanged: (val) {
+                  enteredpass = val;
+                },
+              ),
+              actions: [
+                ElevatedButton(
+                  style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all(Color(0xff94B5AC))),
+                  onPressed: () {
+                    enteredpass = "";
+                    Navigator.pop(context);
+                  },
+                  child: Text('CANCEL'),
+                ),
+                ElevatedButton(
+                  style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all(Color(0xff94B5AC))),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
+      }
+
+      var speakersC = await GetIt.I<RoomService>().joinRoomAsSpeaker(
+          widget.room, user, enteredpass, roompass, speakersCount);
+      if (speakersC == null) {
+        Fluttertoast.showToast(
+            msg: "Please Enter Correct password",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: gradientBottom,
+            textColor: Colors.white,
+            fontSize: 16.0);
         setState(() {
-          speakersCount = speakers.length + 1;
+          // msg = "Incorrect Password";
+          isLoading = false;
         });
+        return false;
+      } else {
+        setState(() {
+          speakersCount = speakersC;
+          isLoading = false;
+        });
+        return true;
       }
     } else {
-      // update the list of participants
-      var rawParticipants = await roomCollection
-          .doc(widget.room.id)
-          .collection("rooms")
-          .doc(widget.room.title)
-          .collection("participants") // participants
-          .get();
-      var participants = rawParticipants.docs.map((e) => e.data()).toList();
-      bool isThere = false;
-      participants.forEach((element) {
-        if (element['id'] == user.id && !isThere) {
-          isThere = true;
-        }
+      var participantsC = await GetIt.I<RoomService>()
+          .joinRoomAsParticipant(widget.room, user, participantsCount);
+      setState(() {
+        participantsCount = participantsC;
+        isLoading = false;
       });
-      if (!isThere) {
-        await roomCollection
-            .doc(widget.room.id)
-            .collection("rooms")
-            .doc(widget.room.title)
-            .update({
-          'participantsCount': participantsCount + 1,
-        });
-        await roomCollection
-            .doc(widget.room.id)
-            .collection("rooms")
-            .doc(widget.room.title)
-            .collection("participants")
-            .doc(user.userName)
-            .set({
-          'username': user.userName,
-          'name': user.name,
-          'profileImage': user.userProfile?.profileImage ?? "image",
-        });
-        setState(() {
-          participantsCount = participants.length + 1;
-        });
-      }
     }
+
     setState(() {
       isLoading = false;
     });
+    return true;
   }
 
-  navigateToRoom() {
+  navigateToRoom() async {
     // navigate to the room
+    await roomService.dispose();
     if (roomTheme == "Minimalist") {
       Navigator.pushReplacement(
         context,
         CupertinoPageRoute(
-          settings: RouteSettings(name: "minimal"),
+          settings: RouteSettings(name: 'minimal'),
           builder: (context) => Scaffold(
             body: Minimal(
               room: widget.room,

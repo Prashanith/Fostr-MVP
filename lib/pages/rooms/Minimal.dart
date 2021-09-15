@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:developer';
-
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +12,8 @@ import 'package:fostr/models/UserModel/User.dart';
 import 'package:fostr/providers/AuthProvider.dart';
 import 'package:fostr/screen/ParticipantsList.dart';
 import 'package:fostr/services/RatingsService.dart';
+import 'package:fostr/services/RoomService.dart';
+import 'package:fostr/services/UserService.dart';
 import 'package:fostr/utils/theme.dart';
 import 'package:fostr/widgets/rooms/Profile.dart';
 import 'package:get_it/get_it.dart';
@@ -30,80 +31,26 @@ class Minimal extends StatefulWidget {
 
 class _MinimalState extends State<Minimal> with FostrTheme {
   int speakersCount = 0, participantsCount = 0;
-
+  String roompass = "";
   bool muted = false, isMicOn = false;
   late RtcEngine _engine;
-
   final RatingService _ratingService = GetIt.I<RatingService>();
-  StreamSubscription<DocumentSnapshot<Map<String, dynamic>>>? roomStream;
-
+  final RoomService _roomService = GetIt.I<RoomService>();
   @override
   void initState() {
     super.initState();
     final auth = Provider.of<AuthProvider>(context, listen: false);
-    initRoom();
-    initialize(auth.user!);
-  }
-
-  @override
-  void dispose() {
-    roomStream?.cancel();
-    super.dispose();
-  }
-
-  initRoom() async {
-    roomStream = roomCollection
-        .doc(widget.room.id)
-        .collection("rooms")
-        .doc(widget.room.title)
-        .snapshots()
-        .listen((result) {
-      print(result.data()?['speakersCount']);
+    GetIt.I<RoomService>().initRoom(widget.room,
+        (participantsC, speakersC, tokenC, channelNameC, roompassC) {
       setState(() {
-        participantsCount = (result.data()!['participantsCount'] < 0
-            ? 0
-            : result.data()!['participantsCount']);
-        speakersCount = (result.data()!['speakersCount'] < 0
-            ? 0
-            : result.data()!['speakersCount']);
+        participantsCount = participantsC;
+        speakersCount = speakersC;
+        token = tokenC;
+        channelName = channelNameC;
+        roompass = roompassC;
       });
     });
-  }
-
-  Future<void> removeUser(User user) async {
-    if (widget.role == ClientRole.Broadcaster) {
-      // update the list of speakers
-      await roomCollection
-          .doc(widget.room.id)
-          .collection("rooms")
-          .doc(widget.room.title)
-          .update({
-        'speakersCount': speakersCount - 1,
-      });
-      await roomCollection
-          .doc(widget.room.id)
-          .collection('rooms')
-          .doc(widget.room.title)
-          .collection("speakers")
-          .doc(user.userName)
-          .delete();
-    } else {
-      // update the list of participants
-      await roomCollection
-          .doc(widget.room.id)
-          .collection("rooms")
-          .doc(widget.room.title)
-          .update({
-        'participantsCount': participantsCount - 1,
-      });
-      await roomCollection
-          .doc(widget.room.id)
-          .collection("rooms")
-          .doc(widget.room.title)
-          .collection("participants")
-          .doc(user.userName)
-          .delete();
-    }
+    initialize(auth.user!);
   }
 
   /// Create Agora SDK instance and initialize
@@ -111,16 +58,10 @@ class _MinimalState extends State<Minimal> with FostrTheme {
     await _initAgoraRtcEngine();
     _addAgoraEventHandlers(user);
     print(channelName);
-    // await getToken();
     print(token);
     print(baseUrl);
     print("got: " + widget.room.token.toString());
-    // await _engine.joinChannel(hitoken, channelName, null, 0);
     await _engine.joinChannel(widget.room.token, channelName, null, 0);
-
-    // await _engine.joinChannel(newToken, channelName, null, 0);
-    // await _engine.joinChannel(newToken, channelName, null, 0);
-    print("joined");
   }
 
   Future<void> _initAgoraRtcEngine() async {
@@ -169,6 +110,7 @@ class _MinimalState extends State<Minimal> with FostrTheme {
         },
         userOffline: (id, reason) async {
           log(id.toString() + "---" + reason.toString());
+
           if (reason == UserOfflineReason.Dropped) {
             int particpants = participantsCount;
             int speakers = speakersCount;
@@ -208,10 +150,13 @@ class _MinimalState extends State<Minimal> with FostrTheme {
                 .doc(widget.room.id)
                 .collection("rooms")
                 .doc(widget.room.title)
-                .update({
-              'speakersCount': speakersCount,
-              'participantsCount': participantsCount,
-            });
+                .update(
+              {
+                'lastTime': DateTime.now().toString(),
+                'speakersCount': speakersCount,
+                'participantsCount': participantsCount,
+              },
+            );
           }
         },
       ),
@@ -347,7 +292,9 @@ class _MinimalState extends State<Minimal> with FostrTheme {
                                   return CircularProgressIndicator();
                                 }
                               }),
-                          bottom(context, user),
+                          bottom(context, user, (newUser) {
+                            auth.refreshUser(newUser);
+                          }),
                         ],
                       ),
                     ))
@@ -361,7 +308,7 @@ class _MinimalState extends State<Minimal> with FostrTheme {
     );
   }
 
-  Widget bottom(BuildContext context, User user) {
+  Widget bottom(BuildContext context, User user, Function(User user) cb) {
     return Align(
       alignment: Alignment.bottomCenter,
       child: Row(
@@ -371,7 +318,11 @@ class _MinimalState extends State<Minimal> with FostrTheme {
                 _ratingService.setCurrentRoom(
                     widget.room.title!, widget.room.id!, user.id);
                 await _engine.leaveChannel();
-                await removeUser(user);
+                final newUser = await _roomService.leaveRoom(widget.room, user,
+                    widget.role, speakersCount, participantsCount);
+                if (widget.room.id == user.id) {
+                  cb(newUser);
+                }
                 Navigator.pop(context);
               },
               color: Color(0xffE8FCD9),

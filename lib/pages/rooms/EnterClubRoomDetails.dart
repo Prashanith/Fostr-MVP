@@ -2,14 +2,13 @@ import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:fostr/core/constants.dart';
-import 'package:fostr/core/data.dart';
-import 'package:fostr/core/functions.dart';
-import 'package:fostr/models/UserModel/User.dart';
 import 'package:fostr/pages/clubOwner/dashboard.dart';
 import 'package:fostr/providers/AuthProvider.dart';
 import 'package:fostr/services/FilePicker.dart';
+import 'package:fostr/services/RoomService.dart';
 import 'package:fostr/services/StorageService.dart';
 import 'package:fostr/utils/theme.dart';
+import 'package:get_it/get_it.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -246,15 +245,6 @@ class _EnterClubRoomDetailsState extends State<EnterClubRoomDetails>
                                                 isLoading = false;
                                               });
                                             }
-                                            // Fluttertoast.showToast(
-                                            //     msg:
-                                            //         "Image must be less than 700KB",
-                                            //     toastLength: Toast.LENGTH_SHORT,
-                                            //     gravity: ToastGravity.BOTTOM,
-                                            //     timeInSecForIosWeb: 1,
-                                            //     backgroundColor: gradientBottom,
-                                            //     textColor: Colors.white,
-                                            //     fontSize: 16.0);
                                           }
                                         } catch (e) {
                                           print(e);
@@ -290,7 +280,7 @@ class _EnterClubRoomDetailsState extends State<EnterClubRoomDetails>
                       ? CircularProgressIndicator()
                       : ElevatedButton(
                           child: Text('Schedule Room'),
-                          onPressed: () {
+                          onPressed: () async {
                             if (eventNameTextEditingController.text.isEmpty) {
                               Fluttertoast.showToast(
                                   msg: "Event Name is required!",
@@ -332,7 +322,22 @@ class _EnterClubRoomDetailsState extends State<EnterClubRoomDetails>
                                   textColor: Colors.white,
                                   fontSize: 16.0);
                             } else {
-                              _createChannel(context, user);
+                              setState(() {
+                                scheduling = true;
+                              });
+                              final newUser = await GetIt.I<RoomService>()
+                                  .createRoom(
+                                      user,
+                                      eventNameTextEditingController.text,
+                                      agendaTextEditingController.text,
+                                      imageUrl,
+                                      "",
+                                      now);
+                              auth.refreshUser(newUser);
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Dashboard()));
                             }
                           },
                           style: ButtonStyle(
@@ -352,42 +357,5 @@ class _EnterClubRoomDetailsState extends State<EnterClubRoomDetails>
         ),
       ),
     );
-  }
-
-  _createChannel(context, User user) async {
-    setState(() {
-      scheduling = true;
-    });
-    var roomToken = await getToken(eventNameTextEditingController.text);
-    // Add new data to Firestore collection
-    await roomCollection.doc(user.id).set({'id': user.id});
-    await roomCollection
-        .doc(user.id)
-        .collection("rooms")
-        .doc(eventNameTextEditingController.text)
-        .set({
-      'participantsCount': 0,
-      'speakersCount': 0,
-      'title': '${eventNameTextEditingController.text}',
-      'agenda': '${agendaTextEditingController.text}',
-      'image': imageUrl,
-      'dateTime':
-          dateTextEditingController.text + " " + timeTextEditingController.text,
-      'roomCreator': (user.bookClubName == "") ? user.name : user.bookClubName,
-      'token': roomToken.toString(),
-      'id': user.id
-      // });
-      // await roomCollection
-      //   .doc(user.id)
-      //   .collection("rooms")
-      //   .doc(eventNameTextEditingController.text)
-      //   .collection("speakers")
-      //   .doc(user.userName)
-      //   .set({
-      //     'username': user.userName,
-      //     'name': user.name,
-      //     'profileImage': user.userProfile?.profileImage ?? "image",
-    }).then((value) => Navigator.push(
-            context, MaterialPageRoute(builder: (context) => Dashboard())));
   }
 }

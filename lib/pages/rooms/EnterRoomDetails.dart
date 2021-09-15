@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:fostr/core/constants.dart';
-import 'package:fostr/core/data.dart';
-import 'package:fostr/core/functions.dart';
-import 'package:fostr/models/UserModel/User.dart';
 import 'package:fostr/pages/user/HomePage.dart';
 import 'package:fostr/providers/AuthProvider.dart';
 import 'package:fostr/services/FilePicker.dart';
+import 'package:fostr/services/RoomService.dart';
 import 'package:fostr/services/StorageService.dart';
 import 'package:fostr/utils/theme.dart';
+import 'package:get_it/get_it.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -31,6 +30,7 @@ class _EnterRoomDetailsState extends State<EnterRoomDetails> with FostrTheme {
   // TextEditingController timeTextEditingController = new TextEditingController();
   TextEditingController agendaTextEditingController =
       new TextEditingController();
+  TextEditingController passController = new TextEditingController();
   String image = "Select Image", imageUrl = "";
   bool isLoading = false, scheduling = false;
 
@@ -126,6 +126,24 @@ class _EnterRoomDetailsState extends State<EnterRoomDetails> with FostrTheme {
                           style: h2,
                           decoration: InputDecoration(
                             hintText: "Agenda for the meeting is...",
+                            hintStyle: TextStyle(
+                              color: Color(0xff476747),
+                            ),
+                            border: InputBorder.none,
+                          ),
+                          textInputAction: TextInputAction.next,
+                          onEditingComplete: () =>
+                              FocusScope.of(context).nextFocus(),
+                        ),
+                        Divider(
+                          height: 0.5,
+                          color: Colors.grey,
+                        ),
+                        TextFormField(
+                          controller: passController,
+                          style: h2,
+                          decoration: InputDecoration(
+                            hintText: "Password (Optional)",
                             hintStyle: TextStyle(
                               color: Color(0xff476747),
                             ),
@@ -257,7 +275,7 @@ class _EnterRoomDetailsState extends State<EnterRoomDetails> with FostrTheme {
                       ? CircularProgressIndicator()
                       : ElevatedButton(
                           child: Text('Schedule Room'),
-                          onPressed: () {
+                          onPressed: () async {
                             if (eventNameTextEditingController.text.isEmpty) {
                               Fluttertoast.showToast(
                                   msg: "Event Name is required!",
@@ -268,7 +286,22 @@ class _EnterRoomDetailsState extends State<EnterRoomDetails> with FostrTheme {
                                   textColor: Colors.white,
                                   fontSize: 16.0);
                             } else {
-                              _createChannel(context, user);
+                              setState(() {
+                                scheduling = true;
+                              });
+                              final newUser = await GetIt.I<RoomService>()
+                                  .createRoom(
+                                      user,
+                                      eventNameTextEditingController.text,
+                                      agendaTextEditingController.text,
+                                      imageUrl,
+                                      passController.text,
+                                      now);
+                              auth.refreshUser(newUser);
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => UserDashboard()));
                             }
                           },
                           style: ButtonStyle(
@@ -288,42 +321,5 @@ class _EnterRoomDetailsState extends State<EnterRoomDetails> with FostrTheme {
         ),
       ),
     );
-  }
-
-  _createChannel(context, User user) async {
-    setState(() {
-      scheduling = true;
-    });
-    var roomToken = await getToken(eventNameTextEditingController.text);
-    // Add new data to Firestore collection
-    await roomCollection.doc(user.id).set({'id': user.id});
-    await roomCollection
-        .doc(user.id)
-        .collection("rooms")
-        .doc(eventNameTextEditingController.text)
-        .set({
-      'participantsCount': 0,
-      'speakersCount': 0,
-      'title': '${eventNameTextEditingController.text}',
-      'agenda': '${agendaTextEditingController.text}',
-      'image': imageUrl,
-      'dateTime': '$now',
-      // 'dateTime': dateTextEditingController.text + " " + timeTextEditingController.text,
-      'roomCreator': (user.bookClubName == "") ? user.name : user.bookClubName,
-      'token': roomToken.toString(),
-      'id': user.id
-      // });
-      // await roomCollection
-      //   .doc(user.id)
-      //   .collection("rooms")
-      //   .doc(eventNameTextEditingController.text)
-      //   .collection("speakers")
-      //   .doc(user.userName)
-      //   .set({
-      //     'username': user.userName,
-      //     'name': user.name,
-      //     'profileImage': user.userProfile?.profileImage ?? "image",
-    }).then((value) => Navigator.push(
-            context, MaterialPageRoute(builder: (context) => UserDashboard())));
   }
 }

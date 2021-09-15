@@ -19,6 +19,8 @@ class User {
   UserProfile? userProfile = UserProfile.empty();
   List<String>? followers = [];
   List<String>? followings = [];
+  int? totalRooms = 0;
+  double? totlaHours = 0.0;
 
   User(
       {required this.id,
