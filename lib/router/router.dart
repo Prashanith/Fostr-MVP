@@ -99,7 +99,6 @@ class FostrRouter {
 
       case Routes.dashboard:
         return Dashboard();
-
       case Routes.roomDetails:
         return RoomDetails();
 

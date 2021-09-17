@@ -41,5 +41,34 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+<<<<<<< HEAD
+=======
+	<key>io.flutter.embedded_views_preview</key>
+	<true/>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>MIC</string>
+	<key>NSCameraUsageDescription</key>
+	<string>CAMERA</string>
+	<key>LSApplicationQueriesSchemes</key>
+<array>
+  <string>https</string>
+  <string>http</string>
+</array>
+<!-- Put me in the [my_project]/ios/Runner/Info.plist file -->
+<!-- Google Sign-in Section -->
+<key>CFBundleURLTypes</key>
+<array>
+	<dict>
+		<key>CFBundleTypeRole</key>
+		<string>Editor</string>
+		<key>CFBundleURLSchemes</key>
+		<array>
+			<!-- TODO Replace this value: -->
+			<!-- Copied from GoogleService-Info.plist key REVERSED_CLIENT_ID -->
+				<string>com.googleusercontent.apps.559126256610-f6lem4un4kdl31bl0qemm6ne5u67r0m4</string>
+		</array>
+	</dict>
+</array>
+>>>>>>> b68f405ecb16ce6bbdbe7696d2f5e90cb734de28
 </dict>
 </plist>
