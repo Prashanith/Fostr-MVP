@@ -41,8 +41,6 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-<<<<<<< HEAD
-=======
 	<key>io.flutter.embedded_views_preview</key>
 	<true/>
 	<key>NSMicrophoneUsageDescription</key>
@@ -69,6 +67,5 @@
 		</array>
 	</dict>
 </array>
->>>>>>> b68f405ecb16ce6bbdbe7696d2f5e90cb734de28
 </dict>
 </plist>

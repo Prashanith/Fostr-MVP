@@ -54,13 +54,8 @@ android {
         applicationId "com.clubfostr.fostr"
         minSdkVersion 21
         targetSdkVersion 30
-<<<<<<< HEAD
         versionCode 2
         versionName "1.0.0+2"
-=======
-        versionCode flutterVersionCode.toInteger()
-        versionName flutterVersionName
->>>>>>> b68f405ecb16ce6bbdbe7696d2f5e90cb734de28
         multiDexEnabled true
     }
 
@@ -94,13 +89,8 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.google.firebase:firebase-auth'
     implementation 'com.google.firebase:firebase-core'
-<<<<<<< HEAD
     implementation 'com.google.firebase:firebase-functions-ktx'
     implementation 'com.google.firebase:firebase-messaging'
     implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'com.squareup.okhttp3:okhttp:3.8.1'
-=======
-    implementation 'com.google.firebase:firebase-messaging'
-    implementation 'androidx.multidex:multidex:2.0.1'
->>>>>>> b68f405ecb16ce6bbdbe7696d2f5e90cb734de28
 }

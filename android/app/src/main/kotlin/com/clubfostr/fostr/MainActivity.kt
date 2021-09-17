@@ -1,6 +1,5 @@
 package com.clubfostr.fostr
 
-<<<<<<< HEAD
 import android.util.Log
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
@@ -59,9 +58,3 @@ class MainActivity: FlutterActivity() {
     }
 }
 
-=======
-import io.flutter.embedding.android.FlutterActivity
-
-class MainActivity: FlutterActivity() {
-}
->>>>>>> b68f405ecb16ce6bbdbe7696d2f5e90cb734de28
