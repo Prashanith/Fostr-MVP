@@ -1,4 +1,4 @@
-const APP_ID = '647ac7a7c4a34180a54c34342c5312a5';
+const APP_ID = '58ee1103fa5b4a9e98e02bacc19aa826';
 
 String baseUrl =
     'https://fostr-token.herokuapp.com/access_token?channel='; //Add the link to your deployed server here

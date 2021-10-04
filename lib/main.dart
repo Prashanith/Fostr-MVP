@@ -91,6 +91,7 @@ class FostrRouteObserver extends NavigatorObserver with FostrTheme {
 
     if (name == "minimal") {
       bool isRated = await _ratingService.isAlreadyRated();
+      log(isRated.toString());
       if (!isRated) {
         Future.delayed(
           Duration(seconds: 1),
@@ -139,7 +140,7 @@ class FostrRouteObserver extends NavigatorObserver with FostrTheme {
                             color: Colors.blue[200],
                             onPressed: () {
                               _ratingService.addRating(ratings);
-                              // Navigator.of(context).pop();
+                              Navigator.of(context).pop();
                             },
                             child: Text(
                               "Rate",

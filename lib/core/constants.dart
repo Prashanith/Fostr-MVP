@@ -12,4 +12,4 @@ const LOGGED_IN = 'fostr-loggedin';
 const USER_TYPE = "fostr-userType";
 
 // agora_rtc
-const AGORA_APP_ID = '647ac7a7c4a34180a54c34342c5312a5';
+const AGORA_APP_ID = '58ee1103fa5b4a9e98e02bacc19aa826';

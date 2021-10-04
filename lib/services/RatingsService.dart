@@ -37,6 +37,8 @@ class RatingService {
           await doc.reference.set({"ratings": ratings, "count": 1});
         }
         doc.reference
+            .collection('rooms')
+            .doc(_currentRoom)
             .collection('users')
             .doc(_currentUser)
             .set({"id": _currentUser});
@@ -51,12 +53,14 @@ class RatingService {
 
   Future<bool> isAlreadyRated() async {
     try {
-      if (_currentRoomCreator == _currentUser) {
-        return true;
-      }
+      // if (_currentRoomCreator == _currentUser) {
+      //   return true;
+      // }
 
       final doc = await ratingCollection
           .doc(_currentRoomCreator!)
+          .collection('rooms')
+          .doc(_currentRoom)
           .collection('users')
           .doc(_currentUser!)
           .get();
