@@ -1,8 +1,8 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:fostr/core/data.dart';
 import 'package:fostr/core/functions.dart';
 import 'package:fostr/models/RoomModel.dart';
@@ -38,10 +38,66 @@ class RoomService {
     });
   }
 
-  Future<User> createRoom(User user, String eventname, String agenda,
-      String imageUrl, String password, String now) async {
+  Future<User> createRoom(
+      User user,
+      String eventname,
+      String agenda,
+      DateTime dateTime,
+      TimeOfDay timeOfDay,
+      String genre,
+      String imageUrl,
+      String password,
+      String now,
+      String adTitle,
+      String adDescription,
+      String redirectLink,
+      String imageUrl2,
+      ) async {
     var roomToken = await getToken(eventname);
+
+    await upcomingRoomsCollection.doc(user.id).set({'id': user.id});
+    var result = await upcomingRoomsCollection
+        .doc(user.id)
+        .collection("rooms")
+        .doc(eventname)
+        .set({
+      'participantsCount': 0,
+      'speakersCount': 0,
+      'title': '$eventname',
+      'agenda': '$agenda',
+      'image': imageUrl,
+      'password': '$password',
+      'dateTime': '$dateTime',
+      'time': '$timeOfDay',
+      'genre': genre,
+      'lastTime': '$now',
+      'roomCreator': (user.bookClubName == "") ? user.name : user.bookClubName,
+      'token': roomToken.toString(),
+      'id': user.id,
+      'adTitle':adTitle,
+      'adDescription':adDescription,
+      'redirectLink':redirectLink,
+      'imageUrl2':imageUrl2
+    });
+
     // Add new data to Firestore collection
+
+    user.totalRooms = user.totalRooms ?? 0;
+    user.totalRooms = user.totalRooms! + 1;
+    _userService.updateUserField(user.toJson());
+    return user;
+  }
+
+  Future<User> createRoomNow(User user, String eventname, String agenda,
+      String genre, String imageUrl, String password, String now,
+      String adTitle,
+      String adDescription,
+      String redirectLink,
+      String imageUrl2,
+      ) async {
+    var roomToken = await getToken(eventname);
+
+
     await roomCollection.doc(user.id).set({'id': user.id});
     var result = await roomCollection
         .doc(user.id)
@@ -54,12 +110,19 @@ class RoomService {
       'agenda': '$agenda',
       'image': imageUrl,
       'password': '$password',
-      'dateTime': '$now',
+      'dateTime': '${DateTime.now()}',
+      'genre': genre,
       'lastTime': '$now',
       'roomCreator': (user.bookClubName == "") ? user.name : user.bookClubName,
       'token': roomToken.toString(),
-      'id': user.id
+      'id': user.id,
+      'adTitle':adTitle,
+      'adDescription':adDescription,
+      'redirectLink':redirectLink,
+      'imageUrl2':imageUrl2
     });
+
+    // Add new data to Firestore collection
 
     user.totalRooms = user.totalRooms ?? 0;
     user.totalRooms = user.totalRooms! + 1;

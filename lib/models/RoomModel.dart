@@ -6,7 +6,7 @@ class Room {
       imageUrl,
       dateTime,
       id,
-      lastTime;
+      lastTime,adTitle,adDescription,redirectLink,imageUrl2;
   final int? participantsCount, speakersCount;
 
   Room({
@@ -21,6 +21,10 @@ class Room {
     this.dateTime,
     this.id,
     this.lastTime,
+    this.adTitle,
+    this.adDescription,
+    this.redirectLink,
+    this.imageUrl2
   });
 
   factory Room.fromJson(json) {
@@ -34,7 +38,11 @@ class Room {
       imageUrl: json['image'],
       dateTime: json['dateTime'],
       id: json['id'],
-      lastTime: json['lastTime']
+      lastTime: json['lastTime'],
+      adTitle:json['adTitle'],
+      adDescription:json['adDescription'],
+      redirectLink:json['redirectLink'],
+      imageUrl2:json['imageUrl2'],
     );
   }
 }

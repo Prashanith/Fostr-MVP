@@ -3,6 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:fostr/core/constants.dart';
 import 'package:fostr/core/data.dart';
 import 'package:fostr/models/RoomModel.dart';
@@ -21,6 +23,7 @@ import 'package:intl/intl.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'SearchPage.dart';
 
 class UserDashboard extends StatefulWidget {
@@ -33,14 +36,115 @@ class UserDashboard extends StatefulWidget {
 class _UserDashboardState extends State<UserDashboard> with FostrTheme {
   int _currentindex = 2;
   final List<Widget> _children = [
-    RoomDetails(),
-    CalendarPage(),
     OngoingRoom(),
+    CalendarPage(),
     SearchPage(),
     UserProfilePage(),
   ];
 
   final AgoraChannel agoraChannel = GetIt.I<AgoraChannel>();
+
+  static const textStyle = TextStyle(fontSize: 16, color: Colors.black87);
+  Future<void> routeTo(param) async {
+    switch (param) {
+      case 'home':
+        setState(() {
+          _currentindex = 0;
+        });
+        Navigator.of(context).pop();
+        break;
+      case 'notify':
+        setState(() {
+          _currentindex = 0;
+        });
+        Navigator.of(context).pop();
+        // FostrRouter.goto(
+        //   context,
+        //   Routes.notifications,
+        // );
+        break;
+      case 'about':
+        setState(() {
+          _currentindex = 0;
+        });
+        if (await canLaunch("url")) {
+          await launch(
+            "url",
+            forceSafariVC: true,
+            forceWebView: true,
+            enableJavaScript: true,
+            headers: <String, String>{'my_header_key': 'my_header_value'},
+          );
+          print("c");
+        } else {
+          Fluttertoast.showToast(
+              msg: "Could not launch URL",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.CENTER,
+              timeInSecForIosWeb: 2,
+              backgroundColor: Colors.white,
+              textColor: Colors.black,
+              fontSize: 16.0
+          );
+        }
+        Navigator.of(context).pop();
+        break;
+      case 'fostrpoints':
+        setState(() {
+          _currentindex = 3;
+        });
+        Navigator.of(context).pop();
+        break;
+      case 'contactus':
+        setState(() {
+          _currentindex = 0;
+        });
+        if (await canLaunch("url")) {
+          await launch(
+            "url",
+            forceSafariVC: false,
+            forceWebView: false,
+            headers: <String, String>{'my_header_key': 'my_header_value'},
+          );
+        } else {
+          Fluttertoast.showToast(
+              msg: "Could not launch URL",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.CENTER,
+              timeInSecForIosWeb: 2,
+              backgroundColor: Colors.white,
+              textColor: Colors.black,
+              fontSize: 16.0
+          );
+        }
+        Navigator.of(context).pop();
+        break;
+      case 'shareApp':
+        setState(() {
+          _currentindex = 0;
+        });
+        QuerySnapshot x =await FirebaseFirestore.instance.collection("links").get();
+        print(x.docs[0]["appLink"]);
+        try{
+          // await Share.share(x.docs[0]["appLink"]);
+        }catch(e){
+          print(e);
+          Fluttertoast.showToast(
+              msg: "Unable to share",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.CENTER,
+              timeInSecForIosWeb: 2,
+              backgroundColor: Colors.white,
+              textColor: Colors.black,
+              fontSize: 16.0
+          );
+        }
+
+        Navigator.of(context).pop();
+        break;
+    }
+  }
+
 
   @override
   void initState() {
@@ -50,25 +154,156 @@ class _UserDashboardState extends State<UserDashboard> with FostrTheme {
 
   @override
   Widget build(BuildContext context) {
-    // final auth = Provider.of<AuthProvider>(context);
+    final auth = Provider.of<AuthProvider>(context);
     // final user = auth.user!;
     return Scaffold(
+      drawer: ClipRRect(
+        borderRadius: BorderRadius.only(
+          topRight: Radius.circular(25),
+          bottomRight: Radius.circular(25),
+        ),
+        child: Drawer(
+          child: ListView(
+            padding: EdgeInsets.all(0),
+            children: [
+              Padding(
+                padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+                child: UserAccountsDrawerHeader(
+                  accountEmail: null,
+                  accountName: null,
+                  decoration: BoxDecoration(
+                      image: DecorationImage(
+                          image: AssetImage('assets/images/logo.png'),
+                          fit: BoxFit.contain)),
+                ),
+              ),
+              ListTile(
+                title: Text(
+                  'Hola, ${auth.user?.name}',
+                  style: TextStyle(fontSize: 24),
+                ),
+                subtitle: Text('We missed you'),
+              ),
+              ListTile(
+                leading: const Text('Home', style: textStyle),
+                onTap: () => routeTo('home'),
+              ),
+              ListTile(
+                leading: const Text('Notifications', style: textStyle),
+                onTap: () => routeTo('notify'),
+              ),
+              ListTile(
+                leading: const Text('About Us', style: textStyle),
+                onTap: () => routeTo('about'),
+              ),
+              ListTile(
+                leading: const Text('Fostr Points', style: textStyle),
+                onTap: () => routeTo('fostrpoints'),
+              ),
+              ListTile(
+                leading: const Text('Contact Us', style: textStyle),
+                onTap: () => routeTo('contactus'),
+              ),
+              ListTile(
+                leading: const Text('Share App', style: textStyle),
+                onTap: () => routeTo('shareApp'),
+              ),
+              ListTile(
+                leading: const Text('Logout', style: textStyle),
+                onTap: () async {
+                  setState(() {
+                    _currentindex = 0;
+                  });
+                  Navigator.of(context).pop();
+                  await auth.signOut();
+                  FostrRouter.removeUntillAndGoto(
+                    context,
+                    Routes.login,
+                        (route) => false,
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+      appBar:AppBar(
+        leading: Builder(
+          builder: (BuildContext context) {
+            return IconButton(
+              icon: SvgPicture.asset(
+                'assets/icons/menu.svg',
+                color: Colors.black,
+                height: 20,
+              ),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+              tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+            );
+          },
+        ),
+        toolbarHeight: 65,
+        elevation: 0,
+        foregroundColor: Colors.black,
+        backgroundColor: Colors.white,
+        actions: [
+          Center(
+            child: Center(
+                child: Image(
+                  height: 40,
+                    image:AssetImage('assets/images/logo.png',)),
+            ),
+          ),
+          SizedBox(
+            width: 10,
+          )
+        ],
+      ),
       body: _children[_currentindex],
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Color(0xff2A9D8F),
+        child: Icon(Icons.add),
+        onPressed: () {
+          showGeneralDialog(
+            barrierLabel: "Label",
+            barrierColor: Colors.black.withOpacity(0.5),
+            transitionDuration: Duration(milliseconds: 400),
+            context: context,
+            pageBuilder: (context, anim1, anim2) {
+              return Align(
+                  alignment: Alignment.center,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                    child: Container(
+                      height: MediaQuery.of(context).size.height * 0.8,
+                      width: MediaQuery.of(context).size.width * 0.94,
+                      child: RoomDetails(),
+                    ),
+                  ));
+            },
+            transitionBuilder: (context, anim1, anim2, child) {
+              return SlideTransition(
+                position: Tween(begin: Offset(0, 1), end: Offset(0, 0))
+                    .animate(anim1),
+                child: child,
+              );
+            },
+          );
+        },
+      ),
       bottomNavigationBar: CurvedNavigationBar(
         backgroundColor: gradientBottom,
         height: min(MediaQuery.of(context).size.height * 0.075, 75),
         index: _currentindex,
         items: <Widget>[
           Icon(
-            LineIcons.plus,
+            LineIcons.home,
             size: 17,
           ),
           Icon(
             LineIcons.calendar,
-            size: 17,
-          ),
-          Icon(
-            LineIcons.home,
             size: 17,
           ),
           Icon(
