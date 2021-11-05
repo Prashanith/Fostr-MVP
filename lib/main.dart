@@ -9,7 +9,6 @@ import 'package:fostr/router/router.dart';
 import 'package:fostr/services/Locators.dart';
 import 'package:fostr/services/RatingsService.dart';
 import 'package:fostr/utils/theme.dart';
-import 'package:fostr/widgets/Buttons.dart';
 import 'package:get_it/get_it.dart';
 import 'package:sizer/sizer.dart';
 
@@ -110,7 +109,7 @@ class FostrRouteObserver extends NavigatorObserver with FostrTheme {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                            "How mauch dyou want to rate this room?",
+                            "How much do you want to rate this room?",
                             style: h1,
                           ),
                           SizedBox(

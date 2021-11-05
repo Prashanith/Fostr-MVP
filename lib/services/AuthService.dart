@@ -29,13 +29,17 @@ class AuthService {
 
   Future<UserModel.User?> signInWithEmailPassword(
       String email, String password, UserType userType) async {
+    print("Logging in with EP");
     try {
       var res = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
       var firebaseUser = res.user!;
       verifyUser(firebaseUser);
       var user = await _userService.getUserById(firebaseUser.uid);
+      print("Vmoas");
+
       if (user != null) {
+        print("Vmoas");
         var updatedUser = updateLastLogin(user);
         return updatedUser;
       } else {
