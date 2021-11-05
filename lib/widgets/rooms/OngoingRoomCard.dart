@@ -140,15 +140,15 @@ class OngoingRoomCard extends StatelessWidget with FostrTheme {
                       SizedBox(
                         height: 5,
                       ),
-                      Text(
-                        room.agenda.toString(),
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.black87,
-                          fontFamily: "Lato",
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                      ),
+                      // Text(
+                      //   room.agenda.toString(),
+                      //   style: TextStyle(
+                      //     fontSize: 12,
+                      //     color: Colors.black87,
+                      //     fontFamily: "Lato",
+                      //   ),
+                      //   overflow: TextOverflow.ellipsis,
+                      // ),
                       SizedBox(
                         height: 5,
                       ),

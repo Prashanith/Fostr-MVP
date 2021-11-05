@@ -41,17 +41,16 @@ class RoomService {
   Future<User> createRoom(
       User user,
       String eventname,
-      String agenda,
+      String genre,
       DateTime dateTime,
       TimeOfDay timeOfDay,
-      String genre,
       String imageUrl,
       String password,
       String now,
-      String adTitle,
-      String adDescription,
-      String redirectLink,
-      String imageUrl2,
+      // String adTitle,
+      // String adDescription,
+      // String redirectLink,
+      // String imageUrl2,
       ) async {
     var roomToken = await getToken(eventname);
 
@@ -64,20 +63,19 @@ class RoomService {
       'participantsCount': 0,
       'speakersCount': 0,
       'title': '$eventname',
-      'agenda': '$agenda',
+      'genre': '$genre',
       'image': imageUrl,
       'password': '$password',
       'dateTime': '$dateTime',
       'time': '$timeOfDay',
-      'genre': genre,
       'lastTime': '$now',
       'roomCreator': (user.bookClubName == "") ? user.name : user.bookClubName,
       'token': roomToken.toString(),
       'id': user.id,
-      'adTitle':adTitle,
-      'adDescription':adDescription,
-      'redirectLink':redirectLink,
-      'imageUrl2':imageUrl2
+      // 'adTitle':adTitle,
+      // 'adDescription':adDescription,
+      // 'redirectLink':redirectLink,
+      // 'imageUrl2':imageUrl2
     });
 
     // Add new data to Firestore collection
@@ -88,12 +86,12 @@ class RoomService {
     return user;
   }
 
-  Future<User> createRoomNow(User user, String eventname, String agenda,
-      String genre, String imageUrl, String password, String now,
-      String adTitle,
-      String adDescription,
-      String redirectLink,
-      String imageUrl2,
+  Future<User> createRoomNow(User user, String eventname, String genre,
+      String imageUrl, String password, String now,
+      // String adTitle,
+      // String adDescription,
+      // String redirectLink,
+      // String imageUrl2,
       ) async {
     var roomToken = await getToken(eventname);
 
@@ -107,19 +105,19 @@ class RoomService {
       'participantsCount': 0,
       'speakersCount': 0,
       'title': '$eventname',
-      'agenda': '$agenda',
+      'genre': '$genre',
       'image': imageUrl,
       'password': '$password',
       'dateTime': '${DateTime.now()}',
-      'genre': genre,
+      // 'genre': genre,
       'lastTime': '$now',
       'roomCreator': (user.bookClubName == "") ? user.name : user.bookClubName,
       'token': roomToken.toString(),
       'id': user.id,
-      'adTitle':adTitle,
-      'adDescription':adDescription,
-      'redirectLink':redirectLink,
-      'imageUrl2':imageUrl2
+      // 'adTitle':adTitle,
+      // 'adDescription':adDescription,
+      // 'redirectLink':redirectLink,
+      // 'imageUrl2':imageUrl2
     });
 
     // Add new data to Firestore collection

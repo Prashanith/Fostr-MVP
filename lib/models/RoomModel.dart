@@ -2,11 +2,11 @@ class Room {
   final String? title,
       roomCreator,
       token,
-      agenda,
       imageUrl,
       dateTime,
       id,
-      lastTime,adTitle,adDescription,redirectLink,imageUrl2;
+      lastTime,genre;
+      // adTitle,adDescription,redirectLink,imageUrl2;
   final int? participantsCount, speakersCount;
 
   Room({
@@ -16,15 +16,15 @@ class Room {
     // this.users,
     this.roomCreator,
     this.token,
-    this.agenda,
+    this.genre,
     this.imageUrl,
     this.dateTime,
     this.id,
     this.lastTime,
-    this.adTitle,
-    this.adDescription,
-    this.redirectLink,
-    this.imageUrl2
+    // this.adTitle,
+    // this.adDescription,
+    // this.redirectLink,
+    // this.imageUrl2
   });
 
   factory Room.fromJson(json) {
@@ -34,15 +34,15 @@ class Room {
       speakersCount: json['speakersCount'],
       roomCreator: json['roomCreator'],
       token: json['token'],
-      agenda: json['agenda'],
+      genre: json['genre'],
       imageUrl: json['image'],
       dateTime: json['dateTime'],
       id: json['id'],
       lastTime: json['lastTime'],
-      adTitle:json['adTitle'],
-      adDescription:json['adDescription'],
-      redirectLink:json['redirectLink'],
-      imageUrl2:json['imageUrl2'],
+      // adTitle:json['adTitle'],
+      // adDescription:json['adDescription'],
+      // redirectLink:json['redirectLink'],
+      // imageUrl2:json['imageUrl2'],
     );
   }
 }

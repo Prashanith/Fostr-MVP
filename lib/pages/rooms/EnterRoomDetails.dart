@@ -531,156 +531,6 @@ class _EnterRoomDetailsState extends State<EnterRoomDetails>
                                 ],
                               ),
                             ),
-                            Container(
-                              padding: EdgeInsets.all(0),
-                              color: Colors.transparent,
-                              child: ExpansionPanelList(
-                                expansionCallback:(i,isExpanded){
-                                  setState(() {
-                                    isOpen[i]=!isOpen[i];
-                                  });
-                                },
-                                elevation: 0,
-                                children: [
-                                  ExpansionPanel(
-                                    headerBuilder:(context,isOpen){
-                                      return Center(child: Text("Post an Ad"));
-                                    },
-                                    isExpanded:isOpen[0],
-                                    canTapOnHeader: true,
-                                    body:SingleChildScrollView(
-                                      child: Form(
-                                        key: _formKey,
-                                        child: Column(
-                                          children: [
-                                            GestureDetector(
-                                              onTap: () async {
-                                                final file2 = await Files.getFile();
-                                                if (file2['file'] != null) {
-                                                  final croppedFile = await ImageCropper.cropImage(
-                                                    sourcePath: file2['file'].path,
-                                                    maxHeight: 150,
-                                                    maxWidth: 150,
-                                                    aspectRatio: CropAspectRatio(
-                                                        ratioX: 1, ratioY: 1
-                                                    ),
-                                                  );
-                                                  if (croppedFile != null) {
-                                                    imageUrl2 =
-                                                    await Storage.saveRoomImage(
-                                                        {
-                                                          "file": croppedFile,
-                                                          "ext": file2["ext"]
-                                                        },"randomName");
-                                                    setState(() {
-                                                      image = file2['file']
-                                                          .toString()
-                                                          .substring(
-                                                          file2['file']
-                                                              .toString()
-                                                              .lastIndexOf(
-                                                              '/') +
-                                                              1,
-                                                          file2['file']
-                                                              .toString()
-                                                              .length -
-                                                              1);
-                                                    });
-                                                  }
-                                                }
-                                                else {
-                                                  Fluttertoast.showToast(
-                                                      msg:"Image must be less than 700KB",
-                                                      toastLength: Toast.LENGTH_SHORT,
-                                                      gravity: ToastGravity.BOTTOM,
-                                                      timeInSecForIosWeb: 1,
-                                                      backgroundColor: gradientBottom,
-                                                      textColor: Colors.white,
-                                                      fontSize: 16.0
-                                                  );
-                                                }
-                                              },
-                                              child: Container(
-                                                padding: EdgeInsets.all(10),
-                                                child: Center(child: Column(
-                                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                                  children: [
-                                                    Icon(Icons.image_outlined, size: 83,
-                                                      color: Colors.grey,),
-                                                    Text("add an image (378x224)"),
-                                                  ],
-                                                )),
-                                                decoration: BoxDecoration(
-                                                  color: Colors.white,
-                                                  borderRadius: BorderRadius.all(
-                                                    Radius.circular(10),
-                                                  ),
-                                                  border: Border.all(
-                                                      color: Colors.grey, width: 0.5),
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(height: 30,),
-                                            TextFormField(
-                                              controller: adTitle,
-                                              validator: (value) {
-                                                if (value == null || value.isEmpty) {
-                                                  return 'Please enter some text';
-                                                }
-                                                return null;
-                                              },
-                                              onEditingComplete: (){
-
-                                              },
-                                              // onChanged: (str)=>setState(() {
-                                              //   adTitle.text=str;
-                                              // }),
-                                              decoration: inputDecoration().copyWith(
-                                                hintText: 'Ad Title',
-                                              ),
-                                            ),
-                                            SizedBox(height: 20,),
-                                            TextFormField(
-                                              controller: adDescription,
-                                              validator: (value) {
-                                                if (value == null || value.isEmpty) {
-                                                  return 'Please enter some text';
-                                                }
-                                                return null;
-                                              },
-                                              onChanged: (str)=>setState(() {
-                                                // searchText=str;
-                                              }),
-                                              decoration: inputDecoration().copyWith(
-                                                hintText: 'Ad Description',
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              height: 20,
-                                            ),
-                                            TextFormField(
-                                              controller: redirectLink,
-                                              validator: (value) {
-                                                if (value == null || value.isEmpty) {
-                                                  return 'Please enter some text';
-                                                }
-                                                return null;
-                                              },
-                                              onChanged: (str)=>setState(() {
-                                                // searchText=str;
-                                              }),
-                                              decoration: inputDecoration().copyWith(
-                                                hintText: 'Redirect Link',
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
                             SizedBox(
                               height: MediaQuery.of(context).size.height * 0.008,
                             ),
@@ -718,18 +568,16 @@ class _EnterRoomDetailsState extends State<EnterRoomDetails>
                                           user,
                                           eventNameTextEditingController
                                               .text,
-                                          agendaTextEditingController
-                                              .text,
+                                          value1,
                                           _dateTime,
                                           _timeOfDay,
-                                          value1,
                                           imageUrl,
                                           passController.text,
                                           now,
-                                          adTitle.text,
-                                          adDescription.text,
-                                          redirectLink.text,
-                                          imageUrl2
+                                          // adTitle.text,
+                                          // adDescription.text,
+                                          // redirectLink.text,
+                                          // imageUrl2
                                       );
                                       auth.refreshUser(newUser);
                                       Navigator.push(
@@ -774,15 +622,10 @@ class _EnterRoomDetailsState extends State<EnterRoomDetails>
                                           .createRoomNow(
                                           user,
                                           eventNameTextEditingController.text,
-                                          agendaTextEditingController.text,
                                           value1,
                                           imageUrl,
                                           passController.text,
                                           now,
-                                          adTitle.text,
-                                          adDescription.text,
-                                          redirectLink.text,
-                                          imageUrl2
                                       );
                                       auth.refreshUser(newUser);
                                       Navigator.push(
