@@ -109,9 +109,9 @@ class _SearchBookState extends State<SearchBook> {
                   itemBuilder: (BuildContext context, int index) {
                     return InkWell(
                       onTap: (){
-                        // final _userCollection = FirebaseFirestore.instance.collection("users");
-                        // TopReads tr = TopReads(_items[index].title, _items[index].image.thumb);
-                        // Map<String,dynamic> mp = tr.toMap();
+                        final _userCollection = FirebaseFirestore.instance.collection("users");
+                        TopReads tr = TopReads(_items[index].title, _items[index].image.thumb);
+                        Map<String,dynamic> mp = tr.toMap();
                         // if (user.userProfile == null) {
                         //   var userProfile = UserProfile();
                         //   userProfile.topRead = ;
@@ -124,15 +124,15 @@ class _SearchBookState extends State<SearchBook> {
                         //   user.userProfile!.toJson(),
                         //   "id": user.id
                         // });
-                        // _userCollection.doc(user.id).set({
-                        //   "userProfile": {
-                        //     "topRead":FieldValue.arrayUnion([
-                        //       tr.toMap()
-                        //     ])
-                        //   }
-                        //
-                        //
-                        // },SetOptions(merge:true)).then((value) => Navigator.of(context).pop());
+                        _userCollection.doc(user.id).set({
+                          "userProfile": {
+                            "topRead":FieldValue.arrayUnion([
+                              tr.toMap()
+                            ])
+                          }
+
+
+                        },SetOptions(merge:true)).then((value) => Navigator.of(context).pop());
                       },
                       child: new Card(
                           child: new Padding(
