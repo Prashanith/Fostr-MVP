@@ -359,27 +359,27 @@ class _EnterRoomDetailsState extends State<EnterRoomDetails>
                                   //     ),
                                   //   ],
                                   // ),
-                                  Container(
-                                    child: DropdownButton<String>(
-                                      borderRadius:
-                                      BorderRadius.all(Radius.circular(8)),
-                                      value: value1,
-                                      items: genres.map((String value) {
-                                        return DropdownMenuItem<String>(
-                                          value: value,
-                                          child: Text(value),
-                                        );
-                                      }).toList(),
-                                      onChanged: (val) {
-                                        setState(() {
-                                          value1 = val!;
-                                        });
-                                      },
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 20,
-                                  ),
+                                  // Container(
+                                  //   child: DropdownButton<String>(
+                                  //     borderRadius:
+                                  //     BorderRadius.all(Radius.circular(8)),
+                                  //     value: value1,
+                                  //     items: genres.map((String value) {
+                                  //       return DropdownMenuItem<String>(
+                                  //         value: value,
+                                  //         child: Text(value),
+                                  //       );
+                                  //     }).toList(),
+                                  //     onChanged: (val) {
+                                  //       setState(() {
+                                  //         value1 = val!;
+                                  //       });
+                                  //     },
+                                  //   ),
+                                  // ),
+                                  // SizedBox(
+                                  //   height: 20,
+                                  // ),
                                   Row(
                                     children: [
                                       isLoading

@@ -13,16 +13,12 @@ class Background extends StatelessWidget with FostrTheme {
         ? Container(
             height: double.infinity,
             width: double.infinity,
-            decoration: BoxDecoration(
-              gradient: gradient,
-            ),
+
           )
         : Container(
             height: double.infinity,
             width: double.infinity,
-            decoration: BoxDecoration(
-              gradient: background,
-            ),
+
           );
   }
 }

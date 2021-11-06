@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fostr/utils/theme.dart';
+import 'package:fostr/utils/widget_constants.dart';
 import 'package:sizer/sizer.dart';
 
 class PrimaryButton extends StatefulWidget {
@@ -41,10 +42,10 @@ class _PrimaryButtonState extends State<PrimaryButton> with FostrTheme {
         duration: Duration(milliseconds: 200),
         alignment: Alignment.center,
         width: (widget.width) ?? 90.w,
-        height: 10.h,
+        height: 8.h,
         decoration: BoxDecoration(
           borderRadius: buttonBorderRadius,
-          gradient: primaryButton,
+          color: GlobalColors.signUpSignInButton
         ),
         child: Text(
           widget.text,

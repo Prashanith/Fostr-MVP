@@ -12,11 +12,13 @@ import 'package:fostr/pages/rooms/RoomDetails.dart';
 import 'package:fostr/pages/rooms/ThemePage.dart';
 import 'package:fostr/pages/user/CalendarPage.dart';
 import 'package:fostr/pages/user/UserProfile.dart';
+import 'package:fostr/pages/user/custom_animated_bottom_bar.dart';
 import 'package:fostr/providers/AuthProvider.dart';
 import 'package:fostr/router/router.dart';
 import 'package:fostr/router/routes.dart';
 import 'package:fostr/services/MethodeChannels.dart';
 import 'package:fostr/utils/theme.dart';
+import 'package:fostr/utils/widget_constants.dart';
 import 'package:fostr/widgets/rooms/OngoingRoomCard.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
@@ -179,35 +181,43 @@ class _UserDashboardState extends State<UserDashboard> with FostrTheme {
               ),
               ListTile(
                 title: Text(
-                  'Hola, ${auth.user?.name}',
-                  style: TextStyle(fontSize: 24),
+                    'Welcome back,',
+                    style:TextStyle(
+                      fontSize:24,
+                        color: Color(0xffFF613A)
+                    )
                 ),
-                subtitle: Text('We missed you'),
+                // subtitle: Text(
+                //     'Welcome back',
+                //     style:TextStyle(
+                //       color: Color(0xffFF613A)
+                //     )
+                // ),
               ),
               ListTile(
                 leading: const Text('Home', style: textStyle),
                 onTap: () => routeTo('home'),
               ),
+              // ListTile(
+              //   leading: const Text('Notifications', style: textStyle),
+              //   onTap: () => routeTo('notify'),
+              // ),
               ListTile(
-                leading: const Text('Notifications', style: textStyle),
-                onTap: () => routeTo('notify'),
-              ),
-              ListTile(
-                leading: const Text('About Us', style: textStyle),
+                leading: const Text('About us', style: textStyle),
                 onTap: () => routeTo('about'),
               ),
+              // ListTile(
+              //   leading: const Text('Fostr Points', style: textStyle),
+              //   onTap: () => routeTo('fostrpoints'),
+              // ),
               ListTile(
-                leading: const Text('Fostr Points', style: textStyle),
-                onTap: () => routeTo('fostrpoints'),
-              ),
-              ListTile(
-                leading: const Text('Contact Us', style: textStyle),
+                leading: const Text('Contact us', style: textStyle),
                 onTap: () => routeTo('contactus'),
               ),
-              ListTile(
-                leading: const Text('Share App', style: textStyle),
-                onTap: () => routeTo('shareApp'),
-              ),
+              // ListTile(
+              //   leading: const Text('Share App', style: textStyle),
+              //   onTap: () => routeTo('shareApp'),
+              // ),
               ListTile(
                 leading: const Text('Logout', style: textStyle),
                 onTap: () async {
@@ -293,33 +303,67 @@ class _UserDashboardState extends State<UserDashboard> with FostrTheme {
       //     );
       //   },
       // ),
-      bottomNavigationBar: CurvedNavigationBar(
-        backgroundColor: gradientBottom,
-        height: min(MediaQuery.of(context).size.height * 0.075, 75),
-        index: _currentindex,
-        items: <Widget>[
-          Icon(
-            LineIcons.home,
-            size: 17,
+      bottomNavigationBar: CustomAnimatedBottomBar(
+        backgroundColor: Colors.white,
+        selectedIndex: _currentindex,
+        // height: min(MediaQuery.of(context).size.height * 0.075, 75),
+        // index: _currentindex,
+        //
+        // items: <Widget>[
+        //   Icon(
+        //     Icons.home,
+        //     size: 17,
+        //   ),
+        //   Icon(
+        //     LineIcons.plus,
+        //     size: 17,
+        //   ),
+        //   Icon(
+        //     LineIcons.search,
+        //     size: 17,
+        //   ),
+        //   Icon(
+        //     LineIcons.user,
+        //     size: 17,
+        //   ),
+        // ],
+        items: <BottomNavyBarItem>[
+          BottomNavyBarItem(
+            icon: Icon(Icons.home),
+            title: Text('Home'),
+            inactiveColor: Colors.black,
+            activeColor: GlobalColors.signUpSignInButton,
+            textAlign: TextAlign.center,
           ),
-          Icon(
-            LineIcons.plus,
-            size: 17,
+          BottomNavyBarItem(
+            icon: Icon(Icons.add),
+            title: Text('Rooms'),
+            inactiveColor: Colors.black,
+            activeColor: GlobalColors.signUpSignInButton,
+            textAlign: TextAlign.center,
           ),
-          Icon(
-            LineIcons.search,
-            size: 17,
+          BottomNavyBarItem(
+            icon: Icon(Icons.search),
+            title: Text(
+              'Search ',
+            ),
+            inactiveColor: Colors.black,
+            activeColor: GlobalColors.signUpSignInButton,
+            textAlign: TextAlign.center,
           ),
-          Icon(
-            LineIcons.user,
-            size: 17,
+          BottomNavyBarItem(
+
+            icon: Icon(Icons.person),
+            title: Text('Profile'),
+
+            activeColor: GlobalColors.signUpSignInButton,
+            inactiveColor: Colors.black,
+            textAlign: TextAlign.center,
           ),
         ],
-        onTap: (index) {
-          setState(() {
-            _currentindex = index;
-          });
-        },
+        onItemSelected: (int value) { setState(() {
+        _currentindex = value;
+      }); },
       ),
     );
   }
@@ -355,16 +399,16 @@ class _OngoingRoomState extends State<OngoingRoom> with FostrTheme {
     final user = auth.user!;
     return Scaffold(
       body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment(-0.6, -1),
-            end: Alignment(1, 0.6),
-            colors: [
-              Color.fromRGBO(148, 181, 172, 1),
-              Color.fromRGBO(229, 229, 229, 1),
-            ],
-          ),
-        ),
+        // decoration: BoxDecoration(
+        //   gradient: LinearGradient(
+        //     begin: Alignment(-0.6, -1),
+        //     end: Alignment(1, 0.6),
+        //     colors: [
+        //       Color.fromRGBO(148, 181, 172, 1),
+        //       Color.fromRGBO(229, 229, 229, 1),
+        //     ],
+        //   ),
+        // ),
         child: SafeArea(
           child: Stack(
             children: [
@@ -381,20 +425,20 @@ class _OngoingRoomState extends State<OngoingRoom> with FostrTheme {
                                     user.bookClubName == null)
                                 ? Text(
                                     "Hello, ${user.userName}",
-                                    style: h1.apply(color: Colors.white),
+                                    style: h1.apply(color: Colors.black),
                                   )
                                 : Text(
                                     "Hello, ${user.bookClubName}",
-                                    style: h1.apply(color: Colors.white),
+                                    style: h1.apply(color: Colors.black),
                                   )
                             : (user.name.isEmpty)
                                 ? Text(
                                     "Hello, ${user.userName}",
-                                    style: h1.apply(color: Colors.white),
+                                    style: h1.apply(color: Colors.black),
                                   )
                                 : Text(
                                     "Hello, ${user.name}",
-                                    style: h1.apply(color: Colors.white),
+                                    style: h1.apply(color: Colors.black),
                                   ),
                       ],
                     ),
@@ -405,17 +449,17 @@ class _OngoingRoomState extends State<OngoingRoom> with FostrTheme {
                   Expanded(
                     child: Container(
                       width: double.infinity,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: Image.asset(IMAGES + "background.png").image,
-                          fit: BoxFit.cover,
-                        ),
-                        borderRadius: BorderRadiusDirectional.only(
-                          topStart: Radius.circular(32),
-                          topEnd: Radius.circular(32),
-                        ),
-                        color: Colors.white,
-                      ),
+                      // decoration: BoxDecoration(
+                      //   image: DecorationImage(
+                      //     image: Image.asset(IMAGES + "background.png").image,
+                      //     fit: BoxFit.cover,
+                      //   ),
+                      //   borderRadius: BorderRadiusDirectional.only(
+                      //     topStart: Radius.circular(32),
+                      //     topEnd: Radius.circular(32),
+                      //   ),
+                      //   color: Colors.white,
+                      // ),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 10, vertical: 10),
@@ -426,6 +470,7 @@ class _OngoingRoomState extends State<OngoingRoom> with FostrTheme {
                               AsyncSnapshot<QuerySnapshot> outerData) {
                             if (outerData.hasData) {
                               final docs = outerData.data!.docs;
+                              print(docs[0].id);
                               return ListView.builder(
                                 itemCount: docs.length,
                                 itemBuilder: (context, index) {
@@ -434,7 +479,7 @@ class _OngoingRoomState extends State<OngoingRoom> with FostrTheme {
                                 },
                               );
                             } else {
-                              return Center(child: CircularProgressIndicator());
+                              return Container();
                             }
                           },
                         ),
@@ -493,12 +538,12 @@ class RoomList extends StatelessWidget with FostrTheme {
 
         if (snapshot.hasData) {
           final roomList = snapshot.data!.docs;
-
           return Column(
             children: List.generate(
               roomList.length,
               (index) {
                 final room = roomList[index].data();
+
                 return GestureDetector(
                   onTap: () async {
                     Navigator.push(
